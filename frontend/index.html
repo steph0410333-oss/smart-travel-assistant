@@ -13,21 +13,25 @@
       <header class="top-bar">
         <button class="icon-button" aria-label="返回">←</button>
         <div><p class="eyebrow">悠遊付</p><h1>智慧出行小幫手</h1></div>
-        <button class="text-button">說明</button>
+        <div class="top-actions">
+          <button id="map-language-button" class="text-button language-button" type="button" aria-label="切換語言">繁中</button>
+          <button class="text-button" data-i18n="help">說明</button>
+        </div>
       </header>
       <button id="open-search" class="search-entry" type="button">
         <span aria-hidden="true">⌕</span>
         <span>搜尋地點，或告訴 AI 你想去哪裡</span>
       </button>
       <div class="prototype-badge">SIMULATED DATA · PROTOTYPE ONLY</div>
+      <button id="reset-map" class="reset-map-button" type="button" hidden>× <span data-i18n="clearResult">清除結果</span></button>
       <div class="map-legend" aria-label="人流顏色圖例">
         <span><i class="legend-color low"></i>較少</span>
         <span><i class="legend-color medium"></i>普通</span>
         <span><i class="legend-color high"></i>偏高</span>
         <span><i class="legend-color critical"></i>擁擠</span>
       </div>
-      <section class="bottom-sheet" aria-label="地點資訊">
-        <div class="sheet-handle"></div>
+      <section class="bottom-sheet is-collapsed" aria-label="地點資訊" data-sheet-state="collapsed">
+        <button id="sheet-handle" class="sheet-handle" type="button" aria-label="拖曳或點擊調整資訊面板" aria-expanded="false"><span></span></button>
         <p id="sheet-kicker" class="sheet-kicker">尚未選擇地點</p>
         <h2 id="sheet-title">從地圖探索現在適合去哪裡</h2>
         <p id="sheet-description" class="sheet-description">選擇目的地後，我們會分析最近捷運站的人流，協助你判斷現在是否適合前往。</p>
@@ -54,6 +58,19 @@
           </div>
           <div class="context-card update-context"><small>資料更新</small><strong id="updated-time">--</strong></div>
         </div>
+        <section class="balance-section" aria-label="旅客餘額推薦">
+          <div class="balance-heading">
+            <div><small data-i18n="touristHelper">FOR VISITORS</small><h3 data-i18n="balanceTitle">餘額智慧推薦</h3></div>
+            <span>MOCK BALANCE</span>
+          </div>
+          <p class="balance-description" data-i18n="balanceDescription">輸入模擬悠遊卡／悠遊付餘額，找出餘額可負擔的消費選擇。</p>
+          <div class="balance-controls">
+            <label><span>NT$</span><input id="balance-input" type="number" min="0" max="10000" step="10" value="300" aria-label="模擬餘額" /></label>
+            <button id="balance-submit" type="button" data-i18n="balanceAction">推薦</button>
+          </div>
+          <div id="balance-results" class="balance-results" hidden></div>
+          <p class="balance-disclaimer" data-i18n="balanceDisclaimer">未連接真實帳戶；餘額、商家與價格皆為 Prototype 模擬資料。</p>
+        </section>
         <section id="merchant-section" class="merchant-section" hidden>
           <div class="merchant-heading">
             <div><small>目的地周邊 700 公尺</small><h3>悠遊付可用商家</h3></div>
@@ -85,7 +102,7 @@
           <h2 id="search-title">普通搜尋</h2>
           <div class="header-actions" aria-label="輔助功能">
             <button class="plain-icon-button" type="button" aria-label="說明">?</button>
-            <button class="plain-icon-button" type="button" aria-label="切換語言">◎</button>
+            <button id="search-language-button" class="plain-icon-button" type="button" aria-label="切換語言">◎</button>
           </div>
         </header>
 
@@ -170,7 +187,14 @@
         </section>
       </div>
     </section>
+    <div id="language-menu" class="language-menu" hidden>
+      <button type="button" data-language="zh-Hant">繁體中文</button>
+      <button type="button" data-language="en">English</button>
+      <button type="button" data-language="ja">日本語</button>
+      <button type="button" data-language="ko">한국어</button>
+    </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/static/app.js"></script>
   </body>
 </html>
+
