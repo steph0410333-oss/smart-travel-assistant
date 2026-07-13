@@ -1,0 +1,47 @@
+[
+  {
+    "place_id": "P001", "place_name": "台北小巨蛋", "latitude": 25.0514, "longitude": 121.5501,
+    "aliases": ["小巨蛋", "台北小巨蛋體育館"],
+    "categories": ["活動", "聚餐"], "features": ["室內", "冷氣", "捷運方便"], "typical_budget": 500
+  },
+  {
+    "place_id": "P002", "place_name": "大安森林公園周邊", "latitude": 25.0316, "longitude": 121.5350,
+    "aliases": ["大安森林公園", "大安公園"],
+    "categories": ["散步", "咖啡", "自然", "聊天"], "features": ["捷運方便", "附近有室內空間", "附近有冷氣"], "typical_budget": 350
+  },
+  {
+    "place_id": "P003", "place_name": "台北車站商圈", "latitude": 25.0478, "longitude": 121.5170,
+    "aliases": ["台北車站", "北車", "臺北車站"],
+    "categories": ["咖啡", "聚餐", "購物", "聊天"], "features": ["室內", "冷氣", "捷運方便", "雨天適合"], "typical_budget": 450
+  },
+  {
+    "place_id": "P004", "place_name": "西門町", "latitude": 25.0436, "longitude": 121.5078,
+    "aliases": ["西門商圈"],
+    "categories": ["咖啡", "聚餐", "購物", "聊天"], "features": ["室內", "冷氣", "捷運方便"], "typical_budget": 500
+  },
+  {
+    "place_id": "P005", "place_name": "中山站咖啡商圈", "latitude": 25.0533, "longitude": 121.5210,
+    "aliases": ["中山商圈", "中山站", "中山站商圈"],
+    "categories": ["咖啡", "聊天", "約會", "購物"], "features": ["室內", "冷氣", "捷運方便", "適合久坐"], "typical_budget": 400
+  },
+  {
+    "place_id": "P006", "place_name": "士林夜市", "latitude": 25.0880, "longitude": 121.5240,
+    "aliases": ["士林市場"],
+    "categories": ["聚餐", "小吃", "逛街"], "features": ["捷運方便", "戶外"], "typical_budget": 500
+  },
+  {
+    "place_id": "P007", "place_name": "大湖公園周邊", "latitude": 25.0836, "longitude": 121.6028,
+    "aliases": ["大湖公園", "大湖公園站"],
+    "categories": ["散步", "咖啡", "自然", "聊天"], "features": ["捷運方便", "附近有室內空間", "附近有冷氣"], "typical_budget": 300
+  },
+  {
+    "place_id": "P008", "place_name": "松山文創園區", "latitude": 25.0437, "longitude": 121.5606,
+    "aliases": ["松菸", "松山文創"],
+    "categories": ["展覽", "咖啡", "散步", "聊天"], "features": ["室內", "冷氣", "捷運方便"], "typical_budget": 450
+  },
+  {
+    "place_id": "P009", "place_name": "華山1914文化創意產業園區", "latitude": 25.0441, "longitude": 121.5294,
+    "aliases": ["華山文創", "華山1914", "華山園區"],
+    "categories": ["展覽", "咖啡", "散步", "聊天"], "features": ["室內", "冷氣", "適合久坐"], "typical_budget": 450
+  }
+]
