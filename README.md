@@ -21,9 +21,12 @@
 - [x] Phase 5：地點推薦
 - [x] Phase 6：Travel Decision Agent（Gemini function calling + 自動備援）
 - [x] Phase 7：模擬悠遊付商家
-- [ ] Phase 8：測試、GitHub 與部署
+- [x] Phase 8：測試、GitHub 與部署
+- [x] Phase 9：可調整資訊面板、搜尋重設、旅客餘額推薦與四語介面
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/steph0410333-oss/smart-travel-assistant)
+
+公開網站：https://smart-travel-assistant-ycn1.onrender.com
 
 ## 地點搜尋的 Prototype 範圍
 
@@ -63,7 +66,15 @@ Gemini 預設使用 `gemini-2.5-flash`，可在 `.env` 以 `GEMINI_MODEL` 調整
 - [x] Render 免費方案部署設定與 health check
 - [x] 公開部署說明文件
 - [x] 建立並授權 GitHub 儲存庫，安全上傳全部程式碼
-- [ ] 由 Render 連接 GitHub 並取得公開網址
+- [x] 由 Render 連接 GitHub 並取得公開網址
 
 部署方式請見 [`DEPLOYMENT.md`](DEPLOYMENT.md)。
+
+### Phase 9（已完成）
+
+- [x] 地圖資訊面板可點擊或拖曳，在縮小、半開與展開狀態間切換
+- [x] 搜尋後提供「清除結果」，一鍵回到原始熱區圖
+- [x] 依模擬悠遊卡／悠遊付餘額推薦可負擔的示意商家
+- [x] 繁體中文、English、日本語、한국어介面切換
+- [x] 餘額、商家與價格皆清楚標示為 Prototype Mock Data，未連接真實帳戶
 
