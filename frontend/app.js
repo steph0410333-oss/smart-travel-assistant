@@ -1,6 +1,60 @@
 let map = null;
 let placeCatalog = [];
 let merchantMarkers = [];
+let hasActiveResult = false;
+let currentLanguage = "zh-Hant";
+const DEFAULT_MAP_VIEW = { center: [25.0478, 121.517], zoom: 13 };
+
+const translations = {
+  "zh-Hant": {
+    appTitle: "智慧出行小幫手", help: "說明", searchEntry: "搜尋地點，或告訴 AI 你想去哪裡",
+    clearResult: "清除結果", defaultKicker: "尚未選擇地點", defaultTitle: "從地圖探索現在適合去哪裡",
+    defaultDescription: "選擇目的地後，我們會分析最近捷運站的人流，協助你判斷現在是否適合前往。",
+    normalSearch: "普通搜尋", aiRecommendation: "AI 推薦", startAnalysis: "開始分析",
+    touristHelper: "FOR VISITORS", balanceTitle: "餘額智慧推薦",
+    balanceDescription: "輸入模擬悠遊卡／悠遊付餘額，找出餘額可負擔的消費選擇。",
+    balanceAction: "推薦", balanceDisclaimer: "未連接真實帳戶；餘額、商家與價格皆為 Prototype 模擬資料。",
+    placePlaceholder: "輸入目的地，例如台北小巨蛋", balanceEmpty: "此餘額目前沒有可推薦的模擬消費選擇。",
+    remaining: "估計消費後餘額", nearestStation: "最近捷運站", update: "更新",
+  },
+  en: {
+    appTitle: "Smart Travel Assistant", help: "Help", searchEntry: "Search a place or tell AI where you want to go",
+    clearResult: "Clear result", defaultKicker: "No place selected", defaultTitle: "Explore a comfortable place to visit",
+    defaultDescription: "Choose a destination to check crowd conditions near its closest metro station.",
+    normalSearch: "Place Search", aiRecommendation: "AI Picks", startAnalysis: "Analyze",
+    touristHelper: "FOR VISITORS", balanceTitle: "Balance-friendly picks",
+    balanceDescription: "Enter a mock EasyCard/EasyWallet balance to find affordable spending ideas.",
+    balanceAction: "Recommend", balanceDisclaimer: "Not connected to a real account. Balances, merchants and prices are prototype data.",
+    placePlaceholder: "Enter a destination, e.g. Taipei Arena", balanceEmpty: "No prototype option is affordable with this balance.",
+    remaining: "Estimated balance after spending", nearestStation: "Nearest metro", update: "updated",
+  },
+  ja: {
+    appTitle: "スマート移動アシスタント", help: "ヘルプ", searchEntry: "場所を検索、またはAIに希望を伝える",
+    clearResult: "結果をクリア", defaultKicker: "場所が選択されていません", defaultTitle: "快適に行ける場所を探す",
+    defaultDescription: "目的地を選ぶと、最寄りのMRT駅周辺の混雑状況を確認できます。",
+    normalSearch: "場所検索", aiRecommendation: "AIおすすめ", startAnalysis: "分析する",
+    touristHelper: "旅行者向け", balanceTitle: "残高でおすすめ",
+    balanceDescription: "模擬EasyCard／EasyWallet残高を入力して、利用可能な候補を探します。",
+    balanceAction: "おすすめ", balanceDisclaimer: "実際の口座には接続していません。残高・店舗・価格は試作データです。",
+    placePlaceholder: "目的地を入力（例：台北アリーナ）", balanceEmpty: "この残高で利用できる模擬候補はありません。",
+    remaining: "利用後の推定残高", nearestStation: "最寄りMRT", update: "更新",
+  },
+  ko: {
+    appTitle: "스마트 여행 도우미", help: "도움말", searchEntry: "장소를 검색하거나 AI에게 원하는 곳을 말해 주세요",
+    clearResult: "결과 지우기", defaultKicker: "선택한 장소 없음", defaultTitle: "지금 편하게 갈 수 있는 곳 찾기",
+    defaultDescription: "목적지를 선택하면 가장 가까운 MRT역 주변의 혼잡도를 분석합니다.",
+    normalSearch: "장소 검색", aiRecommendation: "AI 추천", startAnalysis: "분석하기",
+    touristHelper: "여행자용", balanceTitle: "잔액 맞춤 추천",
+    balanceDescription: "모의 EasyCard/EasyWallet 잔액을 입력해 이용 가능한 소비 선택지를 확인하세요.",
+    balanceAction: "추천", balanceDisclaimer: "실제 계정과 연결되지 않았으며 잔액, 가맹점, 가격은 프로토타입 데이터입니다.",
+    placePlaceholder: "목적지 입력 (예: 타이베이 아레나)", balanceEmpty: "이 잔액으로 이용 가능한 모의 추천이 없습니다.",
+    remaining: "사용 후 예상 잔액", nearestStation: "가장 가까운 MRT", update: "업데이트",
+  },
+};
+
+function t(key) {
+  return translations[currentLanguage]?.[key] || translations["zh-Hant"][key] || key;
+}
 
 if (typeof L !== "undefined") {
   map = L.map("map", { zoomControl: false }).setView([25.0478, 121.517], 13);
@@ -17,6 +71,75 @@ const searchScreen = document.querySelector("#search-screen");
 const searchTitle = document.querySelector("#search-title");
 const normalPanel = document.querySelector("#normal-panel");
 const aiPanel = document.querySelector("#ai-panel");
+const bottomSheet = document.querySelector(".bottom-sheet");
+const sheetHandle = document.querySelector("#sheet-handle");
+
+function setSheetState(state) {
+  bottomSheet.classList.remove("is-collapsed", "is-half", "is-expanded");
+  bottomSheet.classList.add(`is-${state}`);
+  bottomSheet.dataset.sheetState = state;
+  sheetHandle.setAttribute("aria-expanded", String(state !== "collapsed"));
+  if (state !== "collapsed") bottomSheet.style.height = "";
+  window.setTimeout(() => map?.invalidateSize(), 260);
+}
+
+function cycleSheetState() {
+  const next = { collapsed: "half", half: "expanded", expanded: "collapsed" }[bottomSheet.dataset.sheetState] || "half";
+  setSheetState(next);
+}
+
+function setupSheetDrag() {
+  let startY = 0;
+  let startHeight = 0;
+  let moved = false;
+  sheetHandle.addEventListener("pointerdown", (event) => {
+    startY = event.clientY;
+    startHeight = bottomSheet.getBoundingClientRect().height;
+    moved = false;
+    bottomSheet.classList.add("is-dragging");
+    sheetHandle.setPointerCapture(event.pointerId);
+  });
+  sheetHandle.addEventListener("pointermove", (event) => {
+    if (!bottomSheet.classList.contains("is-dragging")) return;
+    const delta = startY - event.clientY;
+    if (Math.abs(delta) > 4) moved = true;
+    const minHeight = 150;
+    const maxHeight = window.innerHeight - 150;
+    bottomSheet.style.height = `${Math.max(minHeight, Math.min(maxHeight, startHeight + delta))}px`;
+  });
+  sheetHandle.addEventListener("pointerup", (event) => {
+    bottomSheet.classList.remove("is-dragging");
+    sheetHandle.releasePointerCapture(event.pointerId);
+    const height = bottomSheet.getBoundingClientRect().height;
+    bottomSheet.style.height = "";
+    if (!moved) return cycleSheetState();
+    if (height < window.innerHeight * 0.3) setSheetState("collapsed");
+    else if (height > window.innerHeight * 0.62) setSheetState("expanded");
+    else setSheetState("half");
+  });
+}
+
+function applyLanguage(language) {
+  currentLanguage = translations[language] ? language : "zh-Hant";
+  document.documentElement.lang = currentLanguage;
+  document.title = t("appTitle");
+  document.querySelector(".top-bar h1").textContent = t("appTitle");
+  document.querySelector("#open-search span:last-child").textContent = t("searchEntry");
+  document.querySelector("#map-language-button").textContent = { "zh-Hant": "繁中", en: "EN", ja: "日本語", ko: "한국어" }[currentLanguage];
+  document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.dataset.i18n); });
+  document.querySelector('[data-mode="normal"]').textContent = t("normalSearch");
+  document.querySelector('[data-mode="ai"]').textContent = t("aiRecommendation");
+  document.querySelector("#normal-submit").textContent = t("startAnalysis");
+  document.querySelector("#place-input").placeholder = t("placePlaceholder");
+  document.querySelectorAll("#language-menu button").forEach((button) => button.classList.toggle("is-active", button.dataset.language === currentLanguage));
+  if (!hasActiveResult) resetResult(false);
+  setMode(aiPanel.hidden ? "normal" : "ai");
+}
+
+function toggleLanguageMenu() {
+  const menu = document.querySelector("#language-menu");
+  menu.hidden = !menu.hidden;
+}
 
 function openSearch() {
   searchScreen.classList.add("is-open");
@@ -32,7 +155,7 @@ function closeSearch() {
 
 function setMode(mode) {
   const isAiMode = mode === "ai";
-  searchTitle.textContent = isAiMode ? "AI 推薦" : "普通搜尋";
+  searchTitle.textContent = isAiMode ? t("aiRecommendation") : t("normalSearch");
   normalPanel.hidden = isAiMode;
   aiPanel.hidden = !isAiMode;
 
@@ -94,6 +217,8 @@ function renderAnalysis(result) {
   const comfort = result.comfort;
   const crowd = crowdPresentation(comfort.factors.effective_crowd_index);
   const comfortDisplay = comfortPresentation(comfort.status);
+  hasActiveResult = true;
+  document.querySelector("#reset-map").hidden = false;
   document.querySelector("#sheet-kicker").textContent = `${result.resolved_place.place_name} · 最近捷運站`;
   document.querySelector("#sheet-title").textContent = station.station_name;
   document.querySelector("#sheet-description").textContent = `你搜尋的目的地距離最近捷運站約 ${station.distance_m} 公尺。`;
@@ -120,7 +245,62 @@ function renderAnalysis(result) {
   document.querySelector("#recommendation-section").hidden = true;
   renderMerchants(result.nearby_merchants || [], result.merchant_summary);
   if (map) map.setView([station.latitude, station.longitude], 15);
+  setSheetState("half");
   closeSearch();
+}
+
+function resetResult(clearInputs = true) {
+  hasActiveResult = false;
+  document.querySelector("#reset-map").hidden = true;
+  document.querySelector("#sheet-kicker").textContent = t("defaultKicker");
+  document.querySelector("#sheet-title").textContent = t("defaultTitle");
+  document.querySelector("#sheet-description").textContent = t("defaultDescription");
+  document.querySelector("#decision-label").textContent = t("defaultKicker");
+  document.querySelector("#decision-summary").textContent = t("defaultDescription");
+  document.querySelector("#comfort-score").textContent = "--";
+  document.querySelector("#comfort-gauge").style.setProperty("--score-angle", "0deg");
+  document.querySelector("#crowd-visual").dataset.level = "0";
+  document.querySelector("#crowd-label").textContent = "--";
+  document.querySelector("#updated-time").textContent = "--";
+  document.querySelector("#comfort-reasons").hidden = true;
+  document.querySelector("#merchant-section").hidden = true;
+  document.querySelector("#recommendation-section").hidden = true;
+  if (clearInputs) {
+    document.querySelector("#place-input").value = "";
+    document.querySelector("#ai-prompt").value = "";
+    document.querySelectorAll(".choice-chip.is-selected, .suggestion-chip.is-selected").forEach((item) => item.classList.remove("is-selected"));
+  }
+  map?.setView(DEFAULT_MAP_VIEW.center, DEFAULT_MAP_VIEW.zoom);
+  setSheetState("collapsed");
+}
+
+async function recommendBalance() {
+  const balance = Number(document.querySelector("#balance-input").value);
+  if (!Number.isFinite(balance) || balance < 0) return;
+  const response = await fetch("/api/balance-recommend", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ balance, limit: 3 }),
+  });
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.detail || "Balance recommendation failed");
+  const results = document.querySelector("#balance-results");
+  results.replaceChildren();
+  if (!payload.recommendations.length) {
+    const empty = document.createElement("p");
+    empty.className = "balance-result";
+    empty.textContent = t("balanceEmpty");
+    results.append(empty);
+  } else {
+    payload.recommendations.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "balance-result";
+      card.innerHTML = `<strong>${item.merchant_name}</strong><span>${item.category} · ${item.price_range}</span><span>${t("remaining")}: NT$${item.estimated_remaining}</span>`;
+      results.append(card);
+    });
+  }
+  results.hidden = false;
+  setSheetState("expanded");
 }
 
 function merchantSummaryText(merchants, summary) {
@@ -292,6 +472,16 @@ async function loadPrototypeData() {
 
 document.querySelector("#open-search").addEventListener("click", openSearch);
 document.querySelector("#close-search").addEventListener("click", closeSearch);
+document.querySelector("#reset-map").addEventListener("click", () => resetResult(true));
+document.querySelector("#balance-submit").addEventListener("click", () => recommendBalance().catch((error) => window.alert(error.message)));
+document.querySelector("#map-language-button").addEventListener("click", toggleLanguageMenu);
+document.querySelector("#search-language-button").addEventListener("click", toggleLanguageMenu);
+document.querySelectorAll("#language-menu button").forEach((button) => {
+  button.addEventListener("click", () => {
+    applyLanguage(button.dataset.language);
+    document.querySelector("#language-menu").hidden = true;
+  });
+});
 
 document.querySelectorAll(".mode-tab").forEach((tab) => {
   tab.addEventListener("click", () => setMode(tab.dataset.mode));
@@ -350,4 +540,7 @@ document.querySelector("#ai-submit").addEventListener("click", async () => {
   }
 });
 
+setupSheetDrag();
+applyLanguage("zh-Hant");
 loadPrototypeData().catch((error) => console.error("無法載入 Prototype 資料", error));
+
