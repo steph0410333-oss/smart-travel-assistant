@@ -5,7 +5,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from agent.travel_decision_agent import TravelDecisionAgent
-from app.schemas import PlaceAnalysisRequest, RecommendationRequest
+from app.schemas import BalanceRecommendationRequest, PlaceAnalysisRequest, RecommendationRequest
+from services.balance_service import recommend_by_balance
 from services.comfort_service import analyze_station_comfort
 from services.intent_service import parse_recommendation_intent
 from services.merchant_service import find_nearby_merchants, get_merchants, summarize_merchants
@@ -74,6 +75,18 @@ def list_merchants(
     }
 
 
+@app.post("/api/balance-recommend")
+def balance_recommend(request: BalanceRecommendationRequest) -> dict:
+    recommendations = recommend_by_balance(request.balance, request.limit)
+    return {
+        "data_label": "MOCK BALANCE / MOCK EASYWALLET MERCHANT DATA / PROTOTYPE ONLY",
+        "currency": "TWD",
+        "balance": request.balance,
+        "recommendations": recommendations,
+        "disclaimer": "未連接真實悠遊卡或悠遊付帳戶，餘額、價格與商家皆為 Prototype 模擬資料。",
+    }
+
+
 @app.post("/api/analyze-place")
 def analyze_place(request: PlaceAnalysisRequest) -> dict:
     place = resolve_place(request.place)
@@ -116,3 +129,4 @@ def recommend(request: RecommendationRequest) -> dict:
 @app.post("/api/agent/recommend")
 def agent_recommend(request: RecommendationRequest) -> dict:
     return travel_decision_agent.run(request.prompt)
+
