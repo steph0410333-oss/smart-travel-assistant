@@ -1,7 +1,7 @@
 import unittest
 
-from app.main import analyze_place, health_check, list_merchants, recommend
-from app.schemas import PlaceAnalysisRequest, RecommendationRequest
+from app.main import analyze_place, balance_recommend, health_check, list_merchants, recommend
+from app.schemas import BalanceRecommendationRequest, PlaceAnalysisRequest, RecommendationRequest
 
 
 class ApiContractTests(unittest.TestCase):
@@ -26,6 +26,15 @@ class ApiContractTests(unittest.TestCase):
         self.assertIn("MOCK", result["data_label"])
         self.assertEqual(result["summary"]["total"], len(result["merchants"]))
 
+    def test_balance_recommendation_is_affordable_and_labeled_mock(self) -> None:
+        result = balance_recommend(BalanceRecommendationRequest(balance=200, limit=3))
+        self.assertIn("MOCK BALANCE", result["data_label"])
+        self.assertGreaterEqual(len(result["recommendations"]), 1)
+        self.assertTrue(
+            all(item["suggested_spend"] <= result["balance"] for item in result["recommendations"])
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
+
