@@ -3,6 +3,7 @@ import unittest
 from agent.gemini_adapter import GeminiTravelAdapter
 from agent.travel_decision_agent import TravelDecisionAgent
 from services.comfort_service import analyze_station_comfort
+from services.balance_service import recommend_by_balance
 from services.intent_service import parse_recommendation_intent
 from services.merchant_service import find_nearby_merchants, get_merchants, summarize_merchants
 from services.recommendation_service import recommend_places
@@ -71,6 +72,14 @@ class MerchantServiceTests(unittest.TestCase):
         self.assertEqual(summarize_merchants(merchants)["total"], len(merchants))
 
 
+class BalanceServiceTests(unittest.TestCase):
+    def test_recommends_only_affordable_mock_merchants(self) -> None:
+        recommendations = recommend_by_balance(100, limit=3)
+        self.assertGreaterEqual(len(recommendations), 1)
+        self.assertTrue(all(item["suggested_spend"] <= 100 for item in recommendations))
+        self.assertTrue(all(item["estimated_remaining"] >= 0 for item in recommendations))
+
+
 class TravelDecisionAgentTests(unittest.TestCase):
     def test_fallback_orchestrates_tools_and_returns_trace(self) -> None:
         result = TravelDecisionAgent(GeminiTravelAdapter(api_key="")).run(
@@ -109,3 +118,4 @@ class TravelDecisionAgentTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
