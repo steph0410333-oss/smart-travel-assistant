@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>智慧出行小幫手</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <div id="map" aria-label="即時人流探索地圖"></div>
+      <header class="top-bar">
+        <button class="icon-button" aria-label="返回">←</button>
+        <div><p class="eyebrow">悠遊付</p><h1>智慧出行小幫手</h1></div>
+        <button class="text-button">說明</button>
+      </header>
+      <button id="open-search" class="search-entry" type="button">
+        <span aria-hidden="true">⌕</span>
+        <span>搜尋地點，或告訴 AI 你想去哪裡</span>
+      </button>
+      <div class="prototype-badge">SIMULATED DATA · PROTOTYPE ONLY</div>
+      <div class="map-legend" aria-label="人流顏色圖例">
+        <span><i class="legend-color low"></i>較少</span>
+        <span><i class="legend-color medium"></i>普通</span>
+        <span><i class="legend-color high"></i>偏高</span>
+        <span><i class="legend-color critical"></i>擁擠</span>
+      </div>
+      <section class="bottom-sheet" aria-label="地點資訊">
+        <div class="sheet-handle"></div>
+        <p id="sheet-kicker" class="sheet-kicker">尚未選擇地點</p>
+        <h2 id="sheet-title">從地圖探索現在適合去哪裡</h2>
+        <p id="sheet-description" class="sheet-description">選擇目的地後，我們會分析最近捷運站的人流，協助你判斷現在是否適合前往。</p>
+        <section class="decision-card" aria-label="出行決策">
+          <div id="comfort-status" class="decision-gauge-wrap">
+            <div id="comfort-gauge" class="comfort-gauge" aria-hidden="true">
+              <span class="gauge-center"><strong id="comfort-score">--</strong><small>分</small></span>
+            </div>
+            <small>出行舒適度</small>
+          </div>
+          <div class="decision-copy">
+            <p>現在適合前往嗎？</p>
+            <h3 id="decision-label">請先選擇地點</h3>
+            <p id="decision-summary">完成搜尋後會在這裡顯示具體建議。</p>
+          </div>
+        </section>
+        <ul id="comfort-reasons" class="comfort-reasons" hidden></ul>
+        <div class="context-row">
+          <div id="crowd-status" class="context-card crowd-context">
+            <span id="crowd-visual" class="crowd-people" data-level="0" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </span>
+            <span><small>最近捷運站人流</small><strong id="crowd-label">尚未分析</strong></span>
+          </div>
+          <div class="context-card update-context"><small>資料更新</small><strong id="updated-time">--</strong></div>
+        </div>
+        <section id="merchant-section" class="merchant-section" hidden>
+          <div class="merchant-heading">
+            <div><small>目的地周邊 700 公尺</small><h3>悠遊付可用商家</h3></div>
+            <span>MOCK DATA</span>
+          </div>
+          <p id="merchant-summary" class="merchant-summary"></p>
+          <div id="merchant-list" class="merchant-list"></div>
+          <p class="merchant-disclaimer">商家、營業時間及優惠皆為 Prototype 假設資料，不代表實際合作或活動。</p>
+        </section>
+        <section id="recommendation-section" class="recommendation-section" hidden>
+          <div class="recommendation-heading">
+            <div><small>AI 推薦結果</small><h3>適合你的 Top 3</h3></div>
+            <span id="agent-mode-badge">MOCK DATA</span>
+          </div>
+          <p id="agent-summary" class="agent-summary"></p>
+          <div id="recommendation-list" class="recommendation-list"></div>
+          <details id="agent-trace" class="agent-trace">
+            <summary>查看 Travel Decision Agent 分析流程</summary>
+            <ol id="agent-trace-list"></ol>
+          </details>
+        </section>
+      </section>
+    </main>
+
+    <section id="search-screen" class="search-screen" aria-hidden="true">
+      <div class="search-page">
+        <header class="search-header">
+          <button id="close-search" class="plain-icon-button" type="button" aria-label="返回地圖">←</button>
+          <h2 id="search-title">普通搜尋</h2>
+          <div class="header-actions" aria-label="輔助功能">
+            <button class="plain-icon-button" type="button" aria-label="說明">?</button>
+            <button class="plain-icon-button" type="button" aria-label="切換語言">◎</button>
+          </div>
+        </header>
+
+        <div class="mode-tabs" role="tablist" aria-label="搜尋模式">
+          <button class="mode-tab is-active" type="button" role="tab" data-mode="normal" aria-selected="true">普通搜尋</button>
+          <button class="mode-tab" type="button" role="tab" data-mode="ai" aria-selected="false">AI 推薦</button>
+        </div>
+
+        <div id="normal-panel" class="mode-panel">
+          <label class="field-row">
+            <span class="field-icon" aria-hidden="true">⌖</span>
+            <span class="sr-only">地點</span>
+            <input id="place-input" type="text" placeholder="輸入目的地，例如台北小巨蛋" autocomplete="off" />
+          </label>
+          <div id="place-suggestions" class="place-suggestions" hidden></div>
+          <label class="field-row">
+            <span class="field-icon" aria-hidden="true">◷</span>
+            <span class="sr-only">時間</span>
+            <input type="time" value="19:00" />
+          </label>
+          <label class="field-row">
+            <span class="field-icon" aria-hidden="true">⚑</span>
+            <span class="sr-only">目的</span>
+            <select>
+              <option value="">選擇出行目的</option>
+              <option>吃飯</option>
+              <option>逛街</option>
+              <option>展覽</option>
+              <option>約會</option>
+              <option>活動</option>
+            </select>
+          </label>
+
+          <div class="conditions-heading">
+            <div><p class="section-label">其他條件</p><p>可複選，協助我們理解你的偏好</p></div>
+            <button id="toggle-conditions" class="small-link" type="button">收合</button>
+          </div>
+          <div id="condition-chips" class="chip-grid">
+            <button class="choice-chip" type="button">不想太擠</button>
+            <button class="choice-chip" type="button">捷運方便</button>
+            <button class="choice-chip" type="button">少走路</button>
+            <button class="choice-chip" type="button">室內為主</button>
+            <button class="choice-chip" type="button">親近自然</button>
+            <button class="choice-chip" type="button">有悠遊付優惠</button>
+          </div>
+
+          <button id="normal-submit" class="primary-action" type="button">開始分析</button>
+        </div>
+
+        <div id="ai-panel" class="mode-panel" hidden>
+          <label class="ai-prompt-box">
+            <span class="sr-only">描述你想去的地方</span>
+            <textarea id="ai-prompt" rows="4" placeholder="例如：今天下午想找一個不太擠、捷運可到、適合散步和喝咖啡的地方"></textarea>
+            <span class="prompt-actions">
+              <button type="button" class="prompt-icon" aria-label="語音輸入，第一版尚未開放" disabled>●</button>
+              <button id="ai-submit" type="button" class="prompt-icon submit" aria-label="送出 AI 推薦">⌕</button>
+            </span>
+          </label>
+
+          <div class="suggestion-block">
+            <p class="section-label">你可能感興趣</p>
+            <p>點選建議詞，快速組合需求</p>
+            <div class="suggestion-grid">
+              <button class="suggestion-chip" type="button">避開人潮</button>
+              <button class="suggestion-chip" type="button">親近自然</button>
+              <button class="suggestion-chip" type="button">熱門景點</button>
+              <button class="suggestion-chip" type="button">適合看展</button>
+              <button class="suggestion-chip" type="button">適合約會</button>
+              <button class="suggestion-chip" type="button">咖啡散步</button>
+              <button class="suggestion-chip" type="button">親子同樂</button>
+              <button class="suggestion-chip" type="button">捷運方便</button>
+              <button class="suggestion-chip" type="button">隨機推薦</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="history-section" aria-label="歷史搜尋">
+          <div class="history-heading"><h3>歷史搜尋</h3><button type="button" class="small-link">編輯</button></div>
+          <button class="history-item" type="button"><span class="history-dot"></span><span><strong>台北車站</strong><small>25 分鐘前</small></span><span>›</span></button>
+          <button class="history-item" type="button"><span class="history-dot"></span><span><strong>大安森林公園</strong><small>昨天 18:20</small></span><span>›</span></button>
+          <button class="history-item" type="button"><span class="history-dot"></span><span><strong>中山站咖啡散步</strong><small>3 天前</small></span><span>›</span></button>
+        </section>
+      </div>
+    </section>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
