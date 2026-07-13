@@ -1,0 +1,112 @@
+[
+  {
+    "station_id": "R10-BL12",
+    "station_name": "台北車站",
+    "latitude": 25.0478,
+    "longitude": 121.5170,
+    "crowd_index": 78,
+    "nearby_crowd_index": 72,
+    "peak_index": 80,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "G12-R11",
+    "station_name": "中山站",
+    "latitude": 25.0527,
+    "longitude": 121.5204,
+    "crowd_index": 55,
+    "nearby_crowd_index": 58,
+    "peak_index": 62,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "BL11-G12",
+    "station_name": "西門站",
+    "latitude": 25.0421,
+    "longitude": 121.5081,
+    "crowd_index": 70,
+    "nearby_crowd_index": 76,
+    "peak_index": 74,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "G17",
+    "station_name": "台北小巨蛋站",
+    "latitude": 25.0518,
+    "longitude": 121.5516,
+    "crowd_index": 86,
+    "nearby_crowd_index": 82,
+    "peak_index": 88,
+    "event_flag": true,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "G16-BR11",
+    "station_name": "南京復興站",
+    "latitude": 25.0522,
+    "longitude": 121.5440,
+    "crowd_index": 48,
+    "nearby_crowd_index": 50,
+    "peak_index": 58,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "R06",
+    "station_name": "大安森林公園站",
+    "latitude": 25.0332,
+    "longitude": 121.5355,
+    "crowd_index": 28,
+    "nearby_crowd_index": 32,
+    "peak_index": 38,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "R15",
+    "station_name": "劍潭站",
+    "latitude": 25.0849,
+    "longitude": 121.5251,
+    "crowd_index": 66,
+    "nearby_crowd_index": 71,
+    "peak_index": 69,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "BR20",
+    "station_name": "大湖公園站",
+    "latitude": 25.0837,
+    "longitude": 121.6023,
+    "crowd_index": 20,
+    "nearby_crowd_index": 24,
+    "peak_index": 30,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "BL17",
+    "station_name": "國父紀念館站",
+    "latitude": 25.0413,
+    "longitude": 121.5577,
+    "crowd_index": 45,
+    "nearby_crowd_index": 52,
+    "peak_index": 55,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  },
+  {
+    "station_id": "BL13",
+    "station_name": "善導寺站",
+    "latitude": 25.0448,
+    "longitude": 121.5232,
+    "crowd_index": 38,
+    "nearby_crowd_index": 43,
+    "peak_index": 49,
+    "event_flag": false,
+    "updated_at": "2026-07-13T18:30:00+08:00"
+  }
+]
