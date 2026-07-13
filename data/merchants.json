@@ -1,0 +1,92 @@
+[
+  {
+    "merchant_id": "M001", "merchant_name": "綠光咖啡小巨蛋店（示意）",
+    "latitude": 25.0508, "longitude": 121.5492, "category": "咖啡",
+    "price_range": "$150–350", "typical_spend": 280, "business_hours": "08:00–21:00",
+    "easywallet_available": true, "discount_available": true, "discount_text": "悠遊付滿 200 元折 20 元（模擬優惠）"
+  },
+  {
+    "merchant_id": "M002", "merchant_name": "日常食堂南京店（示意）",
+    "latitude": 25.0523, "longitude": 121.5485, "category": "餐飲",
+    "price_range": "$180–420", "typical_spend": 320, "business_hours": "11:00–21:30",
+    "easywallet_available": true, "discount_available": false, "discount_text": null
+  },
+  {
+    "merchant_id": "M003", "merchant_name": "森邊咖啡大安店（示意）",
+    "latitude": 25.0321, "longitude": 121.5340, "category": "咖啡",
+    "price_range": "$120–320", "typical_spend": 260, "business_hours": "09:00–20:30",
+    "easywallet_available": true, "discount_available": true, "discount_text": "指定飲品 9 折（模擬優惠）"
+  },
+  {
+    "merchant_id": "M004", "merchant_name": "公園生活選物（示意）",
+    "latitude": 25.0307, "longitude": 121.5362, "category": "生活百貨",
+    "price_range": "$80–600", "typical_spend": 350, "business_hours": "10:30–20:00",
+    "easywallet_available": true, "discount_available": false, "discount_text": null
+  },
+  {
+    "merchant_id": "M005", "merchant_name": "北門輕食站前店（示意）",
+    "latitude": 25.0471, "longitude": 121.5160, "category": "餐飲",
+    "price_range": "$100–300", "typical_spend": 230, "business_hours": "07:30–21:00",
+    "easywallet_available": true, "discount_available": true, "discount_text": "早餐組合折 15 元（模擬優惠）"
+  },
+  {
+    "merchant_id": "M006", "merchant_name": "旅人便利站（示意）",
+    "latitude": 25.0485, "longitude": 121.5181, "category": "便利商店",
+    "price_range": "$35–250", "typical_spend": 120, "business_hours": "24 小時",
+    "easywallet_available": true, "discount_available": false, "discount_text": null
+  },
+  {
+    "merchant_id": "M007", "merchant_name": "西門好食光（示意）",
+    "latitude": 25.0430, "longitude": 121.5069, "category": "餐飲",
+    "price_range": "$150–450", "typical_spend": 330, "business_hours": "11:00–22:00",
+    "easywallet_available": true, "discount_available": true, "discount_text": "悠遊付付款送小菜（模擬優惠）"
+  },
+  {
+    "merchant_id": "M008", "merchant_name": "紅樓茶飲小舖（示意）",
+    "latitude": 25.0427, "longitude": 121.5076, "category": "飲料",
+    "price_range": "$50–150", "typical_spend": 90, "business_hours": "11:00–22:30",
+    "easywallet_available": true, "discount_available": false, "discount_text": null
+  },
+  {
+    "merchant_id": "M009", "merchant_name": "中山慢慢咖啡（示意）",
+    "latitude": 25.0539, "longitude": 121.5202, "category": "咖啡",
+    "price_range": "$140–360", "typical_spend": 290, "business_hours": "10:00–21:00",
+    "easywallet_available": true, "discount_available": true, "discount_text": "平日下午飲品 9 折（模擬優惠）"
+  },
+  {
+    "merchant_id": "M010", "merchant_name": "巷口甜點研究所（示意）",
+    "latitude": 25.0526, "longitude": 121.5220, "category": "甜點",
+    "price_range": "$120–380", "typical_spend": 300, "business_hours": "12:00–20:00",
+    "easywallet_available": true, "discount_available": false, "discount_text": null
+  },
+  {
+    "merchant_id": "M011", "merchant_name": "士林夜食小站（示意）",
+    "latitude": 25.0887, "longitude": 121.5234, "category": "小吃",
+    "price_range": "$60–250", "typical_spend": 180, "business_hours": "16:00–00:00",
+    "easywallet_available": true, "discount_available": true, "discount_text": "指定套餐折 20 元（模擬優惠）"
+  },
+  {
+    "merchant_id": "M012", "merchant_name": "湖畔輕食咖啡（示意）",
+    "latitude": 25.0830, "longitude": 121.6018, "category": "咖啡",
+    "price_range": "$120–330", "typical_spend": 260, "business_hours": "09:00–19:30",
+    "easywallet_available": true, "discount_available": true, "discount_text": "自備杯折 10 元（模擬優惠）"
+  },
+  {
+    "merchant_id": "M013", "merchant_name": "松菸文創選物店（示意）",
+    "latitude": 25.0442, "longitude": 121.5598, "category": "文創選物",
+    "price_range": "$100–900", "typical_spend": 480, "business_hours": "10:00–20:00",
+    "easywallet_available": true, "discount_available": false, "discount_text": null
+  },
+  {
+    "merchant_id": "M014", "merchant_name": "松菸午後咖啡（示意）",
+    "latitude": 25.0432, "longitude": 121.5613, "category": "咖啡",
+    "price_range": "$150–400", "typical_spend": 320, "business_hours": "10:30–20:30",
+    "easywallet_available": true, "discount_available": true, "discount_text": "甜點飲品組合折 30 元（模擬優惠）"
+  },
+  {
+    "merchant_id": "M015", "merchant_name": "華山小日子咖啡（示意）",
+    "latitude": 25.0437, "longitude": 121.5285, "category": "咖啡",
+    "price_range": "$130–360", "typical_spend": 280, "business_hours": "10:00–21:00",
+    "easywallet_available": true, "discount_available": true, "discount_text": "悠遊付滿 300 元折 25 元（模擬優惠）"
+  }
+]
