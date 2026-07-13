@@ -23,6 +23,8 @@
 - [x] Phase 7：模擬悠遊付商家
 - [ ] Phase 8：測試、GitHub 與部署
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/steph0410333-oss/smart-travel-assistant)
+
 ## 地點搜尋的 Prototype 範圍
 
 普通搜尋讓使用者輸入「目的地」，系統自動完成以下流程：
@@ -60,7 +62,7 @@ Gemini 預設使用 `gemini-2.5-flash`，可在 `.env` 以 `GEMINI_MODEL` 調整
 - [x] GitHub secret / ignore 安全檢查
 - [x] Render 免費方案部署設定與 health check
 - [x] 公開部署說明文件
-- [ ] 建立或授權 GitHub 儲存庫並上傳程式碼
+- [x] 建立並授權 GitHub 儲存庫，安全上傳全部程式碼
 - [ ] 由 Render 連接 GitHub 並取得公開網址
 
 部署方式請見 [`DEPLOYMENT.md`](DEPLOYMENT.md)。
