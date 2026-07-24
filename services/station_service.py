@@ -77,8 +77,17 @@ def resolve_place(query: str) -> dict[str, Any] | None:
 
     candidates: list[tuple[int, dict[str, Any]]] = []
     for place in get_places():
-        names = [place["place_name"], *place.get("aliases", [])]
+        names = [
+            place["place_name"],
+            place.get("place_name_en", ""),
+            place.get("place_name_ja", ""),
+            place.get("place_name_ko", ""),
+            *place.get("aliases", []),
+            *place.get("aliases_en", []),
+        ]
         for name in names:
+            if not name:
+                continue
             normalized_name = _normalize(name)
             if normalized_name == normalized_query:
                 return place
