@@ -1,47 +1,47 @@
 [
   {
-    "place_id": "P001", "place_name": "台北小巨蛋", "latitude": 25.0514, "longitude": 121.5501,
-    "aliases": ["小巨蛋", "台北小巨蛋體育館"],
+    "place_id": "P001", "place_name": "台北小巨蛋", "place_name_en": "Taipei Arena", "place_name_ja": "台北アリーナ", "place_name_ko": "타이베이 아레나", "latitude": 25.0514, "longitude": 121.5501,
+    "aliases": ["小巨蛋", "台北小巨蛋體育館"], "aliases_en": ["Taipei Arena"],
     "categories": ["活動", "聚餐"], "features": ["室內", "冷氣", "捷運方便"], "typical_budget": 500
   },
   {
-    "place_id": "P002", "place_name": "大安森林公園周邊", "latitude": 25.0316, "longitude": 121.5350,
-    "aliases": ["大安森林公園", "大安公園"],
+    "place_id": "P002", "place_name": "大安森林公園周邊", "place_name_en": "Daan Forest Park Area", "place_name_ja": "大安森林公園周辺", "place_name_ko": "다안삼림공원 주변", "latitude": 25.0316, "longitude": 121.5350,
+    "aliases": ["大安森林公園", "大安公園"], "aliases_en": ["Daan Forest Park"],
     "categories": ["散步", "咖啡", "自然", "聊天"], "features": ["捷運方便", "附近有室內空間", "附近有冷氣"], "typical_budget": 350
   },
   {
-    "place_id": "P003", "place_name": "台北車站商圈", "latitude": 25.0478, "longitude": 121.5170,
-    "aliases": ["台北車站", "北車", "臺北車站"],
+    "place_id": "P003", "place_name": "台北車站商圈", "place_name_en": "Taipei Main Station District", "place_name_ja": "台北駅周辺", "place_name_ko": "타이베이 메인역 상권", "latitude": 25.0478, "longitude": 121.5170,
+    "aliases": ["台北車站", "北車", "臺北車站"], "aliases_en": ["Taipei Main Station"],
     "categories": ["咖啡", "聚餐", "購物", "聊天"], "features": ["室內", "冷氣", "捷運方便", "雨天適合"], "typical_budget": 450
   },
   {
-    "place_id": "P004", "place_name": "西門町", "latitude": 25.0436, "longitude": 121.5078,
-    "aliases": ["西門商圈"],
+    "place_id": "P004", "place_name": "西門町", "place_name_en": "Ximending", "place_name_ja": "西門町", "place_name_ko": "시먼딩", "latitude": 25.0436, "longitude": 121.5078,
+    "aliases": ["西門商圈"], "aliases_en": ["Ximending"],
     "categories": ["咖啡", "聚餐", "購物", "聊天"], "features": ["室內", "冷氣", "捷運方便"], "typical_budget": 500
   },
   {
-    "place_id": "P005", "place_name": "中山站咖啡商圈", "latitude": 25.0533, "longitude": 121.5210,
-    "aliases": ["中山商圈", "中山站", "中山站商圈"],
+    "place_id": "P005", "place_name": "中山站咖啡商圈", "place_name_en": "Zhongshan Station Café District", "place_name_ja": "中山駅カフェエリア", "place_name_ko": "중산역 카페 거리", "latitude": 25.0533, "longitude": 121.5210,
+    "aliases": ["中山商圈", "中山站", "中山站商圈"], "aliases_en": ["Zhongshan Station", "Zhongshan Café District"],
     "categories": ["咖啡", "聊天", "約會", "購物"], "features": ["室內", "冷氣", "捷運方便", "適合久坐"], "typical_budget": 400
   },
   {
-    "place_id": "P006", "place_name": "士林夜市", "latitude": 25.0880, "longitude": 121.5240,
-    "aliases": ["士林市場"],
+    "place_id": "P006", "place_name": "士林夜市", "place_name_en": "Shilin Night Market", "place_name_ja": "士林夜市", "place_name_ko": "스린 야시장", "latitude": 25.0880, "longitude": 121.5240,
+    "aliases": ["士林市場"], "aliases_en": ["Shilin Night Market"],
     "categories": ["聚餐", "小吃", "逛街"], "features": ["捷運方便", "戶外"], "typical_budget": 500
   },
   {
-    "place_id": "P007", "place_name": "大湖公園周邊", "latitude": 25.0836, "longitude": 121.6028,
-    "aliases": ["大湖公園", "大湖公園站"],
+    "place_id": "P007", "place_name": "大湖公園周邊", "place_name_en": "Dahu Park Area", "place_name_ja": "大湖公園周辺", "place_name_ko": "다후공원 주변", "latitude": 25.0836, "longitude": 121.6028,
+    "aliases": ["大湖公園", "大湖公園站"], "aliases_en": ["Dahu Park"],
     "categories": ["散步", "咖啡", "自然", "聊天"], "features": ["捷運方便", "附近有室內空間", "附近有冷氣"], "typical_budget": 300
   },
   {
-    "place_id": "P008", "place_name": "松山文創園區", "latitude": 25.0437, "longitude": 121.5606,
-    "aliases": ["松菸", "松山文創"],
+    "place_id": "P008", "place_name": "松山文創園區", "place_name_en": "Songshan Cultural and Creative Park", "place_name_ja": "松山文創園区", "place_name_ko": "송산문화창의공원", "latitude": 25.0437, "longitude": 121.5606,
+    "aliases": ["松菸", "松山文創"], "aliases_en": ["Songshan Creative Park"],
     "categories": ["展覽", "咖啡", "散步", "聊天"], "features": ["室內", "冷氣", "捷運方便"], "typical_budget": 450
   },
   {
-    "place_id": "P009", "place_name": "華山1914文化創意產業園區", "latitude": 25.0441, "longitude": 121.5294,
-    "aliases": ["華山文創", "華山1914", "華山園區"],
+    "place_id": "P009", "place_name": "華山1914文化創意產業園區", "place_name_en": "Huashan 1914 Creative Park", "place_name_ja": "華山1914文化創意産業園区", "place_name_ko": "화산1914문화창의산업원구", "latitude": 25.0441, "longitude": 121.5294,
+    "aliases": ["華山文創", "華山1914", "華山園區"], "aliases_en": ["Huashan 1914 Creative Park", "Huashan 1914"],
     "categories": ["展覽", "咖啡", "散步", "聊天"], "features": ["室內", "冷氣", "適合久坐"], "typical_budget": 450
   }
 ]
