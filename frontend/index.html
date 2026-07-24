@@ -5,47 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260724-2" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260724-3" />
   </head>
   <body>
     <main class="app-shell">
-      <div id="map" aria-label="歷史OD人流推估地圖"></div>
+      <div id="map" aria-label="歷史OD人流推估地圖" data-i18n-aria="mapLabel"></div>
       <header class="top-bar">
-        <button class="icon-button" aria-label="返回">←</button>
-        <div><p class="eyebrow">悠遊付</p><h1>智慧出行小幫手</h1></div>
+        <button class="icon-button" aria-label="返回" data-i18n-aria="back">←</button>
+        <div><p class="eyebrow" data-i18n="brand">悠遊付</p><h1 data-i18n="appTitle">智慧出行小幫手</h1></div>
         <div class="top-actions">
-          <button id="map-language-button" class="text-button language-button" type="button" aria-label="切換語言">繁中</button>
+          <button id="map-language-button" class="text-button language-button" type="button" aria-label="切換語言" data-i18n-aria="switchLanguage">繁中</button>
           <button class="text-button help-button" type="button" data-i18n="help">說明</button>
         </div>
       </header>
       <button id="open-search" class="search-entry" type="button">
         <span aria-hidden="true">⌕</span>
-        <span>搜尋地點，或告訴 AI 你想去哪裡</span>
+        <span data-i18n="searchEntry">搜尋地點，或告訴 AI 你想去哪裡</span>
       </button>
       <div class="prototype-badge" data-i18n="historicalEstimate">歷史人流估算</div>
       <button id="reset-map" class="reset-map-button" type="button" hidden>× <span data-i18n="clearResult">清除結果</span></button>
-      <div class="map-legend" aria-label="人流顏色圖例">
-        <span><i class="legend-color low"></i>較少</span>
-        <span><i class="legend-color medium"></i>普通</span>
-        <span><i class="legend-color high"></i>偏高</span>
-        <span><i class="legend-color critical"></i>擁擠</span>
+      <div class="map-legend" aria-label="人流顏色圖例" data-i18n-aria="legendLabel">
+        <span><i class="legend-color low"></i><span data-i18n="legendLow">較少</span></span>
+        <span><i class="legend-color medium"></i><span data-i18n="legendMedium">普通</span></span>
+        <span><i class="legend-color high"></i><span data-i18n="legendHigh">偏高</span></span>
+        <span><i class="legend-color critical"></i><span data-i18n="legendCritical">擁擠</span></span>
       </div>
-      <section class="bottom-sheet is-collapsed" aria-label="地點資訊" data-sheet-state="collapsed">
-        <button id="sheet-handle" class="sheet-handle" type="button" aria-label="拖曳或點擊調整資訊面板" aria-expanded="false"><span></span></button>
+      <section class="bottom-sheet is-collapsed" aria-label="地點資訊" data-i18n-aria="placeInfo" data-sheet-state="collapsed">
+        <button id="sheet-handle" class="sheet-handle" type="button" aria-label="拖曳或點擊調整資訊面板" data-i18n-aria="sheetHandle" aria-expanded="false"><span></span></button>
         <p id="sheet-kicker" class="sheet-kicker">尚未選擇地點</p>
         <h2 id="sheet-title">從地圖探索適合前往的時段</h2>
         <p id="sheet-description" class="sheet-description">選擇目的地後，我們會依最近捷運站的歷史 OD 資料推估人流；結果不是即時站內人數。</p>
-        <section class="decision-card" aria-label="出行決策">
+        <section class="decision-card" aria-label="出行決策" data-i18n-aria="travelDecision">
           <div id="comfort-status" class="decision-gauge-wrap">
             <div id="comfort-gauge" class="comfort-gauge" aria-hidden="true">
-              <span class="gauge-center"><strong id="comfort-score">--</strong><small>分</small></span>
+              <span class="gauge-center"><strong id="comfort-score">--</strong><small data-i18n="scoreUnit">分</small></span>
             </div>
-            <small>出行舒適度</small>
+            <small data-i18n="comfortScoreLabel">出行舒適度</small>
           </div>
           <div class="decision-copy">
-            <p>查詢時段適合前往嗎？</p>
+            <p data-i18n="suitableQuestion">查詢時段適合前往嗎？</p>
             <h3 id="decision-label">請先選擇地點</h3>
-            <p id="decision-summary">完成搜尋後會在這裡顯示具體建議。</p>
+            <p id="decision-summary" data-i18n="defaultSummary">完成搜尋後會在這裡顯示具體建議。</p>
           </div>
         </section>
         <ul id="comfort-reasons" class="comfort-reasons" hidden></ul>
@@ -54,18 +54,30 @@
             <span id="crowd-visual" class="crowd-people" data-level="0" aria-hidden="true">
               <i></i><i></i><i></i><i></i>
             </span>
-            <span><small>最近捷運站人流</small><strong id="crowd-label">尚未分析</strong></span>
+            <span><small data-i18n="nearestCrowd">最近捷運站人流</small><strong id="crowd-label" data-i18n="notAnalyzed">尚未分析</strong></span>
           </div>
-          <div class="context-card update-context"><small>資料依據</small><strong id="updated-time">--</strong></div>
+          <div class="context-card update-context"><small data-i18n="dataBasis">資料依據</small><strong id="updated-time">--</strong></div>
         </div>
-        <section class="balance-section" aria-label="旅客餘額推薦">
+        <section id="recommendation-section" class="recommendation-section" hidden>
+          <div class="recommendation-heading">
+            <div><small data-i18n="aiResult">AI 推薦結果</small><h3 data-i18n="top3Title">適合你的 Top 3</h3></div>
+            <span id="agent-mode-badge">MOCK DATA</span>
+          </div>
+          <p id="agent-summary" class="agent-summary"></p>
+          <div id="recommendation-list" class="recommendation-list"></div>
+          <details id="agent-trace" class="agent-trace">
+            <summary data-i18n="traceTitle">查看 Travel Decision Agent 分析流程</summary>
+            <ol id="agent-trace-list"></ol>
+          </details>
+        </section>
+        <section class="balance-section" aria-label="旅客餘額推薦" data-i18n-aria="balanceA11y">
           <div class="balance-heading">
             <div><small data-i18n="touristHelper">FOR VISITORS</small><h3 data-i18n="balanceTitle">餘額智慧推薦</h3></div>
             <span>MOCK BALANCE</span>
           </div>
           <p class="balance-description" data-i18n="balanceDescription">輸入模擬悠遊卡／悠遊付餘額，找出餘額可負擔的消費選擇。</p>
           <div class="balance-controls">
-            <label><span>NT$</span><input id="balance-input" type="number" min="0" max="10000" step="10" value="300" aria-label="模擬餘額" /></label>
+            <label><span>NT$</span><input id="balance-input" type="number" min="0" max="10000" step="10" value="300" aria-label="模擬餘額" data-i18n-aria="mockBalance" /></label>
             <button id="balance-submit" type="button" data-i18n="balanceAction">推薦</button>
           </div>
           <div id="balance-results" class="balance-results" hidden></div>
@@ -73,24 +85,12 @@
         </section>
         <section id="merchant-section" class="merchant-section" hidden>
           <div class="merchant-heading">
-            <div><small>目的地周邊 700 公尺</small><h3>悠遊付可用商家</h3></div>
+            <div><small data-i18n="nearby700">目的地周邊 700 公尺</small><h3 data-i18n="merchantsTitle">悠遊付可用商家</h3></div>
             <span>MOCK DATA</span>
           </div>
           <p id="merchant-summary" class="merchant-summary"></p>
           <div id="merchant-list" class="merchant-list"></div>
-          <p class="merchant-disclaimer">商家、營業時間及優惠皆為 Prototype 假設資料，不代表實際合作或活動。</p>
-        </section>
-        <section id="recommendation-section" class="recommendation-section" hidden>
-          <div class="recommendation-heading">
-            <div><small>AI 推薦結果</small><h3>適合你的 Top 3</h3></div>
-            <span id="agent-mode-badge">MOCK DATA</span>
-          </div>
-          <p id="agent-summary" class="agent-summary"></p>
-          <div id="recommendation-list" class="recommendation-list"></div>
-          <details id="agent-trace" class="agent-trace">
-            <summary>查看 Travel Decision Agent 分析流程</summary>
-            <ol id="agent-trace-list"></ol>
-          </details>
+          <p class="merchant-disclaimer" data-i18n="merchantDisclaimer">商家、營業時間及優惠皆為 Prototype 假設資料，不代表實際合作或活動。</p>
         </section>
       </section>
     </main>
@@ -98,15 +98,15 @@
     <section id="search-screen" class="search-screen" aria-hidden="true">
       <div class="search-page">
         <header class="search-header">
-          <button id="close-search" class="plain-icon-button" type="button" aria-label="返回地圖">←</button>
+          <button id="close-search" class="plain-icon-button" type="button" aria-label="返回地圖" data-i18n-aria="backToMap">←</button>
           <h2 id="search-title">普通搜尋</h2>
-          <div class="header-actions" aria-label="輔助功能">
-            <button class="plain-icon-button help-button" type="button" aria-label="說明">?</button>
-            <button id="search-language-button" class="plain-icon-button" type="button" aria-label="切換語言">◎</button>
+          <div class="header-actions" aria-label="輔助功能" data-i18n-aria="accessibility">
+            <button class="plain-icon-button help-button" type="button" aria-label="說明" data-i18n-aria="help">?</button>
+            <button id="search-language-button" class="plain-icon-button" type="button" aria-label="切換語言" data-i18n-aria="switchLanguage">◎</button>
           </div>
         </header>
 
-        <div class="mode-tabs" role="tablist" aria-label="搜尋模式">
+        <div class="mode-tabs" role="tablist" aria-label="搜尋模式" data-i18n-aria="searchMode">
           <button class="mode-tab is-active" type="button" role="tab" data-mode="normal" aria-selected="true">普通搜尋</button>
           <button class="mode-tab" type="button" role="tab" data-mode="ai" aria-selected="false">AI 推薦</button>
         </div>
@@ -114,39 +114,39 @@
         <div id="normal-panel" class="mode-panel">
           <label class="field-row">
             <span class="field-icon" aria-hidden="true">⌖</span>
-            <span class="sr-only">地點</span>
+            <span class="sr-only" data-i18n="placeLabel">地點</span>
             <input id="place-input" type="text" placeholder="輸入目的地，例如台北小巨蛋" autocomplete="off" />
           </label>
           <div id="place-suggestions" class="place-suggestions" hidden></div>
           <label class="field-row">
             <span class="field-icon" aria-hidden="true">◷</span>
-            <span class="sr-only">時間</span>
+            <span class="sr-only" data-i18n="timeLabel">時間</span>
             <input type="time" value="19:00" />
           </label>
           <label class="field-row">
             <span class="field-icon" aria-hidden="true">⚑</span>
-            <span class="sr-only">目的</span>
+            <span class="sr-only" data-i18n="purposeLabel">目的</span>
             <select>
-              <option value="">選擇出行目的</option>
-              <option>吃飯</option>
-              <option>逛街</option>
-              <option>展覽</option>
-              <option>約會</option>
-              <option>活動</option>
+              <option value="" data-i18n="purposePlaceholder">選擇出行目的</option>
+              <option value="吃飯" data-i18n="purposeEat">吃飯</option>
+              <option value="逛街" data-i18n="purposeShop">逛街</option>
+              <option value="展覽" data-i18n="purposeExhibition">展覽</option>
+              <option value="約會" data-i18n="purposeDate">約會</option>
+              <option value="活動" data-i18n="purposeEvent">活動</option>
             </select>
           </label>
 
           <div class="conditions-heading">
-            <div><p class="section-label">其他條件</p><p>可複選，協助我們理解你的偏好</p></div>
-            <button id="toggle-conditions" class="small-link" type="button">收合</button>
+            <div><p class="section-label" data-i18n="otherConditions">其他條件</p><p data-i18n="multipleHint">可複選，協助我們理解你的偏好</p></div>
+            <button id="toggle-conditions" class="small-link" type="button" data-i18n="collapse">收合</button>
           </div>
           <div id="condition-chips" class="chip-grid">
-            <button class="choice-chip" type="button">不想太擠</button>
-            <button class="choice-chip" type="button">捷運方便</button>
-            <button class="choice-chip" type="button">少走路</button>
-            <button class="choice-chip" type="button">室內為主</button>
-            <button class="choice-chip" type="button">親近自然</button>
-            <button class="choice-chip" type="button">有悠遊付優惠</button>
+            <button class="choice-chip" type="button" data-value="不想太擠" data-i18n="prefCrowd">不想太擠</button>
+            <button class="choice-chip" type="button" data-value="捷運方便" data-i18n="prefMetro">捷運方便</button>
+            <button class="choice-chip" type="button" data-value="少走路" data-i18n="prefWalk">少走路</button>
+            <button class="choice-chip" type="button" data-value="室內為主" data-i18n="prefIndoor">室內為主</button>
+            <button class="choice-chip" type="button" data-value="親近自然" data-i18n="prefNature">親近自然</button>
+            <button class="choice-chip" type="button" data-value="有悠遊付優惠" data-i18n="prefOffer">有悠遊付優惠</button>
           </div>
 
           <button id="normal-submit" class="primary-action" type="button">開始分析</button>
@@ -154,36 +154,36 @@
 
         <div id="ai-panel" class="mode-panel" hidden>
           <label class="ai-prompt-box">
-            <span class="sr-only">描述你想去的地方</span>
+            <span class="sr-only" data-i18n="promptLabel">描述你想去的地方</span>
             <textarea id="ai-prompt" rows="4" placeholder="例如：今天下午想找一個不太擠、捷運可到、適合散步和喝咖啡的地方"></textarea>
             <span class="prompt-actions">
-              <button type="button" class="prompt-icon" aria-label="語音輸入，第一版尚未開放" disabled>●</button>
-              <button id="ai-submit" type="button" class="prompt-icon submit" aria-label="送出 AI 推薦">⌕</button>
+              <button type="button" class="prompt-icon" aria-label="語音輸入，第一版尚未開放" data-i18n-aria="voiceUnavailable" disabled>●</button>
+              <button id="ai-submit" type="button" class="prompt-icon submit" aria-label="送出 AI 推薦" data-i18n-aria="submitAI">⌕</button>
             </span>
           </label>
 
           <div class="suggestion-block">
-            <p class="section-label">你可能感興趣</p>
-            <p>點選建議詞，快速組合需求</p>
+            <p class="section-label" data-i18n="interestTitle">你可能感興趣</p>
+            <p data-i18n="interestHint">點選建議詞，快速組合需求</p>
             <div class="suggestion-grid">
-              <button class="suggestion-chip" type="button">避開人潮</button>
-              <button class="suggestion-chip" type="button">親近自然</button>
-              <button class="suggestion-chip" type="button">熱門景點</button>
-              <button class="suggestion-chip" type="button">適合看展</button>
-              <button class="suggestion-chip" type="button">適合約會</button>
-              <button class="suggestion-chip" type="button">咖啡散步</button>
-              <button class="suggestion-chip" type="button">親子同樂</button>
-              <button class="suggestion-chip" type="button">捷運方便</button>
-              <button class="suggestion-chip" type="button">隨機推薦</button>
+              <button class="suggestion-chip" type="button" data-prompt="避開人潮" data-i18n="sugAvoidCrowd">避開人潮</button>
+              <button class="suggestion-chip" type="button" data-prompt="親近自然" data-i18n="sugNature">親近自然</button>
+              <button class="suggestion-chip" type="button" data-prompt="熱門景點" data-i18n="sugPopular">熱門景點</button>
+              <button class="suggestion-chip" type="button" data-prompt="適合看展" data-i18n="sugExhibition">適合看展</button>
+              <button class="suggestion-chip" type="button" data-prompt="適合約會" data-i18n="sugDate">適合約會</button>
+              <button class="suggestion-chip" type="button" data-prompt="咖啡散步" data-i18n="sugCoffee">咖啡散步</button>
+              <button class="suggestion-chip" type="button" data-prompt="親子同樂" data-i18n="sugFamily">親子同樂</button>
+              <button class="suggestion-chip" type="button" data-prompt="捷運方便" data-i18n="sugMetro">捷運方便</button>
+              <button class="suggestion-chip" type="button" data-prompt="隨機推薦" data-i18n="sugRandom">隨機推薦</button>
             </div>
           </div>
         </div>
 
-        <section class="history-section" aria-label="歷史搜尋">
-          <div class="history-heading"><h3>歷史搜尋</h3><button type="button" class="small-link">編輯</button></div>
-          <button class="history-item" type="button"><span class="history-dot"></span><span><strong>台北車站</strong><small>25 分鐘前</small></span><span>›</span></button>
-          <button class="history-item" type="button"><span class="history-dot"></span><span><strong>大安森林公園</strong><small>昨天 18:20</small></span><span>›</span></button>
-          <button class="history-item" type="button"><span class="history-dot"></span><span><strong>中山站咖啡散步</strong><small>3 天前</small></span><span>›</span></button>
+        <section class="history-section" aria-label="歷史搜尋" data-i18n-aria="historyTitle">
+          <div class="history-heading"><h3 data-i18n="historyTitle">歷史搜尋</h3><button type="button" class="small-link" data-i18n="edit">編輯</button></div>
+          <button class="history-item" type="button"><span class="history-dot"></span><span><strong data-i18n="historyPlaceTaipei">台北車站</strong><small data-i18n="history25m">25 分鐘前</small></span><span>›</span></button>
+          <button class="history-item" type="button"><span class="history-dot"></span><span><strong data-i18n="historyPlaceDaan">大安森林公園</strong><small data-i18n="historyYesterday">昨天 18:20</small></span><span>›</span></button>
+          <button class="history-item" type="button"><span class="history-dot"></span><span><strong data-i18n="historyPlaceZhongshan">中山站咖啡散步</strong><small data-i18n="history3d">3 天前</small></span><span>›</span></button>
         </section>
       </div>
     </section>
@@ -199,7 +199,7 @@
           <p class="eyebrow" data-i18n="dataGuide">資料說明</p>
           <h2 id="help-title" data-i18n="helpTitle">如何理解人流與舒適度？</h2>
         </div>
-        <button id="close-help" class="help-close" type="button" aria-label="關閉">×</button>
+        <button id="close-help" class="help-close" type="button" aria-label="關閉" data-i18n-aria="close">×</button>
       </div>
       <p data-i18n="helpIntro">畫面提供的是歷史人流估算，適合用來比較不同車站與時段。</p>
       <ul>
@@ -211,6 +211,6 @@
       <p class="help-note" data-i18n="helpUse">建議把結果當作錯峰與比較時段的參考，不應作為安全或營運判斷。</p>
     </dialog>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260724-2"></script>
+    <script src="/static/app.js?v=20260724-3"></script>
   </body>
 </html>
