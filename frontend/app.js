@@ -8,8 +8,8 @@ const DEFAULT_MAP_VIEW = { center: [25.0478, 121.517], zoom: 13 };
 const translations = {
   "zh-Hant": {
     appTitle: "智慧出行小幫手", help: "說明", searchEntry: "搜尋地點，或告訴 AI 你想去哪裡",
-    clearResult: "清除結果", defaultKicker: "尚未選擇地點", defaultTitle: "從地圖探索現在適合去哪裡",
-    defaultDescription: "選擇目的地後，我們會分析最近捷運站的人流，協助你判斷現在是否適合前往。",
+    clearResult: "清除結果", defaultKicker: "尚未選擇地點", defaultTitle: "從地圖探索適合前往的時段",
+    defaultDescription: "選擇目的地後，我們會依最近捷運站的歷史OD資料推估人流；結果不是即時站內人數。",
     normalSearch: "普通搜尋", aiRecommendation: "AI 推薦", startAnalysis: "開始分析",
     touristHelper: "FOR VISITORS", balanceTitle: "餘額智慧推薦",
     balanceDescription: "輸入模擬悠遊卡／悠遊付餘額，找出餘額可負擔的消費選擇。",
@@ -20,7 +20,7 @@ const translations = {
   en: {
     appTitle: "Smart Travel Assistant", help: "Help", searchEntry: "Search a place or tell AI where you want to go",
     clearResult: "Clear result", defaultKicker: "No place selected", defaultTitle: "Explore a comfortable place to visit",
-    defaultDescription: "Choose a destination to check crowd conditions near its closest metro station.",
+    defaultDescription: "Choose a destination to view a historical OD-based crowd estimate for its closest metro station. This is not real-time occupancy.",
     normalSearch: "Place Search", aiRecommendation: "AI Picks", startAnalysis: "Analyze",
     touristHelper: "FOR VISITORS", balanceTitle: "Balance-friendly picks",
     balanceDescription: "Enter a mock EasyCard/EasyWallet balance to find affordable spending ideas.",
@@ -31,7 +31,7 @@ const translations = {
   ja: {
     appTitle: "スマート移動アシスタント", help: "ヘルプ", searchEntry: "場所を検索、またはAIに希望を伝える",
     clearResult: "結果をクリア", defaultKicker: "場所が選択されていません", defaultTitle: "快適に行ける場所を探す",
-    defaultDescription: "目的地を選ぶと、最寄りのMRT駅周辺の混雑状況を確認できます。",
+    defaultDescription: "目的地を選ぶと、最寄りMRT駅の過去ODデータに基づく混雑推定を確認できます。リアルタイム人数ではありません。",
     normalSearch: "場所検索", aiRecommendation: "AIおすすめ", startAnalysis: "分析する",
     touristHelper: "旅行者向け", balanceTitle: "残高でおすすめ",
     balanceDescription: "模擬EasyCard／EasyWallet残高を入力して、利用可能な候補を探します。",
@@ -42,7 +42,7 @@ const translations = {
   ko: {
     appTitle: "스마트 여행 도우미", help: "도움말", searchEntry: "장소를 검색하거나 AI에게 원하는 곳을 말해 주세요",
     clearResult: "결과 지우기", defaultKicker: "선택한 장소 없음", defaultTitle: "지금 편하게 갈 수 있는 곳 찾기",
-    defaultDescription: "목적지를 선택하면 가장 가까운 MRT역 주변의 혼잡도를 분석합니다.",
+    defaultDescription: "목적지를 선택하면 가장 가까운 MRT역의 과거 OD 기반 혼잡 추정치를 확인합니다. 실시간 인원은 아닙니다.",
     normalSearch: "장소 검색", aiRecommendation: "AI 추천", startAnalysis: "분석하기",
     touristHelper: "여행자용", balanceTitle: "잔액 맞춤 추천",
     balanceDescription: "모의 EasyCard/EasyWallet 잔액을 입력해 이용 가능한 소비 선택지를 확인하세요.",
@@ -181,6 +181,7 @@ function crowdColor(index) {
 }
 
 function crowdPresentation(index) {
+  if (!Number.isFinite(Number(index))) return { label: "無歷史資料", level: "level-medium", people: 0 };
   if (index >= 80) return { label: "非常擁擠", level: "level-critical", people: 4 };
   if (index >= 60) return { label: "人流偏高", level: "level-high", people: 3 };
   if (index >= 40) return { label: "人流普通", level: "level-medium", people: 2 };
@@ -193,6 +194,7 @@ function comfortPresentation(status) {
     尚可: { level: "level-medium" },
     偏擠: { level: "level-high" },
     擁擠: { level: "level-critical" },
+    資料不足: { level: "level-medium" },
   };
   return presentations[status] || { level: "level-medium" };
 }
@@ -203,6 +205,7 @@ function decisionPresentation(status) {
     尚可: "可以前往，留意人潮",
     偏擠: "建議錯峰或比較替代地點",
     擁擠: "目前不建議前往",
+    資料不足: "此時段沒有足夠歷史資料",
   };
   return decisions[status] || "請查看分析結果";
 }
@@ -237,11 +240,26 @@ function renderAnalysis(result) {
   setMetricLevel(comfortCard, comfortDisplay.level);
   document.querySelector("#crowd-visual").dataset.level = String(crowd.people);
   document.querySelector("#crowd-label").textContent = crowd.label;
-  document.querySelector("#comfort-score").textContent = comfort.comfort_score;
-  document.querySelector("#comfort-gauge").style.setProperty("--score-angle", `${comfort.comfort_score * 3.6}deg`);
-  comfortCard.setAttribute("aria-label", `舒適度 ${comfort.comfort_score} 分，${comfort.status}`);
+  const hasComfortScore = Number.isFinite(Number(comfort.comfort_score));
+  document.querySelector("#comfort-score").textContent = hasComfortScore ? comfort.comfort_score : "--";
+  document.querySelector("#comfort-gauge").style.setProperty(
+    "--score-angle",
+    hasComfortScore ? `${comfort.comfort_score * 3.6}deg` : "0deg",
+  );
+  comfortCard.setAttribute(
+    "aria-label",
+    hasComfortScore ? `舒適度 ${comfort.comfort_score} 分，${comfort.status}` : comfort.status,
+  );
   crowdCard.setAttribute("aria-label", `人流狀態 ${crowd.label}`);
-  document.querySelector("#updated-time").textContent = station.updated_at.slice(11, 16) + " 更新";
+  const estimate = comfort.crowd_estimate;
+  const reliabilityText = estimate?.reliability === "low"
+    ? "低可靠度"
+    : estimate?.reliability === "unavailable"
+      ? "無資料"
+      : "可用";
+  document.querySelector("#updated-time").textContent = estimate
+    ? `至 ${estimate.data_period_end.replaceAll("-", "/")} · ${reliabilityText}`
+    : "歷史資料";
   document.querySelector("#recommendation-section").hidden = true;
   renderMerchants(result.nearby_merchants || [], result.merchant_summary);
   if (map) map.setView([station.latitude, station.longitude], 15);
@@ -352,7 +370,7 @@ function renderRecommendations(payload, activeIndex = 0) {
   const section = document.querySelector("#recommendation-section");
   const list = document.querySelector("#recommendation-list");
   const modeBadge = document.querySelector("#agent-mode-badge");
-  modeBadge.textContent = payload.llm_enabled ? "GEMINI AI · 模擬資料" : "規則備援 · 模擬資料";
+  modeBadge.textContent = payload.llm_enabled ? "GEMINI AI · OD歷史人流" : "規則備援 · OD歷史人流";
   modeBadge.title = payload.limitations || "";
   document.querySelector("#agent-summary").textContent = payload.personalized_summary || "";
   const traceList = document.querySelector("#agent-trace-list");
@@ -434,9 +452,10 @@ async function loadPrototypeData() {
 
   if (!map) return;
   stationsData.stations.forEach((station) => {
-    const color = crowdColor(station.crowd_index);
+    const hasCrowdScore = Number.isFinite(Number(station.crowd_index));
+    const color = hasCrowdScore ? crowdColor(station.crowd_index) : "#94a3b8";
     L.circle([station.latitude, station.longitude], {
-      radius: 280 + station.crowd_index * 5,
+      radius: hasCrowdScore ? 280 + station.crowd_index * 5 : 280,
       color,
       fillColor: color,
       fillOpacity: 0.22,
@@ -451,7 +470,11 @@ async function loadPrototypeData() {
       weight: 2,
     })
       .addTo(map)
-      .bindTooltip(`${station.station_name} · 人流 ${station.crowd_index}`)
+      .bindTooltip(
+        hasCrowdScore
+          ? `${station.station_name} · 歷史人流壓力 ${Math.round(station.crowd_index)} · 低可靠度`
+          : `${station.station_name} · 此時段無歷史資料`,
+      )
       .on("click", () => analyzePlace(station.station_name).catch((error) => window.alert(error.message)));
   });
 
@@ -543,4 +566,3 @@ document.querySelector("#ai-submit").addEventListener("click", async () => {
 setupSheetDrag();
 applyLanguage("zh-Hant");
 loadPrototypeData().catch((error) => console.error("無法載入 Prototype 資料", error));
-
