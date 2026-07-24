@@ -97,7 +97,11 @@ class TravelDecisionAgent:
             "agent_mode": mode,
             "llm_enabled": llm_enabled,
             "model": self.gemini.model if llm_enabled else None,
-            "data_label": "GEMINI AGENT + MOCK / SIMULATED DATA" if llm_enabled else "MOCK DATA / RULES-BASED AGENT FALLBACK",
+            "data_label": (
+                "GEMINI AGENT + HISTORICAL OD CROWD ESTIMATE"
+                if llm_enabled
+                else "HISTORICAL OD CROWD ESTIMATE / RULES-BASED AGENT FALLBACK"
+            ),
             "structured_intent": intent,
             "recommendations": recommendations,
             "personalized_summary": summary,
@@ -105,7 +109,7 @@ class TravelDecisionAgent:
             "limitations": (
                 f"Gemini 無法完成全部流程，已自動使用規則式備援：{gemini_error}。"
                 if gemini_error
-                else "Gemini 負責理解需求與撰寫說明；地點、人流與舒適度仍為 Prototype 模擬資料。"
+                else "Gemini 負責理解需求與撰寫說明；人流為低可靠度的歷史OD推估，並非即時站內人數。"
                 if llm_enabled
                 else "未設定 Gemini API key，意圖解析與說明使用可測試的規則式備援。"
             ),
