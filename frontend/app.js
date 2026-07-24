@@ -328,7 +328,8 @@ function localizedStationName(station) {
 
 function localizedPlaceName(place) {
   if (currentLanguage === "zh-Hant") return place.place_name;
-  return place.place_name_en || place.place_name;
+  const localizedKey = { en: "place_name_en", ja: "place_name_ja", ko: "place_name_ko" }[currentLanguage];
+  return place[localizedKey] || place.place_name_en || place.place_name;
 }
 
 if (typeof L !== "undefined") {
@@ -756,7 +757,17 @@ function renderPlaceSuggestions(query = "") {
   const panel = document.querySelector("#place-suggestions");
   const normalized = query.trim().toLowerCase();
   const matches = placeCatalog
-    .filter((place) => !normalized || place.place_name.toLowerCase().includes(normalized) || place.aliases.some((alias) => alias.toLowerCase().includes(normalized)))
+    .filter((place) => {
+      const searchableNames = [
+        place.place_name,
+        place.place_name_en,
+        place.place_name_ja,
+        place.place_name_ko,
+        ...(place.aliases || []),
+        ...(place.aliases_en || []),
+      ].filter(Boolean);
+      return !normalized || searchableNames.some((name) => name.toLowerCase().includes(normalized));
+    })
     .slice(0, 6);
 
   panel.replaceChildren();
@@ -764,12 +775,12 @@ function renderPlaceSuggestions(query = "") {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "place-suggestion";
-    button.innerHTML = `<span class="place-suggestion-icon">⌖</span><span><strong>${place.place_name}</strong><small>${tf("suggestionNearest", {
+    button.innerHTML = `<span class="place-suggestion-icon">⌖</span><span><strong>${localizedPlaceName(place)}</strong><small>${tf("suggestionNearest", {
       station: currentLanguage === "zh-Hant" ? place.nearest_station : (place.nearest_station_en || place.nearest_station),
       distance: place.station_distance_m,
     })}</small></span>`;
     button.addEventListener("click", () => {
-      document.querySelector("#place-input").value = place.place_name;
+      document.querySelector("#place-input").value = localizedPlaceName(place);
       panel.hidden = true;
     });
     panel.append(button);
