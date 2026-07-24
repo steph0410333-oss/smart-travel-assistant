@@ -8,8 +8,15 @@ const DEFAULT_MAP_VIEW = { center: [25.0478, 121.517], zoom: 13 };
 const translations = {
   "zh-Hant": {
     appTitle: "智慧出行小幫手", help: "說明", searchEntry: "搜尋地點，或告訴 AI 你想去哪裡",
+    historicalEstimate: "歷史人流估算", dataGuide: "資料說明", helpTitle: "如何理解人流與舒適度？",
+    helpIntro: "畫面提供的是歷史人流估算，適合用來比較不同車站與時段。",
+    helpHistory: "資料期間為 2026 年 6 月，依車站、星期與小時整理歷史 OD 進出站資料。",
+    helpRealtime: "結果不是即時站內人數，也不是官方容量或安全上限。",
+    helpReliability: "目前只有一個月資料，同星期同時段約 4–5 筆樣本，因此仍屬初步估算。",
+    helpComfort: "舒適度由歷史人流壓力反向換算，分數越高代表該時段相對舒適。",
+    helpUse: "建議把結果當作錯峰與比較時段的參考，不應作為安全或營運判斷。",
     clearResult: "清除結果", defaultKicker: "尚未選擇地點", defaultTitle: "從地圖探索適合前往的時段",
-    defaultDescription: "選擇目的地後，我們會依最近捷運站的歷史OD資料推估人流；結果不是即時站內人數。",
+    defaultDescription: "選擇目的地後，我們會依最近捷運站的歷史資料，協助你比較適合前往的時段。",
     normalSearch: "普通搜尋", aiRecommendation: "AI 推薦", startAnalysis: "開始分析",
     touristHelper: "FOR VISITORS", balanceTitle: "餘額智慧推薦",
     balanceDescription: "輸入模擬悠遊卡／悠遊付餘額，找出餘額可負擔的消費選擇。",
@@ -19,8 +26,15 @@ const translations = {
   },
   en: {
     appTitle: "Smart Travel Assistant", help: "Help", searchEntry: "Search a place or tell AI where you want to go",
+    historicalEstimate: "Historical crowd estimate", dataGuide: "ABOUT THE DATA", helpTitle: "How should I read crowd and comfort scores?",
+    helpIntro: "The screen shows historical crowd estimates for comparing stations and travel times.",
+    helpHistory: "The current dataset covers June 2026 and is grouped by station, weekday and hour from historical OD entries and exits.",
+    helpRealtime: "Results are not real-time occupancy, official capacity or a safety limit.",
+    helpReliability: "Only one month is available, with roughly 4–5 samples for the same weekday and hour, so this remains an early estimate.",
+    helpComfort: "Comfort reverses historical crowd pressure: a higher score means the time is relatively more comfortable.",
+    helpUse: "Use the result to compare times and avoid peaks, not for safety or operational decisions.",
     clearResult: "Clear result", defaultKicker: "No place selected", defaultTitle: "Explore a comfortable place to visit",
-    defaultDescription: "Choose a destination to view a historical OD-based crowd estimate for its closest metro station. This is not real-time occupancy.",
+    defaultDescription: "Choose a destination to compare suitable travel times using historical data from its nearest metro station.",
     normalSearch: "Place Search", aiRecommendation: "AI Picks", startAnalysis: "Analyze",
     touristHelper: "FOR VISITORS", balanceTitle: "Balance-friendly picks",
     balanceDescription: "Enter a mock EasyCard/EasyWallet balance to find affordable spending ideas.",
@@ -30,8 +44,15 @@ const translations = {
   },
   ja: {
     appTitle: "スマート移動アシスタント", help: "ヘルプ", searchEntry: "場所を検索、またはAIに希望を伝える",
+    historicalEstimate: "過去データによる混雑推定", dataGuide: "データについて", helpTitle: "混雑度と快適度の見方",
+    helpIntro: "駅や時間帯を比較するための、過去データに基づく混雑推定です。",
+    helpHistory: "2026年6月のOD入出場データを、駅・曜日・時間ごとに集計しています。",
+    helpRealtime: "リアルタイム人数、公式収容人数、安全基準ではありません。",
+    helpReliability: "現在は1か月分のみで、同じ曜日・時間帯の標本は約4～5件のため、初期推定です。",
+    helpComfort: "快適度は過去の混雑圧力を反転した値で、高いほど相対的に快適です。",
+    helpUse: "時間帯比較やピーク回避の参考として利用し、安全・運行判断には使用しないでください。",
     clearResult: "結果をクリア", defaultKicker: "場所が選択されていません", defaultTitle: "快適に行ける場所を探す",
-    defaultDescription: "目的地を選ぶと、最寄りMRT駅の過去ODデータに基づく混雑推定を確認できます。リアルタイム人数ではありません。",
+    defaultDescription: "目的地を選ぶと、最寄りMRT駅の過去データから行きやすい時間帯を比較できます。",
     normalSearch: "場所検索", aiRecommendation: "AIおすすめ", startAnalysis: "分析する",
     touristHelper: "旅行者向け", balanceTitle: "残高でおすすめ",
     balanceDescription: "模擬EasyCard／EasyWallet残高を入力して、利用可能な候補を探します。",
@@ -41,8 +62,15 @@ const translations = {
   },
   ko: {
     appTitle: "스마트 여행 도우미", help: "도움말", searchEntry: "장소를 검색하거나 AI에게 원하는 곳을 말해 주세요",
+    historicalEstimate: "과거 혼잡도 추정", dataGuide: "데이터 안내", helpTitle: "혼잡도와 쾌적도 읽는 법",
+    helpIntro: "역과 시간대를 비교하기 위한 과거 데이터 기반 혼잡도 추정입니다.",
+    helpHistory: "2026년 6월 OD 승하차 데이터를 역·요일·시간별로 정리했습니다.",
+    helpRealtime: "실시간 인원, 공식 수용량 또는 안전 기준이 아닙니다.",
+    helpReliability: "현재 한 달치만 있으며 같은 요일·시간대 표본은 약 4–5건이므로 초기 추정치입니다.",
+    helpComfort: "쾌적도는 과거 혼잡 압력을 반대로 환산하며 점수가 높을수록 상대적으로 쾌적합니다.",
+    helpUse: "시간대 비교와 혼잡 회피 참고용이며 안전·운영 판단에는 사용하지 마세요.",
     clearResult: "결과 지우기", defaultKicker: "선택한 장소 없음", defaultTitle: "지금 편하게 갈 수 있는 곳 찾기",
-    defaultDescription: "목적지를 선택하면 가장 가까운 MRT역의 과거 OD 기반 혼잡 추정치를 확인합니다. 실시간 인원은 아닙니다.",
+    defaultDescription: "목적지를 선택하면 가장 가까운 MRT역의 과거 데이터로 적합한 시간대를 비교할 수 있습니다.",
     normalSearch: "장소 검색", aiRecommendation: "AI 추천", startAnalysis: "분석하기",
     touristHelper: "여행자용", balanceTitle: "잔액 맞춤 추천",
     balanceDescription: "모의 EasyCard/EasyWallet 잔액을 입력해 이용 가능한 소비 선택지를 확인하세요.",
@@ -153,6 +181,15 @@ function closeSearch() {
   document.body.style.overflow = "";
 }
 
+function openHelp() {
+  const dialog = document.querySelector("#help-dialog");
+  if (!dialog.open) dialog.showModal();
+}
+
+function closeHelp() {
+  document.querySelector("#help-dialog").close();
+}
+
 function setMode(mode) {
   const isAiMode = mode === "ai";
   searchTitle.textContent = isAiMode ? t("aiRecommendation") : t("normalSearch");
@@ -228,7 +265,8 @@ function renderAnalysis(result) {
   document.querySelector("#decision-label").textContent = decisionPresentation(comfort.status);
   document.querySelector("#decision-summary").textContent = comfort.advice;
   const reasons = document.querySelector("#comfort-reasons");
-  reasons.replaceChildren(...comfort.reasons.slice(0, 3).map((reason) => {
+  const userFacingReasons = comfort.reasons.filter((reason) => !reason.includes("可靠度低"));
+  reasons.replaceChildren(...userFacingReasons.slice(0, 3).map((reason) => {
     const item = document.createElement("li");
     item.textContent = reason;
     return item;
@@ -252,13 +290,8 @@ function renderAnalysis(result) {
   );
   crowdCard.setAttribute("aria-label", `人流狀態 ${crowd.label}`);
   const estimate = comfort.crowd_estimate;
-  const reliabilityText = estimate?.reliability === "low"
-    ? "低可靠度"
-    : estimate?.reliability === "unavailable"
-      ? "無資料"
-      : "可用";
   document.querySelector("#updated-time").textContent = estimate
-    ? `至 ${estimate.data_period_end.replaceAll("-", "/")} · ${reliabilityText}`
+    ? `至 ${estimate.data_period_end.replaceAll("-", "/")} · ${t("historicalEstimate")}`
     : "歷史資料";
   document.querySelector("#recommendation-section").hidden = true;
   renderMerchants(result.nearby_merchants || [], result.merchant_summary);
@@ -472,7 +505,7 @@ async function loadPrototypeData() {
       .addTo(map)
       .bindTooltip(
         hasCrowdScore
-          ? `${station.station_name} · 歷史人流壓力 ${Math.round(station.crowd_index)} · 低可靠度`
+          ? `${station.station_name} · 歷史人流壓力 ${Math.round(station.crowd_index)}`
           : `${station.station_name} · 此時段無歷史資料`,
       )
       .on("click", () => analyzePlace(station.station_name).catch((error) => window.alert(error.message)));
@@ -497,6 +530,11 @@ document.querySelector("#open-search").addEventListener("click", openSearch);
 document.querySelector("#close-search").addEventListener("click", closeSearch);
 document.querySelector("#reset-map").addEventListener("click", () => resetResult(true));
 document.querySelector("#balance-submit").addEventListener("click", () => recommendBalance().catch((error) => window.alert(error.message)));
+document.querySelectorAll(".help-button").forEach((button) => button.addEventListener("click", openHelp));
+document.querySelector("#close-help").addEventListener("click", closeHelp);
+document.querySelector("#help-dialog").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) closeHelp();
+});
 document.querySelector("#map-language-button").addEventListener("click", toggleLanguageMenu);
 document.querySelector("#search-language-button").addEventListener("click", toggleLanguageMenu);
 document.querySelectorAll("#language-menu button").forEach((button) => {
