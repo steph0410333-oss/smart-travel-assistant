@@ -743,7 +743,7 @@ async function analyzePlace(placeName) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       place: placeName,
-      time: document.querySelector('input[type="time"]').value,
+      time: document.querySelector("#time-input").value,
       preferences: [...document.querySelectorAll(".choice-chip.is-selected")].map((item) => item.dataset.value),
     }),
   });
