@@ -38,8 +38,9 @@ def recommend_places(intent: dict[str, Any], limit: int = 3) -> list[dict[str, A
             budget_match = place["typical_budget"] <= budget_max
             budget_score = 15 if budget_match else max(0, 15 - (place["typical_budget"] - budget_max) / 20)
 
+        comfort_for_ranking = comfort["comfort_score"] if comfort["comfort_score"] is not None else 0
         recommendation_score = round(
-            0.35 * comfort["comfort_score"] + category_score + feature_score + budget_score
+            0.35 * comfort_for_ranking + category_score + feature_score + budget_score
         )
 
         reasons = []
@@ -49,7 +50,7 @@ def recommend_places(intent: dict[str, Any], limit: int = 3) -> list[dict[str, A
             reasons.append("具備「" + "、".join(matched_features) + "」相關選項")
         if budget_match and budget_max is not None:
             reasons.append(f"典型消費約 {place['typical_budget']} 元，在預算內")
-        reasons.append(f"最近的 {nearest_station['station_name']} 目前為「{comfort['status']}」")
+        reasons.append(f"最近的 {nearest_station['station_name']} 查詢時段推估為「{comfort['status']}」")
 
         results.append(
             {
