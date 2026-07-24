@@ -16,6 +16,11 @@ class StationServiceTests(unittest.TestCase):
         stations = get_stations()
         self.assertEqual(len(stations), 119)
         self.assertEqual(len({station["station_name"] for station in stations}), 119)
+        self.assertTrue(all(station["station_name_en"] for station in stations))
+        self.assertFalse(any(
+            any("\u4e00" <= character <= "\u9fff" for character in station["station_name_en"])
+            for station in stations
+        ))
         self.assertTrue(all(station["line_station_ids"] for station in stations))
 
     def test_banqiao_od_lines_remain_separate(self) -> None:
@@ -36,7 +41,14 @@ class StationServiceTests(unittest.TestCase):
         self.assertIsNotNone(place)
         station = find_nearest_station(place["latitude"], place["longitude"])
         self.assertEqual(station["station_name"], "台北小巨蛋")
+        self.assertEqual(station["station_name_en"], "Taipei Arena")
         self.assertLess(station["distance_m"], 300)
+
+    def test_resolves_official_english_station_name(self) -> None:
+        place = resolve_place("Taipei Arena")
+        self.assertIsNotNone(place)
+        self.assertEqual(place["place_name"], "台北小巨蛋")
+        self.assertEqual(place["place_name_en"], "Taipei Arena")
 
 
 class ComfortServiceTests(unittest.TestCase):
