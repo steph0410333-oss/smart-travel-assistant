@@ -332,6 +332,12 @@ function localizedPlaceName(place) {
   return place[localizedKey] || place.place_name_en || place.place_name;
 }
 
+function selectedTravelTime() {
+  return document.querySelector("#time-input")?.value
+    || document.querySelector('input[type="time"]')?.value
+    || "19:00";
+}
+
 if (typeof L !== "undefined") {
   map = L.map("map", { zoomControl: false }).setView([25.0478, 121.517], 13);
 
@@ -743,7 +749,7 @@ async function analyzePlace(placeName) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       place: placeName,
-      time: document.querySelector("#time-input").value,
+      time: selectedTravelTime(),
       preferences: [...document.querySelectorAll(".choice-chip.is-selected")].map((item) => item.dataset.value),
     }),
   });
