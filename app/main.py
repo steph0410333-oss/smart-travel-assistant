@@ -11,7 +11,13 @@ from services.comfort_service import analyze_station_comfort
 from services.intent_service import parse_recommendation_intent
 from services.merchant_service import find_nearby_merchants, get_merchants, summarize_merchants
 from services.recommendation_service import recommend_places
-from services.station_service import find_nearest_station, get_places, get_stations, resolve_place
+from services.crowd_service import get_crowd_metadata
+from services.station_service import (
+    find_nearest_station,
+    get_places,
+    get_stations_for_time,
+    resolve_place,
+)
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,10 +39,15 @@ def health_check() -> dict[str, str]:
 
 
 @app.get("/api/stations")
-def list_stations() -> dict:
+def list_stations(time: str | None = None, date: str | None = None) -> dict:
+    metadata = get_crowd_metadata()
     return {
-        "data_label": "SIMULATED DATA",
-        "stations": get_stations(),
+        "data_label": "HISTORICAL OD ESTIMATE / LOW RELIABILITY",
+        "data_period": {
+            "start": metadata["data_period_start"],
+            "end": metadata["data_period_end"],
+        },
+        "stations": get_stations_for_time(query_time=time, query_date=date),
     }
 
 
@@ -100,12 +111,13 @@ def analyze_place(request: PlaceAnalysisRequest) -> dict:
     comfort = analyze_station_comfort(
         nearest_station,
         query_time=request.time,
+        query_date=request.date,
         preferences=request.preferences,
         station_distance_m=nearest_station["distance_m"],
     )
     nearby_merchants = find_nearby_merchants(place["latitude"], place["longitude"])
     return {
-        "data_label": "SIMULATED DATA / PROTOTYPE LOGIC",
+        "data_label": "HISTORICAL OD ESTIMATE / NOT REAL-TIME / LOW RELIABILITY",
         "query": request.model_dump(),
         "resolved_place": place,
         "nearest_station": nearest_station,
@@ -129,4 +141,3 @@ def recommend(request: RecommendationRequest) -> dict:
 @app.post("/api/agent/recommend")
 def agent_recommend(request: RecommendationRequest) -> dict:
     return travel_decision_agent.run(request.prompt)
-
