@@ -5,6 +5,7 @@ from app.main import (
     balance_recommend,
     health_check,
     list_merchants,
+    list_places,
     list_stations,
     recommend,
 )
@@ -39,6 +40,12 @@ class ApiContractTests(unittest.TestCase):
         self.assertTrue(all(item["crowd_reliability"] == "low" for item in result["stations"]))
         self.assertTrue(all(item["crowd_index"] is not None for item in result["stations"]))
         self.assertTrue(all(0 <= item["crowd_index"] <= 100 for item in result["stations"]))
+
+    def test_place_catalog_includes_localized_names(self) -> None:
+        result = list_places()
+        self.assertTrue(all(item["place_name_en"] for item in result["places"]))
+        self.assertTrue(all(item["place_name_ja"] for item in result["places"]))
+        self.assertTrue(all(item["place_name_ko"] for item in result["places"]))
 
     def test_rules_recommendation_returns_top_three_contract(self) -> None:
         result = recommend(RecommendationRequest(prompt="想喝咖啡聊天，有冷氣，預算500元內"))
