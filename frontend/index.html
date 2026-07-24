@@ -9,20 +9,20 @@
   </head>
   <body>
     <main class="app-shell">
-      <div id="map" aria-label="即時人流探索地圖"></div>
+      <div id="map" aria-label="歷史OD人流推估地圖"></div>
       <header class="top-bar">
         <button class="icon-button" aria-label="返回">←</button>
         <div><p class="eyebrow">悠遊付</p><h1>智慧出行小幫手</h1></div>
         <div class="top-actions">
           <button id="map-language-button" class="text-button language-button" type="button" aria-label="切換語言">繁中</button>
-          <button class="text-button" data-i18n="help">說明</button>
+          <button class="text-button help-button" type="button" data-i18n="help">說明</button>
         </div>
       </header>
       <button id="open-search" class="search-entry" type="button">
         <span aria-hidden="true">⌕</span>
         <span>搜尋地點，或告訴 AI 你想去哪裡</span>
       </button>
-      <div class="prototype-badge">SIMULATED DATA · PROTOTYPE ONLY</div>
+      <div class="prototype-badge" data-i18n="historicalEstimate">歷史人流估算</div>
       <button id="reset-map" class="reset-map-button" type="button" hidden>× <span data-i18n="clearResult">清除結果</span></button>
       <div class="map-legend" aria-label="人流顏色圖例">
         <span><i class="legend-color low"></i>較少</span>
@@ -33,8 +33,8 @@
       <section class="bottom-sheet is-collapsed" aria-label="地點資訊" data-sheet-state="collapsed">
         <button id="sheet-handle" class="sheet-handle" type="button" aria-label="拖曳或點擊調整資訊面板" aria-expanded="false"><span></span></button>
         <p id="sheet-kicker" class="sheet-kicker">尚未選擇地點</p>
-        <h2 id="sheet-title">從地圖探索現在適合去哪裡</h2>
-        <p id="sheet-description" class="sheet-description">選擇目的地後，我們會分析最近捷運站的人流，協助你判斷現在是否適合前往。</p>
+        <h2 id="sheet-title">從地圖探索適合前往的時段</h2>
+        <p id="sheet-description" class="sheet-description">選擇目的地後，我們會依最近捷運站的歷史 OD 資料推估人流；結果不是即時站內人數。</p>
         <section class="decision-card" aria-label="出行決策">
           <div id="comfort-status" class="decision-gauge-wrap">
             <div id="comfort-gauge" class="comfort-gauge" aria-hidden="true">
@@ -43,7 +43,7 @@
             <small>出行舒適度</small>
           </div>
           <div class="decision-copy">
-            <p>現在適合前往嗎？</p>
+            <p>查詢時段適合前往嗎？</p>
             <h3 id="decision-label">請先選擇地點</h3>
             <p id="decision-summary">完成搜尋後會在這裡顯示具體建議。</p>
           </div>
@@ -56,7 +56,7 @@
             </span>
             <span><small>最近捷運站人流</small><strong id="crowd-label">尚未分析</strong></span>
           </div>
-          <div class="context-card update-context"><small>資料更新</small><strong id="updated-time">--</strong></div>
+          <div class="context-card update-context"><small>資料依據</small><strong id="updated-time">--</strong></div>
         </div>
         <section class="balance-section" aria-label="旅客餘額推薦">
           <div class="balance-heading">
@@ -101,7 +101,7 @@
           <button id="close-search" class="plain-icon-button" type="button" aria-label="返回地圖">←</button>
           <h2 id="search-title">普通搜尋</h2>
           <div class="header-actions" aria-label="輔助功能">
-            <button class="plain-icon-button" type="button" aria-label="說明">?</button>
+            <button class="plain-icon-button help-button" type="button" aria-label="說明">?</button>
             <button id="search-language-button" class="plain-icon-button" type="button" aria-label="切換語言">◎</button>
           </div>
         </header>
@@ -193,8 +193,24 @@
       <button type="button" data-language="ja">日本語</button>
       <button type="button" data-language="ko">한국어</button>
     </div>
+    <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-title">
+      <div class="help-dialog-header">
+        <div>
+          <p class="eyebrow" data-i18n="dataGuide">資料說明</p>
+          <h2 id="help-title" data-i18n="helpTitle">如何理解人流與舒適度？</h2>
+        </div>
+        <button id="close-help" class="help-close" type="button" aria-label="關閉">×</button>
+      </div>
+      <p data-i18n="helpIntro">畫面提供的是歷史人流估算，適合用來比較不同車站與時段。</p>
+      <ul>
+        <li data-i18n="helpHistory">資料期間為 2026 年 6 月，依車站、星期與小時整理歷史 OD 進出站資料。</li>
+        <li data-i18n="helpRealtime">結果不是即時站內人數，也不是官方容量或安全上限。</li>
+        <li data-i18n="helpReliability">目前只有一個月資料，同星期同時段約 4–5 筆樣本，因此仍屬初步估算。</li>
+        <li data-i18n="helpComfort">舒適度由歷史人流壓力反向換算，分數越高代表該時段相對舒適。</li>
+      </ul>
+      <p class="help-note" data-i18n="helpUse">建議把結果當作錯峰與比較時段的參考，不應作為安全或營運判斷。</p>
+    </dialog>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/static/app.js"></script>
   </body>
 </html>
-
