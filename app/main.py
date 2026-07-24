@@ -60,6 +60,7 @@ def list_places() -> dict:
             {
                 **place,
                 "nearest_station": nearest_station["station_name"],
+                "nearest_station_en": nearest_station["station_name_en"],
                 "station_distance_m": nearest_station["distance_m"],
             }
         )
