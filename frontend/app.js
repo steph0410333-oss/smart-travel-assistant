@@ -319,6 +319,18 @@ function localizedWeekday(number) {
   return names[currentLanguage]?.[number] || names["zh-Hant"][number] || "";
 }
 
+function localizedStationName(station) {
+  if (currentLanguage === "zh-Hant") {
+    return station.display_name || station.station_name;
+  }
+  return station.station_name_en || station.display_name || station.station_name;
+}
+
+function localizedPlaceName(place) {
+  if (currentLanguage === "zh-Hant") return place.place_name;
+  return place.place_name_en || place.place_name;
+}
+
 if (typeof L !== "undefined") {
   map = L.map("map", { zoomControl: false }).setView([25.0478, 121.517], 13);
 
@@ -529,8 +541,8 @@ function renderAnalysis(result) {
   const comfortDisplay = comfortPresentation(comfort.status);
   hasActiveResult = true;
   document.querySelector("#reset-map").hidden = false;
-  document.querySelector("#sheet-kicker").textContent = tf("resultKicker", { place: result.resolved_place.place_name });
-  document.querySelector("#sheet-title").textContent = station.station_name;
+  document.querySelector("#sheet-kicker").textContent = tf("resultKicker", { place: localizedPlaceName(result.resolved_place) });
+  document.querySelector("#sheet-title").textContent = localizedStationName(station);
   document.querySelector("#sheet-description").textContent = tf("distanceToStation", { distance: station.distance_m });
   document.querySelector("#decision-label").textContent = decisionPresentation(comfort.status);
   document.querySelector("#decision-summary").textContent = currentLanguage === "zh-Hant"
@@ -691,7 +703,7 @@ function renderRecommendations(payload, activeIndex = 0) {
   modeBadge.title = currentLanguage === "zh-Hant" ? (payload.limitations || "") : t("helpUse");
   document.querySelector("#agent-summary").textContent = currentLanguage === "zh-Hant"
     ? (payload.personalized_summary || "")
-    : tf("topSummary", { place: payload.recommendations[0]?.resolved_place.place_name || "" });
+    : tf("topSummary", { place: localizedPlaceName(payload.recommendations[0]?.resolved_place || { place_name: "" }) });
   const traceList = document.querySelector("#agent-trace-list");
   traceList.replaceChildren(...(payload.workflow_trace || []).map((step) => {
     const item = document.createElement("li");
@@ -711,8 +723,8 @@ function renderRecommendations(payload, activeIndex = 0) {
     card.className = `recommendation-card${index === activeIndex ? " is-active" : ""}`;
     card.innerHTML = `
       <span class="rank">TOP ${index + 1} · ${tf("matchScore", { score: item.recommendation_score })}</span>
-      <h4>${item.resolved_place.place_name}</h4>
-      <p class="station-line">${item.nearest_station.station_name} · ${localizedStatus(item.comfort.status)}</p>
+      <h4>${localizedPlaceName(item.resolved_place)}</h4>
+      <p class="station-line">${localizedStationName(item.nearest_station)} · ${localizedStatus(item.comfort.status)}</p>
       <p class="reason-line">${currentLanguage === "zh-Hant" ? item.recommendation_reasons.slice(0, 2).join("；") : t("recommendationReason")}</p>
     `;
     card.addEventListener("click", () => {
@@ -753,7 +765,7 @@ function renderPlaceSuggestions(query = "") {
     button.type = "button";
     button.className = "place-suggestion";
     button.innerHTML = `<span class="place-suggestion-icon">⌖</span><span><strong>${place.place_name}</strong><small>${tf("suggestionNearest", {
-      station: place.nearest_station,
+      station: currentLanguage === "zh-Hant" ? place.nearest_station : (place.nearest_station_en || place.nearest_station),
       distance: place.station_distance_m,
     })}</small></span>`;
     button.addEventListener("click", () => {
@@ -799,8 +811,8 @@ async function loadPrototypeData() {
       .on("click", () => analyzePlace(station.station_name).catch((error) => window.alert(error.message)));
     stationMarker.bindTooltip(
       hasCrowdScore
-        ? tf("mapCrowd", { station: station.station_name, score: Math.round(station.crowd_index) })
-        : tf("mapNoData", { station: station.station_name }),
+        ? tf("mapCrowd", { station: localizedStationName(station), score: Math.round(station.crowd_index) })
+        : tf("mapNoData", { station: localizedStationName(station) }),
     );
     stationMarkers.push({ station, marker: stationMarker, hasCrowdScore });
   });
@@ -824,8 +836,8 @@ function refreshMapTooltips() {
   stationMarkers.forEach(({ station, marker, hasCrowdScore }) => {
     marker.setTooltipContent(
       hasCrowdScore
-        ? tf("mapCrowd", { station: station.station_name, score: Math.round(station.crowd_index) })
-        : tf("mapNoData", { station: station.station_name }),
+        ? tf("mapCrowd", { station: localizedStationName(station), score: Math.round(station.crowd_index) })
+        : tf("mapNoData", { station: localizedStationName(station) }),
     );
   });
   merchantMarkers.forEach(({ merchant, marker }) => {
