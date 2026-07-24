@@ -50,6 +50,13 @@ class StationServiceTests(unittest.TestCase):
         self.assertEqual(place["place_name"], "台北小巨蛋")
         self.assertEqual(place["place_name_en"], "Taipei Arena")
 
+    def test_resolves_localized_place_suggestion_name(self) -> None:
+        place = resolve_place("Shilin Night Market")
+        self.assertIsNotNone(place)
+        self.assertEqual(place["place_name"], "士林夜市")
+        self.assertEqual(place["place_name_ja"], "士林夜市")
+        self.assertEqual(place["place_name_ko"], "스린 야시장")
+
 
 class ComfortServiceTests(unittest.TestCase):
     def setUp(self) -> None:
