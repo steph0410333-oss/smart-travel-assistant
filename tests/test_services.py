@@ -3,40 +3,106 @@ import unittest
 from agent.gemini_adapter import GeminiTravelAdapter
 from agent.travel_decision_agent import TravelDecisionAgent
 from services.comfort_service import analyze_station_comfort
+from services.crowd_service import get_historical_crowd
 from services.balance_service import recommend_by_balance
 from services.intent_service import parse_recommendation_intent
 from services.merchant_service import find_nearby_merchants, get_merchants, summarize_merchants
 from services.recommendation_service import recommend_places
-from services.station_service import find_nearest_station, resolve_place
+from services.station_service import find_nearest_station, get_stations, resolve_place
 
 
 class StationServiceTests(unittest.TestCase):
+    def test_station_catalog_covers_all_od_stations(self) -> None:
+        stations = get_stations()
+        self.assertEqual(len(stations), 119)
+        self.assertEqual(len({station["station_name"] for station in stations}), 119)
+        self.assertTrue(all(station["line_station_ids"] for station in stations))
+
+    def test_banqiao_od_lines_remain_separate(self) -> None:
+        stations = {
+            station["station_name"]: station
+            for station in get_stations()
+        }
+        self.assertEqual(stations["BL板橋"]["line_station_ids"], ["BL07"])
+        self.assertEqual(stations["Y板橋"]["line_station_ids"], ["Y16"])
+
+    def test_physical_banqiao_name_resolves_without_knowing_line_prefix(self) -> None:
+        place = resolve_place("板橋站")
+        self.assertIsNotNone(place)
+        self.assertEqual(place["place_name"], "板橋")
+
     def test_resolves_place_alias_and_finds_nearest_station(self) -> None:
         place = resolve_place("我想去小巨蛋")
         self.assertIsNotNone(place)
         station = find_nearest_station(place["latitude"], place["longitude"])
-        self.assertEqual(station["station_name"], "台北小巨蛋站")
+        self.assertEqual(station["station_name"], "台北小巨蛋")
         self.assertLess(station["distance_m"], 300)
 
 
 class ComfortServiceTests(unittest.TestCase):
     def setUp(self) -> None:
         self.station = {
-            "crowd_index": 50,
-            "nearby_crowd_index": 45,
-            "peak_index": 55,
-            "event_flag": False,
+            "station_name": "中山站",
+        }
+        self.estimate = {
+            "available": True,
+            "crowd_score": 70.0,
+            "crowd_level": "擁擠",
+            "sample_count": 4,
+            "reliability": "low",
+            "weekday": "星期五",
+            "hour": 19,
+            "data_period_start": "2026-06-01",
+            "data_period_end": "2026-06-30",
         }
 
-    def test_evening_peak_reduces_comfort(self) -> None:
-        afternoon = analyze_station_comfort(self.station, "15:00")
-        evening = analyze_station_comfort(self.station, "19:00")
-        self.assertLess(evening["comfort_score"], afternoon["comfort_score"])
+    def test_historical_crowd_score_is_inverted_to_comfort(self) -> None:
+        result = analyze_station_comfort(
+            self.station,
+            "19:00",
+            crowd_estimate=self.estimate,
+        )
+        self.assertEqual(result["base_comfort_score"], 30)
+        self.assertEqual(result["status"], "擁擠")
+        self.assertIn("歷史OD推估", result["assumption"])
 
     def test_crowd_preference_adds_personalized_penalty(self) -> None:
-        normal = analyze_station_comfort(self.station, "19:00")
-        personalized = analyze_station_comfort(self.station, "19:00", ["不想太擠"])
+        normal = analyze_station_comfort(
+            self.station,
+            "19:00",
+            crowd_estimate=self.estimate,
+        )
+        personalized = analyze_station_comfort(
+            self.station,
+            "19:00",
+            preferences=["不想太擠"],
+            crowd_estimate=self.estimate,
+        )
         self.assertLess(personalized["comfort_score"], normal["comfort_score"])
+
+    def test_non_operating_hour_returns_no_score(self) -> None:
+        result = analyze_station_comfort(
+            self.station,
+            "03:00",
+            query_date="2026-07-24",
+        )
+        self.assertIsNone(result["comfort_score"])
+        self.assertEqual(result["status"], "資料不足")
+
+
+class CrowdServiceTests(unittest.TestCase):
+    def test_looks_up_station_weekday_and_hour_from_od_profile(self) -> None:
+        estimate = get_historical_crowd(
+            "中山站",
+            query_time="19:00",
+            query_date="2026-07-24",
+        )
+        self.assertTrue(estimate["available"])
+        self.assertEqual(estimate["source_station"], "中山")
+        self.assertEqual(estimate["weekday_num"], 5)
+        self.assertEqual(estimate["reliability"], "low")
+        self.assertGreaterEqual(estimate["crowd_score"], 0)
+        self.assertLessEqual(estimate["crowd_score"], 100)
 
 
 class RecommendationServiceTests(unittest.TestCase):
@@ -102,7 +168,7 @@ class TravelDecisionAgentTests(unittest.TestCase):
                 },
             }}]}}]},
             {"candidates": [{"content": {"role": "model", "parts": [
-                {"text": "首選是中山站咖啡商圈，最近為中山站；舒適度為模擬評分。"}
+                {"text": "首選是中山站咖啡商圈，最近為中山站；舒適度為低可靠度的歷史OD推估。"}
             ]}}]},
         ])
         adapter = GeminiTravelAdapter(api_key="test-key", transport=lambda _: next(responses))
@@ -113,9 +179,8 @@ class TravelDecisionAgentTests(unittest.TestCase):
         self.assertEqual(result["structured_intent"]["budget_max"], 500)
         self.assertEqual(len(result["recommendations"]), 3)
         self.assertIn("nearby_merchants", result["recommendations"][0])
-        self.assertIn("模擬評分", result["personalized_summary"])
+        self.assertIn("歷史OD推估", result["personalized_summary"])
 
 
 if __name__ == "__main__":
     unittest.main()
-
