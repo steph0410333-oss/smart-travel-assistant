@@ -472,7 +472,742 @@
     "display_name": "台北101/世貿",
     "latitude": 25.032865,
     "longitude": 121.563667,
-    "line_station_ids…7780 tokens truncated…ngitude": 121.519585,
+    "line_station_ids": [
+      "R03"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G17",
+    "station_name": "台北小巨蛋",
+    "display_name": "台北小巨蛋",
+    "latitude": 25.05152,
+    "longitude": 121.552549,
+    "line_station_ids": [
+      "G17"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "O13",
+    "station_name": "台北橋",
+    "display_name": "台北橋",
+    "latitude": 25.063075,
+    "longitude": 121.500575,
+    "line_station_ids": [
+      "O13"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R10-BL12",
+    "station_name": "台北車站",
+    "display_name": "台北車站",
+    "latitude": 25.04631,
+    "longitude": 121.517415,
+    "line_station_ids": [
+      "R10",
+      "BL12"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R09",
+    "station_name": "台大醫院",
+    "display_name": "台大醫院",
+    "latitude": 25.041399,
+    "longitude": 121.51602,
+    "line_station_ids": [
+      "R09"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G08",
+    "station_name": "台電大樓",
+    "display_name": "台電大樓",
+    "latitude": 25.020733,
+    "longitude": 121.5281435,
+    "line_station_ids": [
+      "G08"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R20",
+    "station_name": "唭哩岸",
+    "display_name": "唭哩岸",
+    "latitude": 25.1208515,
+    "longitude": 121.506234,
+    "line_station_ids": [
+      "R20"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL13",
+    "station_name": "善導寺",
+    "display_name": "善導寺",
+    "latitude": 25.04468,
+    "longitude": 121.523885,
+    "line_station_ids": [
+      "BL13"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL17",
+    "station_name": "國父紀念館",
+    "display_name": "國父紀念館",
+    "latitude": 25.04137,
+    "longitude": 121.557815,
+    "line_station_ids": [
+      "BL17"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R14",
+    "station_name": "圓山",
+    "display_name": "圓山",
+    "latitude": 25.0714085,
+    "longitude": 121.520074,
+    "line_station_ids": [
+      "R14"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL03",
+    "station_name": "土城",
+    "display_name": "土城",
+    "latitude": 24.97313,
+    "longitude": 121.44432,
+    "line_station_ids": [
+      "BL03"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R16",
+    "station_name": "士林",
+    "display_name": "士林",
+    "latitude": 25.0934925,
+    "longitude": 121.52623,
+    "line_station_ids": [
+      "R16"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G04-Y07",
+    "station_name": "大坪林",
+    "display_name": "大坪林",
+    "latitude": 24.9827205,
+    "longitude": 121.54134,
+    "line_station_ids": [
+      "G04",
+      "Y07"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR09-R05",
+    "station_name": "大安",
+    "display_name": "大安",
+    "latitude": 25.033311,
+    "longitude": 121.54237,
+    "line_station_ids": [
+      "BR09",
+      "R05"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R06",
+    "station_name": "大安森林公園",
+    "display_name": "大安森林公園",
+    "latitude": 25.033225,
+    "longitude": 121.536151,
+    "line_station_ids": [
+      "R06"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "O12",
+    "station_name": "大橋頭站",
+    "display_name": "大橋頭",
+    "latitude": 25.06322,
+    "longitude": 121.5130035,
+    "line_station_ids": [
+      "O12"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR20",
+    "station_name": "大湖公園",
+    "display_name": "大湖公園",
+    "latitude": 25.083805,
+    "longitude": 121.602214,
+    "line_station_ids": [
+      "BR20"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR14",
+    "station_name": "大直",
+    "display_name": "大直",
+    "latitude": 25.07943,
+    "longitude": 121.54679,
+    "line_station_ids": [
+      "BR14"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R21",
+    "station_name": "奇岩",
+    "display_name": "奇岩",
+    "latitude": 25.1254705,
+    "longitude": 121.50114,
+    "line_station_ids": [
+      "R21"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G11",
+    "station_name": "小南門",
+    "display_name": "小南門",
+    "latitude": 25.035585,
+    "longitude": 121.51088,
+    "line_station_ids": [
+      "G11"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G03A",
+    "station_name": "小碧潭",
+    "display_name": "小碧潭",
+    "latitude": 24.97188,
+    "longitude": 121.53058,
+    "line_station_ids": [
+      "G03A"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL18",
+    "station_name": "市政府",
+    "display_name": "市政府",
+    "latitude": 25.041135,
+    "longitude": 121.565685,
+    "line_station_ids": [
+      "BL18"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "Y19",
+    "station_name": "幸福",
+    "display_name": "幸福",
+    "latitude": 25.050282,
+    "longitude": 121.460216,
+    "line_station_ids": [
+      "Y19"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL06",
+    "station_name": "府中",
+    "display_name": "府中",
+    "latitude": 25.008465,
+    "longitude": 121.459276,
+    "line_station_ids": [
+      "BL06"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL20",
+    "station_name": "後山埤",
+    "display_name": "後山埤",
+    "latitude": 25.044715,
+    "longitude": 121.58227,
+    "line_station_ids": [
+      "BL20"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "O52",
+    "station_name": "徐匯中學",
+    "display_name": "徐匯中學",
+    "latitude": 25.080485,
+    "longitude": 121.479945,
+    "line_station_ids": [
+      "O52"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R23",
+    "station_name": "復興崗",
+    "display_name": "復興崗",
+    "latitude": 25.137497,
+    "longitude": 121.485456,
+    "line_station_ids": [
+      "R23"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR10-BL15",
+    "station_name": "忠孝復興",
+    "display_name": "忠孝復興",
+    "latitude": 25.041749,
+    "longitude": 121.545026,
+    "line_station_ids": [
+      "BR10",
+      "BL15"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL16",
+    "station_name": "忠孝敦化",
+    "display_name": "忠孝敦化",
+    "latitude": 25.041505,
+    "longitude": 121.55045,
+    "line_station_ids": [
+      "BL16"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "O07-BL14",
+    "station_name": "忠孝新生",
+    "display_name": "忠孝新生",
+    "latitude": 25.042498,
+    "longitude": 121.53321,
+    "line_station_ids": [
+      "O07",
+      "BL14"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R24",
+    "station_name": "忠義",
+    "display_name": "忠義",
+    "latitude": 25.1309225,
+    "longitude": 121.4732975,
+    "line_station_ids": [
+      "R24"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR18",
+    "station_name": "文德",
+    "display_name": "文德",
+    "latitude": 25.078455,
+    "longitude": 121.5849995,
+    "line_station_ids": [
+      "BR18"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R22A",
+    "station_name": "新北投",
+    "display_name": "新北投",
+    "latitude": 25.1369315,
+    "longitude": 121.5025955,
+    "line_station_ids": [
+      "R22A"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "Y20",
+    "station_name": "新北產業園區",
+    "display_name": "新北產業園區",
+    "latitude": 25.0615483,
+    "longitude": 121.4599257,
+    "line_station_ids": [
+      "Y20"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL08",
+    "station_name": "新埔",
+    "display_name": "新埔",
+    "latitude": 25.02327,
+    "longitude": 121.468055,
+    "line_station_ids": [
+      "BL08"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "Y17",
+    "station_name": "新埔民生",
+    "display_name": "新埔民生",
+    "latitude": 25.026125,
+    "longitude": 121.466839,
+    "line_station_ids": [
+      "Y17"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G01",
+    "station_name": "新店",
+    "display_name": "新店",
+    "latitude": 24.95761,
+    "longitude": 121.53746,
+    "line_station_ids": [
+      "G01"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G02",
+    "station_name": "新店區公所",
+    "display_name": "新店區公所",
+    "latitude": 24.96744,
+    "longitude": 121.5413,
+    "line_station_ids": [
+      "G02"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "O18",
+    "station_name": "新莊",
+    "display_name": "新莊",
+    "latitude": 25.03608,
+    "longitude": 121.45218,
+    "line_station_ids": [
+      "O18"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BL21",
+    "station_name": "昆陽",
+    "display_name": "昆陽",
+    "latitude": 25.0504585,
+    "longitude": 121.5932285,
+    "line_station_ids": [
+      "BL21"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R18",
+    "station_name": "明德",
+    "display_name": "明德",
+    "latitude": 25.109815,
+    "longitude": 121.518785,
+    "line_station_ids": [
+      "R18"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "O02-Y11",
+    "station_name": "景安",
+    "display_name": "景安",
+    "latitude": 24.99392,
+    "longitude": 121.505114,
+    "line_station_ids": [
+      "O02",
+      "Y11"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "Y10",
+    "station_name": "景平",
+    "display_name": "景平",
+    "latitude": 24.9919681,
+    "longitude": 121.5165532,
+    "line_station_ids": [
+      "Y10"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G05",
+    "station_name": "景美",
+    "display_name": "景美",
+    "latitude": 24.992824,
+    "longitude": 121.5406975,
+    "line_station_ids": [
+      "G05"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR02",
+    "station_name": "木柵",
+    "display_name": "木柵",
+    "latitude": 24.99824,
+    "longitude": 121.573127,
+    "line_station_ids": [
+      "BR02"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR22",
+    "station_name": "東湖",
+    "display_name": "東湖",
+    "latitude": 25.067455,
+    "longitude": 121.611535,
+    "line_station_ids": [
+      "BR22"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R07-O06",
+    "station_name": "東門",
+    "display_name": "東門",
+    "latitude": 25.033894,
+    "longitude": 121.528766,
+    "line_station_ids": [
+      "R07",
+      "O06"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G19",
+    "station_name": "松山",
+    "display_name": "松山",
+    "latitude": 25.050118,
+    "longitude": 121.577706,
+    "line_station_ids": [
+      "G19"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "BR13",
+    "station_name": "松山機場",
+    "display_name": "松山機場",
+    "latitude": 25.0629075,
+    "longitude": 121.55201,
+    "line_station_ids": [
+      "BR13"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "G15-O08",
+    "station_name": "松江南京",
+    "display_name": "松江南京",
+    "latitude": 25.052693,
+    "longitude": 121.53285,
+    "line_station_ids": [
+      "G15",
+      "O08"
+    ],
+    "coordinate_method": "mean_of_transfer_line_coordinates",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "Y15",
+    "station_name": "板新",
+    "display_name": "板新",
+    "latitude": 25.0144914,
+    "longitude": 121.4722124,
+    "line_station_ids": [
+      "Y15"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "Y13",
+    "station_name": "橋和",
+    "display_name": "橋和",
+    "latitude": 25.0044131,
+    "longitude": 121.4904608,
+    "line_station_ids": [
+      "Y13"
+    ],
+    "coordinate_method": "single_line_station",
+    "coordinate_source": "Taipei Metro station coordinate mirror",
+    "coordinate_source_url": "https://github.com/bamboooofish/Taiwan-MRT-Stations-LatLong",
+    "official_reference_url": "https://data.taipei/dataset/detail?id=cfa4778c-62c1-497b-b704-756231de348b"
+  },
+  {
+    "station_id": "R13-O11",
+    "station_name": "民權西路",
+    "display_name": "民權西路",
+    "latitude": 25.06235,
+    "longitude": 121.519585,
     "line_station_ids": [
       "R13",
       "O11"
