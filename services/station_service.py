@@ -13,7 +13,12 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 @lru_cache
 def get_stations() -> list[dict[str, Any]]:
     with (DATA_DIR / "stations.json").open(encoding="utf-8") as file:
-        return json.load(file)
+        stations = json.load(file)
+    with (DATA_DIR / "station_names_en.json").open(encoding="utf-8") as file:
+        english_names = json.load(file)["names"]
+    for station in stations:
+        station["station_name_en"] = english_names[station["display_name"]]
+    return stations
 
 
 @lru_cache
@@ -34,6 +39,7 @@ def get_stations_for_time(
                 "station_id",
                 "station_name",
                 "display_name",
+                "station_name_en",
                 "latitude",
                 "longitude",
                 "line_station_ids",
@@ -83,6 +89,7 @@ def resolve_place(query: str) -> dict[str, Any] | None:
         station_names = {
             _normalize(station["station_name"]),
             _normalize(station.get("display_name", station["station_name"])),
+            _normalize(station["station_name_en"]),
         }
         for normalized_name in station_names:
             normalized_without_suffix = normalized_name.removesuffix("站")
@@ -93,6 +100,7 @@ def resolve_place(query: str) -> dict[str, Any] | None:
                 return {
                     "place_id": f"station:{station['station_id']}",
                     "place_name": station.get("display_name", station["station_name"]),
+                    "place_name_en": station["station_name_en"],
                     "latitude": station["latitude"],
                     "longitude": station["longitude"],
                     "aliases": [station["station_name"]],
@@ -126,6 +134,7 @@ def find_nearest_station(latitude: float, longitude: float) -> dict[str, Any]:
             "station_id",
             "station_name",
             "display_name",
+            "station_name_en",
             "latitude",
             "longitude",
             "line_station_ids",
