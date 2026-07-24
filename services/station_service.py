@@ -4,6 +4,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from services.crowd_service import get_historical_crowd
+
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
@@ -18,6 +20,44 @@ def get_stations() -> list[dict[str, Any]]:
 def get_places() -> list[dict[str, Any]]:
     with (DATA_DIR / "places.json").open(encoding="utf-8") as file:
         return json.load(file)
+
+
+def get_stations_for_time(
+    query_time: str | None = None,
+    query_date: str | None = None,
+) -> list[dict[str, Any]]:
+    stations = []
+    for station in get_stations():
+        public_station = {
+            key: station[key]
+            for key in (
+                "station_id",
+                "station_name",
+                "display_name",
+                "latitude",
+                "longitude",
+                "line_station_ids",
+                "coordinate_method",
+                "coordinate_source",
+                "official_reference_url",
+            )
+        }
+        estimate = get_historical_crowd(
+            station["station_name"],
+            query_time=query_time,
+            query_date=query_date,
+        )
+        stations.append(
+            {
+                **public_station,
+                "crowd_index": estimate["crowd_score"],
+                "crowd_level": estimate["crowd_level"],
+                "crowd_reliability": estimate["reliability"],
+                "crowd_sample_count": estimate["sample_count"],
+                "crowd_estimate": estimate,
+            }
+        )
+    return stations
 
 
 def _normalize(text: str) -> str:
@@ -40,16 +80,23 @@ def resolve_place(query: str) -> dict[str, Any] | None:
                 candidates.append((len(normalized_name), place))
 
     for station in get_stations():
-        normalized_name = _normalize(station["station_name"])
-        normalized_without_suffix = normalized_name.removesuffix("站")
-        if normalized_name in normalized_query or normalized_without_suffix == normalized_query:
-            return {
-                "place_id": f"station:{station['station_id']}",
-                "place_name": station["station_name"],
-                "latitude": station["latitude"],
-                "longitude": station["longitude"],
-                "aliases": [],
-            }
+        station_names = {
+            _normalize(station["station_name"]),
+            _normalize(station.get("display_name", station["station_name"])),
+        }
+        for normalized_name in station_names:
+            normalized_without_suffix = normalized_name.removesuffix("站")
+            if (
+                normalized_name in normalized_query
+                or normalized_without_suffix == normalized_query
+            ):
+                return {
+                    "place_id": f"station:{station['station_id']}",
+                    "place_name": station.get("display_name", station["station_name"]),
+                    "latitude": station["latitude"],
+                    "longitude": station["longitude"],
+                    "aliases": [station["station_name"]],
+                }
 
     if candidates:
         return max(candidates, key=lambda item: item[0])[1]
@@ -73,7 +120,18 @@ def find_nearest_station(latitude: float, longitude: float) -> dict[str, Any]:
         get_stations(),
         key=lambda item: _distance_km(latitude, longitude, item["latitude"], item["longitude"]),
     )
-    result = station.copy()
+    result = {
+        key: station[key]
+        for key in (
+            "station_id",
+            "station_name",
+            "display_name",
+            "latitude",
+            "longitude",
+            "line_station_ids",
+            "coordinate_method",
+        )
+    }
     result["distance_m"] = round(
         _distance_km(latitude, longitude, station["latitude"], station["longitude"]) * 1000
     )
