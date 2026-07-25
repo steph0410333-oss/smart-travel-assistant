@@ -5,12 +5,18 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from agent.travel_decision_agent import TravelDecisionAgent
-from app.schemas import BalanceRecommendationRequest, PlaceAnalysisRequest, RecommendationRequest
+from app.schemas import (
+    BalanceRecommendationRequest,
+    PlaceAnalysisRequest,
+    RecommendationRequest,
+    RoamingReportRequest,
+)
 from services.balance_service import recommend_by_balance
 from services.comfort_service import analyze_station_comfort
 from services.intent_service import parse_recommendation_intent
 from services.merchant_service import find_nearby_merchants, get_merchants, summarize_merchants
 from services.recommendation_service import recommend_places
+from services.roaming_service import generate_roaming_report
 from services.crowd_service import get_crowd_metadata
 from services.station_service import (
     find_nearest_station,
@@ -142,3 +148,8 @@ def recommend(request: RecommendationRequest) -> dict:
 @app.post("/api/agent/recommend")
 def agent_recommend(request: RecommendationRequest) -> dict:
     return travel_decision_agent.run(request.prompt)
+
+
+@app.post("/api/roaming-report")
+def roaming_report(request: RoamingReportRequest) -> dict[str, str]:
+    return generate_roaming_report(request.language, request.district, request.station)

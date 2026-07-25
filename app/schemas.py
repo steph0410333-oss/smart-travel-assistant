@@ -18,3 +18,9 @@ class RecommendationRequest(BaseModel):
 class BalanceRecommendationRequest(BaseModel):
     balance: int = Field(ge=0, le=10000, examples=[300])
     limit: int = Field(default=3, ge=1, le=10)
+
+
+class RoamingReportRequest(BaseModel):
+    language: str = Field(default="zh-Hant", pattern="^(zh-Hant|en|ja|ko)$")
+    district: str = Field(min_length=1, max_length=40)
+    station: str = Field(min_length=1, max_length=60)
