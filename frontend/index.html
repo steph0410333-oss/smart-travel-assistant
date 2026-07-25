@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260725-7" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260725-8" />
   </head>
   <body>
     <main class="app-shell">
@@ -16,8 +16,11 @@
         <div class="top-actions">
           <button id="map-language-button" class="text-button language-button" type="button" aria-label="切換語言" data-i18n-aria="switchLanguage">繁中</button>
           <button class="text-button help-button" type="button" data-i18n="help">說明</button>
-          <button id="open-profile" class="profile-button" type="button" aria-label="開啟個人頁" data-i18n-aria="openProfile">
-            <span aria-hidden="true">●</span>
+          <button id="open-profile" class="profile-button companion-avatar" type="button" aria-label="開啟個人頁" data-i18n-aria="openProfile">
+            <span class="avatar-character" aria-hidden="true">
+              <img class="bebe-character" src="/static/assets/companion/bebe-front.png" alt="" />
+              <i class="bebe-wearable"></i>
+            </span>
           </button>
         </div>
       </header>
@@ -239,7 +242,7 @@
         </header>
 
         <section class="profile-hero" aria-labelledby="profile-name">
-          <button id="avatar-shortcut" class="avatar-preview avatar-preview-small" type="button" aria-label="開啟小人衣櫃" data-i18n-aria="openWardrobe">
+          <button id="avatar-shortcut" class="avatar-preview avatar-preview-small companion-avatar" type="button" aria-label="開啟小人衣櫃" data-i18n-aria="openWardrobe">
             <span class="avatar-card-pattern" aria-hidden="true"></span>
             <span class="avatar-character" aria-hidden="true">
               <img class="bebe-character" src="/static/assets/companion/bebe-front.png" alt="" />
@@ -278,7 +281,7 @@
             <span id="equipment-count">1 / 5</span>
           </div>
           <div class="companion-showcase">
-            <div id="avatar-preview-large" class="avatar-preview avatar-preview-large" aria-label="虛擬數位分身" data-i18n-aria="digitalAvatar">
+            <div id="avatar-preview-large" class="avatar-preview avatar-preview-large companion-avatar" aria-label="虛擬數位分身" data-i18n-aria="digitalAvatar">
               <span class="avatar-card-pattern" aria-hidden="true"></span>
               <span class="avatar-character" aria-hidden="true">
                 <img class="bebe-character" src="/static/assets/companion/bebe-front.png" alt="" />
@@ -421,6 +424,6 @@
     </dialog>
     <div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260725-7"></script>
+    <script src="/static/app.js?v=20260725-8"></script>
   </body>
 </html>
