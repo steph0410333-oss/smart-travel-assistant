@@ -40,6 +40,16 @@ const cardCatalog = [
   { id: "rain", nameKey: "rainCard", unlockKey: "completeRainTask" },
   { id: "explorer", nameKey: "explorerCard", unlockKey: "visitThreeStations" },
 ];
+const companionArtwork = {
+  bebe: "/static/assets/companion/bebe-front.png",
+  cards: {
+    "metro-night": "/static/assets/companion/zhongshan-rain-watercolor.png",
+    dadaocheng: "/static/assets/companion/dadaocheng-watercolor.png",
+    zhongshan: "/static/assets/companion/zhongshan-rain-watercolor.png",
+    rain: "/static/assets/companion/zhongshan-rain-watercolor.png",
+    explorer: "/static/assets/companion/alishan-watercolor.png",
+  },
+};
 const badgeCatalog = [
   { id: "crowd-observer", icon: "⌁", nameKey: "badgeCrowdObserver", unlockKey: "completeCrowdSearch" },
   { id: "full-attendance", icon: "✓", nameKey: "badgeAttendance", unlockKey: "completeCheckin" },
@@ -853,9 +863,10 @@ function renderEquipmentCollection() {
     const selected = profileState.equippedEquipment === item.id;
     const button = document.createElement("button");
     button.type = "button";
+    button.dataset.equipment = item.id;
     button.className = `collection-item${selected ? " is-selected" : ""}${unlocked ? "" : " is-locked"}`;
     button.disabled = !unlocked;
-    button.innerHTML = `<span aria-hidden="true">${item.icon}</span><strong>${t(item.nameKey)}</strong><small>${selected ? t("equipped") : (unlocked ? t("equip") : t(item.unlockKey))}</small>`;
+    button.innerHTML = `<span class="equipment-art" aria-hidden="true"><i></i></span><strong>${t(item.nameKey)}</strong><small>${selected ? t("equipped") : (unlocked ? t("equip") : t(item.unlockKey))}</small>`;
     button.addEventListener("click", () => equipItem(item.id));
     grid.append(button);
   });
@@ -901,6 +912,8 @@ function postcardTravelStamps(postcard) {
 function postcardMarkup(postcard) {
   const equipment = equipmentCatalog.find((item) => item.id === postcard.equipment);
   return `
+    <img class="postcard-bebe" src="${companionArtwork.bebe}" alt="" />
+    <i class="postcard-seal" aria-hidden="true">TAIWAN</i>
     <small>${t("honorPostcardLabel")} · ${postcard.createdAt}</small>
     <strong>${t("postcardTitle")}</strong>
     <p>${t("postcardSubtitle")} · ${t("equipmentLabel")}：${equipment ? t(equipment.nameKey) : t("none")}</p>
@@ -916,6 +929,7 @@ function renderPostcards() {
   empty.hidden = Boolean(latest);
   button.hidden = !latest;
   if (latest) {
+    button.dataset.card = latest.card || "metro-night";
     button.innerHTML = postcardMarkup(latest);
     button.onclick = () => openPostcard(latest);
   }
@@ -943,7 +957,9 @@ let activePostcard = null;
 
 function openPostcard(postcard) {
   activePostcard = postcard;
-  document.querySelector("#postcard-preview").innerHTML = postcardMarkup(postcard);
+  const preview = document.querySelector("#postcard-preview");
+  preview.dataset.card = postcard.card || "metro-night";
+  preview.innerHTML = postcardMarkup(postcard);
   const dialog = document.querySelector("#postcard-dialog");
   if (!dialog.open) dialog.showModal();
 }
@@ -970,25 +986,46 @@ function drawWrappedText(context, text, x, y, maxWidth, lineHeight, maxLines = 3
   });
 }
 
-function postcardCanvas(postcard) {
+function loadArtwork(source) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = source;
+  });
+}
+
+function drawCoverImage(context, image, width, height) {
+  const scale = Math.max(width / image.width, height / image.height);
+  const drawWidth = image.width * scale;
+  const drawHeight = image.height * scale;
+  context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+}
+
+async function postcardCanvas(postcard) {
   const canvas = document.createElement("canvas");
   canvas.width = 1200;
   canvas.height = 760;
   const context = canvas.getContext("2d");
-  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, "#17332c");
-  gradient.addColorStop(0.58, "#3a7e6a");
-  gradient.addColorStop(1, "#efb85f");
-  context.fillStyle = gradient;
+  const cardId = postcard.card || "metro-night";
+  const [background, bebe] = await Promise.all([
+    loadArtwork(companionArtwork.cards[cardId] || companionArtwork.cards["metro-night"]),
+    loadArtwork(companionArtwork.bebe),
+  ]);
+  drawCoverImage(context, background, canvas.width, canvas.height);
+  const overlay = context.createLinearGradient(0, 0, canvas.width, 0);
+  overlay.addColorStop(0, "rgba(22,42,37,.92)");
+  overlay.addColorStop(0.55, "rgba(22,42,37,.48)");
+  overlay.addColorStop(1, "rgba(22,42,37,.08)");
+  context.fillStyle = overlay;
   context.fillRect(0, 0, canvas.width, canvas.height);
-  context.strokeStyle = "rgba(255,255,255,.2)";
-  context.lineWidth = 18;
+  context.fillStyle = "rgba(255,250,238,.94)";
   context.beginPath();
-  context.arc(1060, 640, 155, 0, Math.PI * 2);
+  context.roundRect(42, 42, 1116, 676, 34);
+  context.strokeStyle = "rgba(255,255,255,.72)";
+  context.lineWidth = 3;
   context.stroke();
-  context.fillStyle = "rgba(255,255,255,.18)";
-  context.font = "900 130px sans-serif";
-  context.fillText("悠", 995, 690);
+  context.drawImage(bebe, 835, 210, 300, 420);
   context.fillStyle = "rgba(255,255,255,.72)";
   context.font = "700 25px sans-serif";
   context.fillText(`${t("honorPostcardLabel")} · ${postcard.createdAt}`, 80, 92);
@@ -1008,11 +1045,11 @@ function postcardCanvas(postcard) {
   return canvas;
 }
 
-function downloadActivePostcard() {
+async function downloadActivePostcard() {
   if (!activePostcard) return;
   const link = document.createElement("a");
   link.download = `smart-travel-honor-${activePostcard.id}.png`;
-  link.href = postcardCanvas(activePostcard).toDataURL("image/png");
+  link.href = (await postcardCanvas(activePostcard)).toDataURL("image/png");
   link.click();
 }
 
