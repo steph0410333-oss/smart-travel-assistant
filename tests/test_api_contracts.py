@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from app.main import (
     analyze_place,
@@ -8,14 +9,29 @@ from app.main import (
     list_places,
     list_stations,
     recommend,
+    roaming_report,
 )
-from app.schemas import BalanceRecommendationRequest, PlaceAnalysisRequest, RecommendationRequest
+from app.schemas import (
+    BalanceRecommendationRequest,
+    PlaceAnalysisRequest,
+    RecommendationRequest,
+    RoamingReportRequest,
+)
 
 
 class ApiContractTests(unittest.TestCase):
     def test_health_contract(self) -> None:
         result = health_check()
         self.assertEqual(result["status"], "ok")
+
+    def test_roaming_report_has_safe_local_fallback(self) -> None:
+        with patch.dict("os.environ", {"GEMINI_API_KEY": ""}):
+            result = roaming_report(
+                RoamingReportRequest(language="en", district="Dadaocheng", station="Beimen")
+            )
+        self.assertEqual(result["source"], "LOCAL_TEMPLATE")
+        self.assertIn("Dadaocheng", result["title"])
+        self.assertIn("Beimen", result["story"])
 
     def test_place_analysis_includes_station_comfort_and_merchants(self) -> None:
         result = analyze_place(

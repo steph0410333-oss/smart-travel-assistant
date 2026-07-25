@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260724-3" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260725-6" />
   </head>
   <body>
     <main class="app-shell">
@@ -16,12 +16,30 @@
         <div class="top-actions">
           <button id="map-language-button" class="text-button language-button" type="button" aria-label="切換語言" data-i18n-aria="switchLanguage">繁中</button>
           <button class="text-button help-button" type="button" data-i18n="help">說明</button>
+          <button id="open-profile" class="profile-button" type="button" aria-label="開啟個人頁" data-i18n-aria="openProfile">
+            <span aria-hidden="true">●</span>
+          </button>
         </div>
       </header>
+      <button id="level-shortcut" class="level-shortcut" type="button" aria-label="查看等級進度" data-i18n-aria="viewLevel">
+        <span data-i18n="currentLevel">目前等級</span>
+        <strong>Level 2 · <span data-i18n="profileRank">台北地頭蛇</span></strong>
+        <span class="mini-progress" aria-hidden="true"><i style="width:64%"></i></span>
+      </button>
       <button id="open-search" class="search-entry" type="button">
         <span aria-hidden="true">⌕</span>
         <span data-i18n="searchEntry">搜尋地點，或告訴 AI 你想去哪裡</span>
       </button>
+      <div class="merchant-filter-panel">
+        <div class="merchant-filter-row" role="group" aria-label="商家分類" data-i18n-aria="merchantCategories">
+          <button class="merchant-filter is-active" type="button" data-category="all" data-i18n="filterAll">全部</button>
+          <button class="merchant-filter" type="button" data-category="drink" data-i18n="filterDrink">手搖</button>
+          <button class="merchant-filter" type="button" data-category="restaurant" data-i18n="filterRestaurant">餐廳</button>
+          <button class="merchant-filter" type="button" data-category="creative" data-i18n="filterCreative">文創</button>
+          <button class="merchant-filter" type="button" data-category="snack" data-i18n="filterSnack">小吃</button>
+        </div>
+        <button id="merchant-filter-status" class="merchant-filter-status" type="button" hidden></button>
+      </div>
       <div class="prototype-badge" data-i18n="historicalEstimate">歷史人流估算</div>
       <button id="reset-map" class="reset-map-button" type="button" hidden>× <span data-i18n="clearResult">清除結果</span></button>
       <div class="map-legend" aria-label="人流顏色圖例" data-i18n-aria="legendLabel">
@@ -212,6 +230,161 @@
         </section>
       </div>
     </section>
+    <section id="profile-screen" class="profile-screen" aria-hidden="true">
+      <div class="profile-page">
+        <header class="profile-header">
+          <button id="close-profile" class="plain-icon-button" type="button" aria-label="返回地圖" data-i18n-aria="backToMap">←</button>
+          <p data-i18n="profileTitle">我的探索檔案</p>
+          <button class="plain-icon-button" type="button" aria-label="設定" data-i18n-aria="settings">⚙</button>
+        </header>
+
+        <section class="profile-hero" aria-labelledby="profile-name">
+          <button id="avatar-shortcut" class="avatar-preview avatar-preview-small" type="button" aria-label="開啟小人衣櫃" data-i18n-aria="openWardrobe">
+            <span class="avatar-card-pattern" aria-hidden="true"></span>
+            <span class="avatar-character" aria-hidden="true">
+              <i class="avatar-head"><b>悠</b></i>
+              <i class="avatar-body"></i>
+              <i class="avatar-hat"></i>
+              <i class="avatar-accessory"></i>
+            </span>
+          </button>
+          <div class="profile-identity">
+            <p class="profile-eyebrow" data-i18n="travelerProfile">TRAVELER PROFILE</p>
+            <h2 id="profile-name" data-i18n="profileName">旅人 01</h2>
+            <strong id="profile-rank" data-i18n="profileRank">台北地頭蛇</strong>
+            <small id="avatar-stage-label">成長階段 2 · 城市探索者</small>
+          </div>
+        </section>
+
+        <section class="level-card" aria-label="等級進度" data-i18n-aria="levelProgress">
+          <div class="level-card-heading">
+            <span><small>LEVEL</small><strong id="profile-level">2</strong></span>
+            <p><strong id="profile-xp">320</strong> / <span id="profile-xp-goal">500</span> XP</p>
+            <span><small>NEXT</small><strong id="profile-next-level">3</strong></span>
+          </div>
+          <div class="level-progress" role="progressbar" aria-valuemin="0" aria-valuemax="500" aria-valuenow="320">
+            <i id="level-progress-fill" style="width:64%"></i>
+          </div>
+          <p data-i18n="levelHint">探索站點、完成餘額規劃與城市任務，都能累積經驗值。</p>
+        </section>
+
+        <nav class="profile-feature-nav" aria-label="小人功能" data-i18n-aria="companionFeatures">
+          <button type="button" data-profile-target="wardrobe-section"><span aria-hidden="true">✦</span><strong data-i18n="wardrobe">小人衣櫃</strong></button>
+          <button type="button" data-profile-target="card-collection-section"><span aria-hidden="true">▣</span><strong data-i18n="cardCollection">卡面圖鑑</strong></button>
+          <button type="button" data-profile-target="postcard-section"><span aria-hidden="true">✉</span><strong data-i18n="postcards">榮譽明信片</strong></button>
+        </nav>
+
+        <section id="wardrobe-section" class="profile-section companion-section">
+          <div class="profile-section-heading">
+            <div><p class="profile-eyebrow" data-i18n="digitalCompanion">DIGITAL COMPANION</p><h3 data-i18n="myCompanion">我的小人</h3></div>
+            <span id="equipment-count">1 / 5</span>
+          </div>
+          <div class="companion-showcase">
+            <div id="avatar-preview-large" class="avatar-preview avatar-preview-large" aria-label="虛擬數位分身" data-i18n-aria="digitalAvatar">
+              <span class="avatar-card-pattern" aria-hidden="true"></span>
+              <span class="avatar-character" aria-hidden="true">
+                <i class="avatar-head"><b>悠</b></i>
+                <i class="avatar-body"></i>
+                <i class="avatar-hat"></i>
+                <i class="avatar-accessory"></i>
+              </span>
+            </div>
+            <div class="companion-copy">
+              <strong id="equipped-name" data-i18n="starterBag">旅行小包</strong>
+              <p data-i18n="companionHint">完成城市任務，替小人收集地區、節慶與季節限定裝備。</p>
+            </div>
+          </div>
+          <div id="equipment-grid" class="collection-grid equipment-grid" aria-live="polite"></div>
+        </section>
+
+        <section id="card-collection-section" class="profile-section">
+          <div class="profile-section-heading">
+            <div><p class="profile-eyebrow" data-i18n="virtualEasyCard">VIRTUAL EASYCARD</p><h3 data-i18n="cardCollection">卡面圖鑑</h3></div>
+            <span id="card-count">1 / 5</span>
+          </div>
+          <p class="section-description" data-i18n="cardCollectionHint">選擇已解鎖的原創虛擬卡面，作為小人的旅行背景。</p>
+          <div id="card-collection" class="virtual-card-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="profile-section">
+          <div class="profile-section-heading">
+            <div><p class="profile-eyebrow" data-i18n="achievementLabel">ACHIEVEMENTS</p><h3 data-i18n="myBadges">榮譽徽章</h3></div>
+            <span id="badge-count">1 / 5</span>
+          </div>
+          <div id="badge-grid" class="badge-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="points-card">
+          <div><p class="profile-eyebrow" data-i18n="myPoints">我的積分</p><strong><span id="profile-points">150</span>P</strong></div>
+          <button type="button" data-profile-target="wardrobe-section" data-i18n="viewRewards">查看收藏 →</button>
+        </section>
+
+        <section class="profile-section mission-section">
+          <div class="profile-section-heading">
+            <div><p class="profile-eyebrow" data-i18n="missionsLabel">MISSIONS</p><h3 data-i18n="missionCenter">任務中心</h3></div>
+            <span id="mission-count">1 / 5</span>
+          </div>
+          <div class="mission-list">
+            <button class="mission-item is-complete" type="button" data-task="report" data-points="10">
+              <span class="mission-check" aria-hidden="true">✓</span>
+              <span><small>10 XP</small><strong data-i18n="taskReport">完成一次人流查詢</strong><em data-i18n="rewardCrowdBadge">解鎖：人流觀察員徽章</em></span>
+            </button>
+            <button class="mission-item" type="button" data-task="wallet" data-points="30">
+              <span class="mission-check" aria-hidden="true"></span>
+              <span><small>30 XP</small><strong data-i18n="taskWallet">完成一次餘額智慧推薦</strong><em data-i18n="rewardPostcard">解鎖：國際榮譽明信片</em></span>
+            </button>
+            <button class="mission-item" type="button" data-task="explore" data-points="50">
+              <span class="mission-check" aria-hidden="true"></span>
+              <span><small>50 XP</small><strong data-i18n="taskExplore">探索三個不同捷運站</strong><em data-i18n="rewardExplorer">解鎖：城市探索卡面</em></span>
+            </button>
+            <button class="mission-item" type="button" data-task="rain" data-points="20">
+              <span class="mission-check" aria-hidden="true"></span>
+              <span><small>20 XP</small><strong data-i18n="taskRain">體驗雨天通勤情境</strong><em data-i18n="rewardRain">Prototype 任務：雨傘裝備</em></span>
+            </button>
+            <button class="mission-item" type="button" data-task="checkin" data-points="20">
+              <span class="mission-check" aria-hidden="true"></span>
+              <span><small>20 XP</small><strong data-i18n="taskCheckin">完成本週城市簽到</strong><em data-i18n="rewardCheckin">解鎖：全勤捷運族徽章</em></span>
+            </button>
+          </div>
+          <p class="prototype-note" data-i18n="profilePrototypeNote">Prototype：進度會保留在目前裝置的瀏覽器，不會寫入真實帳戶。</p>
+        </section>
+
+        <section id="postcard-section" class="profile-section postcard-section">
+          <div class="profile-section-heading">
+            <div><p class="profile-eyebrow" data-i18n="honorPostcardLabel">INTERNATIONAL HONOR</p><h3 data-i18n="postcards">國際榮譽明信片</h3></div>
+            <span id="postcard-count">0</span>
+          </div>
+          <div id="postcard-empty" class="postcard-empty">
+            <span aria-hidden="true">✉</span>
+            <strong data-i18n="postcardEmptyTitle">完成餘額規劃，取得第一張明信片</strong>
+            <p data-i18n="postcardEmptyHint">明信片會放入專屬小人、旅行印章、裝備與榮譽勳章。</p>
+          </div>
+          <button id="latest-postcard" class="latest-postcard" type="button" hidden></button>
+        </section>
+
+        <section class="profile-section roaming-section">
+          <div class="profile-section-heading">
+            <div><p class="profile-eyebrow" data-i18n="roamingLabel">WEEKLY ROAMING</p><h3 data-i18n="roamingTitle">小人漫遊／寄養模式</h3></div>
+            <label class="toggle-control">
+              <input id="foster-mode" type="checkbox" />
+              <span aria-hidden="true"></span>
+              <b data-i18n="fosterMode">寄養</b>
+            </label>
+          </div>
+          <p class="section-description" data-i18n="roamingHint">開啟後，小人會在你離開台灣後繼續虛擬探索；不會追蹤真實位置。</p>
+          <article id="weekly-report" class="weekly-report">
+            <span class="weekly-report-stamp" aria-hidden="true">週末</span>
+            <div>
+              <small data-i18n="weeklyReportLabel">本週城市探索提案</small>
+              <h4 id="weekly-report-title">等待小人出發</h4>
+              <p id="weekly-report-story" data-i18n="weeklyReportEmpty">開啟寄養模式，即可生成本週漫遊故事與下次來台提案。</p>
+            </div>
+          </article>
+          <button id="generate-report" class="secondary-action" type="button" data-i18n="generateReport">生成本週漫遊報告</button>
+          <p class="prototype-note" data-i18n="roamingPrototypeNote">Prototype：報告會在開啟網站時生成，不會在網站關閉時背景定位或推播。</p>
+        </section>
+      </div>
+    </section>
     <div id="language-menu" class="language-menu" hidden>
       <button type="button" data-language="zh-Hant">繁體中文</button>
       <button type="button" data-language="en">English</button>
@@ -235,7 +408,23 @@
       </ul>
       <p class="help-note" data-i18n="helpUse">建議把結果當作錯峰與比較時段的參考，不應作為安全或營運判斷。</p>
     </dialog>
+    <dialog id="postcard-dialog" class="postcard-dialog" aria-labelledby="postcard-dialog-title">
+      <div class="postcard-dialog-header">
+        <div>
+          <p class="profile-eyebrow" data-i18n="honorPostcardLabel">INTERNATIONAL HONOR</p>
+          <h2 id="postcard-dialog-title" data-i18n="postcardDialogTitle">我的榮譽明信片</h2>
+        </div>
+        <button id="close-postcard" class="help-close" type="button" aria-label="關閉" data-i18n-aria="close">×</button>
+      </div>
+      <div id="postcard-preview" class="postcard-preview"></div>
+      <div class="postcard-actions">
+        <button id="download-postcard" class="secondary-action" type="button" data-i18n="downloadPostcard">下載 PNG</button>
+        <button id="share-postcard" class="primary-inline-action" type="button" data-i18n="sharePostcard">分享明信片</button>
+      </div>
+      <p class="prototype-note" data-i18n="postcardPrivacy">只顯示使用者選擇的商圈印章，不公開精確位置或完整路線。</p>
+    </dialog>
+    <div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260724-7"></script>
+    <script src="/static/app.js?v=20260725-6"></script>
   </body>
 </html>
