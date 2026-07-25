@@ -846,7 +846,7 @@ function selectVirtualCard(cardId) {
 
 function renderAvatar() {
   const equipment = equipmentCatalog.find((item) => item.id === profileState.equippedEquipment) || equipmentCatalog[0];
-  document.querySelectorAll(".avatar-preview").forEach((avatar) => {
+  document.querySelectorAll(".companion-avatar").forEach((avatar) => {
     avatar.dataset.stage = String(profileStage());
     avatar.dataset.equipment = equipment.id;
     avatar.dataset.card = profileState.selectedCard;

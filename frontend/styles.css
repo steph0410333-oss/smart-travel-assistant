@@ -50,6 +50,7 @@ button { font: inherit; }
 .top-actions { display: flex; gap: 6px; }
 .language-button { min-width: 54px; padding-inline: 10px; }
 .profile-button {
+  position: relative;
   display: grid;
   width: 42px;
   height: 42px;
@@ -57,28 +58,33 @@ button { font: inherit; }
   place-items: center;
   border: 2px solid #17332c;
   border-radius: 50%;
-  background: white;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(14,38,56,.14)),
+    url("/static/assets/companion/zhongshan-rain-watercolor.png") center/cover;
   color: #17332c;
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(25,65,54,.12);
 }
-.profile-button span {
-  position: relative;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: currentColor;
+.profile-button[data-card="dadaocheng"] {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.04), rgba(69,39,22,.14)), url("/static/assets/companion/dadaocheng-watercolor.png");
 }
-.profile-button span::after {
-  position: absolute;
-  top: 13px;
-  left: 50%;
-  width: 20px;
-  height: 10px;
-  border-radius: 12px 12px 4px 4px;
-  background: currentColor;
-  content: "";
-  transform: translateX(-50%);
+.profile-button[data-card="zhongshan"],
+.profile-button[data-card="rain"],
+.profile-button[data-card="metro-night"] {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.02), rgba(14,38,56,.16)), url("/static/assets/companion/zhongshan-rain-watercolor.png");
+}
+.profile-button[data-card="explorer"] {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.04), rgba(25,68,49,.1)), url("/static/assets/companion/alishan-watercolor.png");
+}
+.profile-button .avatar-character {
+  top: 1px;
+  bottom: 0;
+  width: 88%;
+  height: 98%;
+}
+.profile-button .bebe-character {
+  filter: drop-shadow(0 2px 2px rgba(33,37,29,.2));
 }
 
 .level-shortcut {
@@ -1491,8 +1497,8 @@ button { font: inherit; }
   height: 100%;
 }
 
-.avatar-preview[data-equipment="starter-bag"] .bebe-wearable::before,
-.avatar-preview[data-equipment="zhongshan-bag"] .bebe-wearable::before {
+.companion-avatar[data-equipment="starter-bag"] .bebe-wearable::before,
+.companion-avatar[data-equipment="zhongshan-bag"] .bebe-wearable::before {
   right: 9%;
   bottom: 22%;
   width: 30%;
@@ -1502,22 +1508,22 @@ button { font: inherit; }
   background: linear-gradient(145deg, #ee6684, #c73f64);
   box-shadow: inset 0 5px rgba(255,255,255,.2), 0 6px 9px rgba(47,36,24,.18);
 }
-.avatar-preview[data-equipment="starter-bag"] .bebe-wearable::after,
-.avatar-preview[data-equipment="zhongshan-bag"] .bebe-wearable::after {
-  top: 31%;
-  left: 45%;
-  width: 43%;
-  height: 48%;
+.companion-avatar[data-equipment="starter-bag"] .bebe-wearable::after,
+.companion-avatar[data-equipment="zhongshan-bag"] .bebe-wearable::after {
+  right: 13%;
+  bottom: 43%;
+  width: 22%;
+  height: 10%;
   border: 3px solid #493321;
-  border-width: 3px 3px 0 0;
-  border-radius: 50%;
-  transform: rotate(24deg);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  transform: none;
 }
-.avatar-preview[data-equipment="zhongshan-bag"] .bebe-wearable::before {
+.companion-avatar[data-equipment="zhongshan-bag"] .bebe-wearable::before {
   background: linear-gradient(145deg, #3f9b83, #236954);
 }
 
-.avatar-preview[data-equipment="dadaocheng-hat"] .bebe-wearable::before {
+.companion-avatar[data-equipment="dadaocheng-hat"] .bebe-wearable::before {
   top: 2%;
   left: 23%;
   width: 54%;
@@ -1527,7 +1533,7 @@ button { font: inherit; }
   background: linear-gradient(180deg, #a86038 0 63%, #e0a24c 64% 78%, #7c452c 79%);
   transform: rotate(-2deg);
 }
-.avatar-preview[data-equipment="dadaocheng-hat"] .bebe-wearable::after {
+.companion-avatar[data-equipment="dadaocheng-hat"] .bebe-wearable::after {
   top: 17%;
   left: 16%;
   width: 68%;
@@ -1537,7 +1543,7 @@ button { font: inherit; }
   background: #8f4f31;
 }
 
-.avatar-preview[data-equipment="rain-umbrella"] .bebe-wearable::before {
+.companion-avatar[data-equipment="rain-umbrella"] .bebe-wearable::before {
   top: 17%;
   right: -18%;
   width: 60%;
@@ -1547,7 +1553,7 @@ button { font: inherit; }
   background: linear-gradient(90deg, #1389c7 0 33%, #f2ad27 34% 66%, #e54b79 67%);
   transform: rotate(11deg);
 }
-.avatar-preview[data-equipment="rain-umbrella"] .bebe-wearable::after {
+.companion-avatar[data-equipment="rain-umbrella"] .bebe-wearable::after {
   top: 44%;
   right: 2%;
   width: 5px;
@@ -1557,7 +1563,7 @@ button { font: inherit; }
   transform: rotate(11deg);
 }
 
-.avatar-preview[data-equipment="night-lantern"] .bebe-wearable::before {
+.companion-avatar[data-equipment="night-lantern"] .bebe-wearable::before {
   right: 1%;
   bottom: 24%;
   width: 25%;
@@ -1567,7 +1573,7 @@ button { font: inherit; }
   background: repeating-linear-gradient(90deg, #f58b31 0 6px, #d95635 7px 10px);
   box-shadow: 0 0 18px rgba(244,127,49,.62);
 }
-.avatar-preview[data-equipment="night-lantern"] .bebe-wearable::after {
+.companion-avatar[data-equipment="night-lantern"] .bebe-wearable::after {
   right: 10%;
   bottom: 17%;
   width: 4px;
@@ -1575,7 +1581,7 @@ button { font: inherit; }
   background: #563221;
 }
 
-.avatar-preview[data-equipment="balance-gift"] .bebe-wearable::before {
+.companion-avatar[data-equipment="balance-gift"] .bebe-wearable::before {
   right: 2%;
   bottom: 18%;
   width: 34%;
@@ -1584,7 +1590,7 @@ button { font: inherit; }
   border-radius: 7px 7px 12px 12px;
   background: linear-gradient(90deg, #ec4580 0 25%, #17a57c 25% 50%, #1688be 50% 75%, #f4ad25 75%);
 }
-.avatar-preview[data-equipment="balance-gift"] .bebe-wearable::after {
+.companion-avatar[data-equipment="balance-gift"] .bebe-wearable::after {
   right: 10%;
   bottom: 42%;
   width: 18%;
