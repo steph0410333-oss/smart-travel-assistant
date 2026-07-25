@@ -1383,3 +1383,460 @@ button { font: inherit; }
     box-shadow: 0 24px 70px rgba(25,65,54,.2);
   }
 }
+
+/* BeBe collectible experience */
+.profile-page {
+  background:
+    radial-gradient(circle at 8% 4%, rgba(244,174,39,.13), transparent 24%),
+    radial-gradient(circle at 92% 12%, rgba(0,126,188,.1), transparent 25%),
+    #fbf8f0;
+}
+
+.profile-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 24px 20px;
+  border: 1px solid rgba(112,84,46,.12);
+  border-radius: 28px;
+  background:
+    linear-gradient(90deg, rgba(255,250,237,.96) 0%, rgba(255,250,237,.78) 55%, rgba(255,250,237,.2) 100%),
+    url("/static/assets/companion/dadaocheng-watercolor.png") center/cover;
+  box-shadow: 0 18px 48px rgba(91,63,35,.14);
+}
+
+.profile-hero::after {
+  position: absolute;
+  right: -18px;
+  bottom: -26px;
+  width: 120px;
+  height: 120px;
+  border: 1px solid rgba(161,84,43,.22);
+  border-radius: 50%;
+  content: "";
+}
+
+.profile-identity { position: relative; z-index: 2; }
+.profile-identity h2 { color: #34281e; }
+.profile-identity > strong { color: #d54e72; }
+.profile-eyebrow { color: #916a42; letter-spacing: .15em; }
+
+.avatar-preview {
+  isolation: isolate;
+  border: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(26,51,44,.12)),
+    url("/static/assets/companion/zhongshan-rain-watercolor.png") center/cover;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.58), 0 16px 36px rgba(34,58,51,.18);
+}
+
+.avatar-preview[data-card="dadaocheng"] {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.04), rgba(69,39,22,.14)), url("/static/assets/companion/dadaocheng-watercolor.png");
+}
+.avatar-preview[data-card="zhongshan"],
+.avatar-preview[data-card="rain"],
+.avatar-preview[data-card="metro-night"] {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.02), rgba(14,38,56,.16)), url("/static/assets/companion/zhongshan-rain-watercolor.png");
+}
+.avatar-preview[data-card="explorer"] {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.04), rgba(25,68,49,.1)), url("/static/assets/companion/alishan-watercolor.png");
+}
+
+.avatar-card-pattern {
+  inset: auto 8px 8px auto;
+  width: 30px;
+  height: 30px;
+  border: 1px dashed rgba(255,255,255,.78);
+  border-radius: 50%;
+  background: rgba(255,255,255,.16);
+}
+
+.avatar-character {
+  top: 4%;
+  bottom: 0;
+  width: 88%;
+  height: 96%;
+  transform: translateX(-50%);
+}
+
+.avatar-preview-small .avatar-character { width: 84%; }
+.avatar-preview[data-stage="1"] .avatar-character { width: 78%; }
+.avatar-preview[data-stage="3"] .avatar-character { width: 94%; }
+.bebe-character {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 9px 10px rgba(33,37,29,.22));
+}
+.avatar-head,
+.avatar-body,
+.avatar-hat,
+.avatar-accessory { display: none; }
+
+.bebe-wearable,
+.bebe-wearable::before,
+.bebe-wearable::after {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  box-sizing: border-box;
+  content: "";
+}
+
+.bebe-wearable {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-preview[data-equipment="starter-bag"] .bebe-wearable::before,
+.avatar-preview[data-equipment="zhongshan-bag"] .bebe-wearable::before {
+  right: 9%;
+  bottom: 22%;
+  width: 30%;
+  height: 25%;
+  border: 3px solid #493321;
+  border-radius: 9px 9px 14px 14px;
+  background: linear-gradient(145deg, #ee6684, #c73f64);
+  box-shadow: inset 0 5px rgba(255,255,255,.2), 0 6px 9px rgba(47,36,24,.18);
+}
+.avatar-preview[data-equipment="starter-bag"] .bebe-wearable::after,
+.avatar-preview[data-equipment="zhongshan-bag"] .bebe-wearable::after {
+  top: 31%;
+  left: 45%;
+  width: 43%;
+  height: 48%;
+  border: 3px solid #493321;
+  border-width: 3px 3px 0 0;
+  border-radius: 50%;
+  transform: rotate(24deg);
+}
+.avatar-preview[data-equipment="zhongshan-bag"] .bebe-wearable::before {
+  background: linear-gradient(145deg, #3f9b83, #236954);
+}
+
+.avatar-preview[data-equipment="dadaocheng-hat"] .bebe-wearable::before {
+  top: 2%;
+  left: 23%;
+  width: 54%;
+  height: 18%;
+  border: 3px solid #402c20;
+  border-radius: 12px 12px 5px 5px;
+  background: linear-gradient(180deg, #a86038 0 63%, #e0a24c 64% 78%, #7c452c 79%);
+  transform: rotate(-2deg);
+}
+.avatar-preview[data-equipment="dadaocheng-hat"] .bebe-wearable::after {
+  top: 17%;
+  left: 16%;
+  width: 68%;
+  height: 5%;
+  border: 3px solid #402c20;
+  border-radius: 50%;
+  background: #8f4f31;
+}
+
+.avatar-preview[data-equipment="rain-umbrella"] .bebe-wearable::before {
+  top: 17%;
+  right: -18%;
+  width: 60%;
+  height: 30%;
+  border: 3px solid #2f3941;
+  border-radius: 70% 70% 12% 12%;
+  background: linear-gradient(90deg, #1389c7 0 33%, #f2ad27 34% 66%, #e54b79 67%);
+  transform: rotate(11deg);
+}
+.avatar-preview[data-equipment="rain-umbrella"] .bebe-wearable::after {
+  top: 44%;
+  right: 2%;
+  width: 5px;
+  height: 42%;
+  border-radius: 4px;
+  background: #2f3941;
+  transform: rotate(11deg);
+}
+
+.avatar-preview[data-equipment="night-lantern"] .bebe-wearable::before {
+  right: 1%;
+  bottom: 24%;
+  width: 25%;
+  height: 30%;
+  border: 3px solid #563221;
+  border-radius: 45%;
+  background: repeating-linear-gradient(90deg, #f58b31 0 6px, #d95635 7px 10px);
+  box-shadow: 0 0 18px rgba(244,127,49,.62);
+}
+.avatar-preview[data-equipment="night-lantern"] .bebe-wearable::after {
+  right: 10%;
+  bottom: 17%;
+  width: 4px;
+  height: 12%;
+  background: #563221;
+}
+
+.avatar-preview[data-equipment="balance-gift"] .bebe-wearable::before {
+  right: 2%;
+  bottom: 18%;
+  width: 34%;
+  height: 30%;
+  border: 3px solid #4b3321;
+  border-radius: 7px 7px 12px 12px;
+  background: linear-gradient(90deg, #ec4580 0 25%, #17a57c 25% 50%, #1688be 50% 75%, #f4ad25 75%);
+}
+.avatar-preview[data-equipment="balance-gift"] .bebe-wearable::after {
+  right: 10%;
+  bottom: 42%;
+  width: 18%;
+  height: 14%;
+  border: 3px solid #4b3321;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0;
+}
+
+.companion-showcase {
+  position: relative;
+  min-height: 210px;
+  overflow: hidden;
+  align-items: stretch;
+  padding: 18px;
+  border: 1px solid rgba(65,91,78,.1);
+  background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(244,238,224,.88));
+  box-shadow: 0 18px 40px rgba(55,72,60,.12);
+}
+.avatar-preview-large {
+  width: 154px;
+  min-width: 154px;
+  height: 184px;
+  border-radius: 25px;
+}
+.companion-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.companion-copy strong { color: #34281e; font-family: Georgia, "Noto Serif TC", serif; font-size: 22px; }
+
+.collection-grid { gap: 11px; }
+.collection-item {
+  min-height: 124px;
+  padding: 10px 8px 12px;
+  border: 1px solid rgba(72,91,78,.12);
+  border-radius: 20px;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 9px 22px rgba(45,65,55,.08);
+}
+.collection-item:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(45,65,55,.13); }
+.equipment-art {
+  position: relative;
+  display: grid !important;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 7px;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fffaf0, #efe5d3);
+}
+.equipment-art::before,
+.equipment-art::after,
+.equipment-art i {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  content: "";
+}
+.collection-item[data-equipment$="bag"] .equipment-art::before,
+.collection-item[data-equipment="balance-gift"] .equipment-art::before {
+  width: 30px;
+  height: 29px;
+  border: 2px solid #503725;
+  border-radius: 7px 7px 10px 10px;
+  background: #e75c7e;
+}
+.collection-item[data-equipment="zhongshan-bag"] .equipment-art::before { background: #39917a; }
+.collection-item[data-equipment="balance-gift"] .equipment-art::before {
+  background: linear-gradient(90deg, #ec4580 0 25%, #17a57c 25% 50%, #1688be 50% 75%, #f4ad25 75%);
+}
+.collection-item[data-equipment$="bag"] .equipment-art::after,
+.collection-item[data-equipment="balance-gift"] .equipment-art::after {
+  top: 8px;
+  width: 18px;
+  height: 14px;
+  border: 2px solid #503725;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0;
+}
+.collection-item[data-equipment="dadaocheng-hat"] .equipment-art::before {
+  top: 10px;
+  width: 31px;
+  height: 25px;
+  border: 2px solid #49301f;
+  border-radius: 8px 8px 3px 3px;
+  background: linear-gradient(#a66037 0 65%, #e3a347 66% 80%, #76422b 81%);
+}
+.collection-item[data-equipment="dadaocheng-hat"] .equipment-art::after {
+  bottom: 11px;
+  width: 43px;
+  height: 8px;
+  border: 2px solid #49301f;
+  border-radius: 50%;
+  background: #8b4c30;
+}
+.collection-item[data-equipment="rain-umbrella"] .equipment-art::before {
+  top: 9px;
+  width: 42px;
+  height: 23px;
+  border: 2px solid #3b3c3c;
+  border-radius: 80% 80% 8% 8%;
+  background: linear-gradient(90deg, #168bc6 0 33%, #f3b22d 34% 66%, #e74b79 67%);
+}
+.collection-item[data-equipment="rain-umbrella"] .equipment-art::after {
+  top: 30px;
+  width: 3px;
+  height: 18px;
+  border-radius: 3px;
+  background: #3b3c3c;
+}
+.collection-item[data-equipment="night-lantern"] .equipment-art::before {
+  width: 28px;
+  height: 35px;
+  border: 2px solid #57311f;
+  border-radius: 45%;
+  background: repeating-linear-gradient(90deg, #f79532 0 5px, #d95635 6px 8px);
+  box-shadow: 0 0 11px rgba(244,127,49,.5);
+}
+.collection-item.is-selected {
+  border-color: #dd5d7d;
+  background: linear-gradient(145deg, #fff9f3, #fff0f4);
+  box-shadow: 0 11px 26px rgba(210,77,115,.15);
+}
+
+.virtual-card-grid { gap: 14px; }
+.virtual-card {
+  min-height: 128px;
+  padding: 15px;
+  border-radius: 21px;
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 15px 30px rgba(31,54,46,.18);
+}
+.virtual-card::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(20,36,32,.78), rgba(20,36,32,.08) 78%);
+  content: "";
+}
+.virtual-card[data-card="metro-night"],
+.virtual-card[data-card="zhongshan"],
+.virtual-card[data-card="rain"] { background-image: url("/static/assets/companion/zhongshan-rain-watercolor.png"); }
+.virtual-card[data-card="dadaocheng"] { background-image: url("/static/assets/companion/dadaocheng-watercolor.png"); }
+.virtual-card[data-card="explorer"] { background-image: url("/static/assets/companion/alishan-watercolor.png"); }
+.virtual-card::after {
+  right: 10px;
+  bottom: 8px;
+  width: 35px;
+  height: 35px;
+  border: 1px solid rgba(255,255,255,.72);
+  background: rgba(255,255,255,.12);
+  content: "EC";
+  font-size: 9px;
+  line-height: 33px;
+}
+.virtual-card strong { font-family: Georgia, "Noto Serif TC", serif; font-size: 14px; }
+.virtual-card small { margin-top: 47px; font-size: 9px; }
+
+.badge-card {
+  border: 1px solid rgba(151,111,63,.18);
+  background: linear-gradient(145deg, #fffdf7, #f3ead9);
+  box-shadow: 0 8px 19px rgba(87,65,38,.08);
+}
+.badge-card > span {
+  border: 1px solid rgba(166,115,56,.2);
+  background: radial-gradient(circle, #fff8dc 0 42%, #dca952 44% 48%, #fff8dc 50%);
+}
+
+.latest-postcard,
+.postcard-preview {
+  isolation: isolate;
+  background-position: center;
+  background-size: cover;
+}
+.latest-postcard::before,
+.postcard-preview::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(100deg, rgba(28,38,33,.88), rgba(28,38,33,.28) 64%, rgba(28,38,33,.05));
+  content: "";
+}
+.latest-postcard[data-card="metro-night"],
+.latest-postcard[data-card="zhongshan"],
+.latest-postcard[data-card="rain"],
+.postcard-preview[data-card="metro-night"],
+.postcard-preview[data-card="zhongshan"],
+.postcard-preview[data-card="rain"] { background-image: url("/static/assets/companion/zhongshan-rain-watercolor.png"); }
+.latest-postcard[data-card="dadaocheng"],
+.postcard-preview[data-card="dadaocheng"] { background-image: url("/static/assets/companion/dadaocheng-watercolor.png"); }
+.latest-postcard[data-card="explorer"],
+.postcard-preview[data-card="explorer"] { background-image: url("/static/assets/companion/alishan-watercolor.png"); }
+.latest-postcard { position: relative; min-height: 220px; padding: 22px; border: 1px solid rgba(255,255,255,.7); }
+.postcard-preview { min-height: 330px; padding: 25px; }
+.latest-postcard::after,
+.postcard-preview::after { display: none; }
+.latest-postcard small,
+.latest-postcard strong,
+.latest-postcard p,
+.latest-postcard span,
+.postcard-preview small,
+.postcard-preview strong,
+.postcard-preview p,
+.postcard-preview span { position: relative; z-index: 3; max-width: 68%; }
+.latest-postcard p { position: relative; z-index: 3; max-width: 68%; font-size: 10px; line-height: 1.45; }
+.postcard-bebe {
+  position: absolute;
+  right: -2%;
+  bottom: -12%;
+  z-index: 2;
+  width: 42%;
+  height: 88%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 12px rgba(20,30,26,.28));
+}
+.postcard-seal {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 3;
+  display: grid;
+  width: 55px;
+  height: 55px;
+  place-items: center;
+  border: 2px solid rgba(255,255,255,.72);
+  border-radius: 50%;
+  color: white;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .08em;
+  transform: rotate(9deg);
+}
+
+.postcard-dialog {
+  background:
+    radial-gradient(circle at 95% 3%, rgba(238,94,124,.1), transparent 26%),
+    #fffaf1;
+}
+.weekly-report {
+  overflow: hidden;
+  border: 1px solid rgba(116,86,51,.13);
+  background:
+    linear-gradient(90deg, rgba(255,249,235,.96), rgba(255,249,235,.78)),
+    url("/static/assets/companion/alishan-watercolor.png") center/cover;
+}
+
+@media (max-width: 420px) {
+  .profile-hero { padding: 19px 16px; }
+  .avatar-preview-large { width: 142px; min-width: 142px; height: 178px; }
+  .companion-showcase { min-height: 205px; gap: 12px; padding: 14px; }
+  .collection-grid { grid-template-columns: repeat(2, 1fr); }
+}
