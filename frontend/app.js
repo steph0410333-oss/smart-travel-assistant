@@ -42,12 +42,36 @@ const cardCatalog = [
 ];
 const companionArtwork = {
   bebe: "/static/assets/companion/bebe-front.png",
+  locations: {
+    "taipei-metro-night": "/static/assets/companion/locations/taipei-metro-night.webp",
+    dadaocheng: "/static/assets/companion/locations/dadaocheng.webp",
+    zhongshan: "/static/assets/companion/locations/zhongshan.webp",
+    yongkang: "/static/assets/companion/locations/yongkang.webp",
+    ximending: "/static/assets/companion/locations/ximending.webp",
+    beitou: "/static/assets/companion/locations/beitou.webp",
+    tamsui: "/static/assets/companion/locations/tamsui.webp",
+    maokong: "/static/assets/companion/locations/maokong.webp",
+    jiufen: "/static/assets/companion/locations/jiufen.webp",
+    shifen: "/static/assets/companion/locations/shifen.webp",
+    yehliu: "/static/assets/companion/locations/yehliu.webp",
+    keelung: "/static/assets/companion/locations/keelung.webp",
+    pingxi: "/static/assets/companion/locations/pingxi.webp",
+    "sun-moon-lake": "/static/assets/companion/locations/sun-moon-lake.webp",
+    alishan: "/static/assets/companion/locations/alishan.webp",
+    "tainan-anping": "/static/assets/companion/locations/tainan-anping.webp",
+    "kaohsiung-pier2": "/static/assets/companion/locations/kaohsiung-pier2.webp",
+    taroko: "/static/assets/companion/locations/taroko.webp",
+    kenting: "/static/assets/companion/locations/kenting.webp",
+    penghu: "/static/assets/companion/locations/penghu.webp",
+    "taipei-rain": "/static/assets/companion/locations/taipei-rain.webp",
+    "taipei-explorer": "/static/assets/companion/locations/taipei-explorer.webp",
+  },
   cards: {
-    "metro-night": "/static/assets/companion/zhongshan-rain-watercolor.png",
-    dadaocheng: "/static/assets/companion/dadaocheng-watercolor.png",
-    zhongshan: "/static/assets/companion/zhongshan-rain-watercolor.png",
-    rain: "/static/assets/companion/zhongshan-rain-watercolor.png",
-    explorer: "/static/assets/companion/alishan-watercolor.png",
+    "metro-night": "/static/assets/companion/locations/taipei-metro-night.webp",
+    dadaocheng: "/static/assets/companion/locations/dadaocheng.webp",
+    zhongshan: "/static/assets/companion/locations/zhongshan.webp",
+    rain: "/static/assets/companion/locations/taipei-rain.webp",
+    explorer: "/static/assets/companion/locations/taipei-explorer.webp",
   },
 };
 const badgeCatalog = [
@@ -63,10 +87,26 @@ const districtRewards = [
   { match: ["中山", "Zhongshan"], district: "心中山", equipment: "zhongshan-bag", card: "zhongshan" },
 ];
 const roamingDestinations = [
-  { district: "大稻埕", station: "北門", stamp: "大稻埕", equipment: "dadaocheng-hat" },
-  { district: "心中山", station: "中山", stamp: "心中山", equipment: "zhongshan-bag" },
-  { district: "西門町", station: "西門", stamp: "西門町", equipment: "night-lantern" },
-  { district: "永康街", station: "東門", stamp: "永康街", equipment: "starter-bag" },
+  { id: "dadaocheng", district: "大稻埕", station: "北門站", equipment: "dadaocheng-hat" },
+  { id: "zhongshan", district: "心中山", station: "中山站", equipment: "zhongshan-bag" },
+  { id: "ximending", district: "西門町", station: "西門站", equipment: "night-lantern" },
+  { id: "yongkang", district: "永康街", station: "東門站", equipment: "starter-bag" },
+  { id: "beitou", district: "北投", station: "新北投站", equipment: "rain-umbrella" },
+  { id: "tamsui", district: "淡水", station: "淡水站", equipment: "starter-bag" },
+  { id: "maokong", district: "貓空", station: "貓空纜車站", equipment: "starter-bag" },
+  { id: "jiufen", district: "九份", station: "瑞芳車站", equipment: "night-lantern" },
+  { id: "shifen", district: "十分", station: "十分車站", equipment: "rain-umbrella" },
+  { id: "yehliu", district: "野柳", station: "野柳地質公園", equipment: "starter-bag" },
+  { id: "keelung", district: "基隆", station: "基隆車站", equipment: "night-lantern" },
+  { id: "pingxi", district: "平溪", station: "平溪車站", equipment: "night-lantern" },
+  { id: "sun-moon-lake", district: "日月潭", station: "水社碼頭", equipment: "starter-bag" },
+  { id: "alishan", district: "阿里山", station: "阿里山車站", equipment: "starter-bag" },
+  { id: "tainan-anping", district: "台南安平", station: "安平古堡", equipment: "dadaocheng-hat" },
+  { id: "kaohsiung-pier2", district: "高雄駁二", station: "哈瑪星站", equipment: "zhongshan-bag" },
+  { id: "taroko", district: "太魯閣", station: "新城車站", equipment: "starter-bag" },
+  { id: "kenting", district: "墾丁", station: "鵝鑾鼻燈塔", equipment: "starter-bag" },
+  { id: "penghu", district: "澎湖", station: "馬公港", equipment: "balance-gift" },
+  { id: "taipei-metro-night", district: "台北捷運夜景", station: "台北101／世貿站", equipment: "night-lantern" },
 ];
 
 function loadProfileState() {
@@ -441,7 +481,7 @@ Object.assign(translations["zh-Hant"], {
   unlockedStatus: "已解鎖", achievementUnlocked: "解鎖新收藏：{reward}", postcardCreated: "已取得國際榮譽明信片！",
   shareText: "我的智慧出行國際榮譽明信片", shareCopied: "分享文字已複製",
   fosterRequired: "請先開啟寄養模式", reportGenerated: "本週小人漫遊報告已生成",
-  reportTitle: "{district}週末漫遊", reportStory: "小悠本週去了{district}，從{station}站展開探索。下次來台灣，要不要一起完成這條城市任務？",
+  reportTitle: "{district}週末漫遊", reportStory: "小悠本週去了{district}，從{station}展開探索。下次來台灣，要不要一起完成這條城市任務？",
   postcardTitle: "國際漫遊旅人", postcardSubtitle: "完成餘額智慧規劃", footprint: "旅行印章",
   honor: "榮譽", equipmentLabel: "裝備", none: "尚無", avatarStage1: "成長階段 1 · 初來乍到",
   avatarStage2: "成長階段 2 · 城市探索者", avatarStage3: "成長階段 3 · 國際漫遊旅人",
@@ -477,7 +517,7 @@ Object.assign(translations.en, {
   unlockedStatus: "Unlocked", achievementUnlocked: "New collectible unlocked: {reward}", postcardCreated: "International Honor Postcard earned!",
   shareText: "My Smart Travel International Honor Postcard", shareCopied: "Share text copied",
   fosterRequired: "Turn on foster mode first", reportGenerated: "Weekly companion report generated",
-  reportTitle: "{district} weekend roaming", reportStory: "Xiao-You explored {district} this week, starting from {station} Station. Want to complete this city mission together on your next Taiwan trip?",
+  reportTitle: "{district} weekend roaming", reportStory: "Xiao-You explored {district} this week, starting from {station}. Want to complete this city mission together on your next Taiwan trip?",
   postcardTitle: "International Roaming Traveler", postcardSubtitle: "Smart balance plan completed", footprint: "Travel stamps",
   honor: "Honor", equipmentLabel: "Gear", none: "None yet", avatarStage1: "Stage 1 · New arrival",
   avatarStage2: "Stage 2 · City explorer", avatarStage3: "Stage 3 · International roamer",
@@ -513,7 +553,7 @@ Object.assign(translations.ja, {
   unlockedStatus: "解除済み", achievementUnlocked: "新しいコレクション：{reward}", postcardCreated: "国際名誉ポストカードを獲得！",
   shareText: "スマートトラベル国際名誉ポストカード", shareCopied: "共有テキストをコピーしました",
   fosterRequired: "先にお預かりモードを開いてください", reportGenerated: "今週の小人漫遊レポートを生成しました",
-  reportTitle: "{district}週末漫遊", reportStory: "小悠は今週{station}駅から{district}を探索しました。次の台湾旅行で一緒に街ミッションをしませんか？",
+  reportTitle: "{district}週末漫遊", reportStory: "小悠は今週{station}から{district}を探索しました。次の台湾旅行で一緒に街ミッションをしませんか？",
   postcardTitle: "国際漫遊トラベラー", postcardSubtitle: "スマート残高プラン完了", footprint: "旅スタンプ",
   honor: "名誉", equipmentLabel: "装備", none: "なし", avatarStage1: "成長1・台湾へようこそ",
   avatarStage2: "成長2・街探索者", avatarStage3: "成長3・国際漫遊トラベラー",
@@ -549,11 +589,95 @@ Object.assign(translations.ko, {
   unlockedStatus: "해제됨", achievementUnlocked: "새 컬렉션 해제: {reward}", postcardCreated: "국제 명예 엽서를 받았습니다!",
   shareText: "나의 스마트 여행 국제 명예 엽서", shareCopied: "공유 문구를 복사했습니다",
   fosterRequired: "먼저 위탁 모드를 켜 주세요", reportGenerated: "이번 주 캐릭터 로밍 보고서를 만들었습니다",
-  reportTitle: "{district} 주말 로밍", reportStory: "샤오요우는 이번 주 {station}역에서 출발해 {district}를 탐험했습니다. 다음 대만 여행에서 함께 도시 미션을 해 볼까요?",
+  reportTitle: "{district} 주말 로밍", reportStory: "샤오요우는 이번 주 {station}에서 출발해 {district} 지역을 탐험했습니다. 다음 대만 여행에서 함께 도시 미션을 해 볼까요?",
   postcardTitle: "국제 로밍 여행자", postcardSubtitle: "스마트 잔액 계획 완료", footprint: "여행 도장",
   honor: "명예", equipmentLabel: "장비", none: "없음", avatarStage1: "성장 1 · 대만 첫 방문",
   avatarStage2: "성장 2 · 도시 탐험가", avatarStage3: "성장 3 · 국제 로밍 여행자",
   districtDadaocheng: "다다오청", districtZhongshan: "중산", districtXimen: "시먼딩", districtYongkang: "융캉제",
+});
+
+Object.assign(translations["zh-Hant"], {
+  dataGuide: "APP 使用指南", helpTitle: "智慧出行小幫手完整操作說明",
+  helpIntro: "這裡整理地圖、搜尋、餘額、小人與寄養模式的完整操作方式。",
+  helpMapTitle: "地圖與普通搜尋", helpMapBody: "點選地圖上的捷運站，或輸入目的地並選擇日期、時間；系統會找出最近捷運站，顯示歷史人流與舒適度。下方資訊面板可拖曳縮放，清除結果可回到完整地圖。",
+  helpAiTitle: "AI 推薦", helpAiBody: "切換到 AI 搜尋，用自然語言輸入活動、預算與偏好，系統會回傳三個具名地點，並比較最近捷運站的舒適度。",
+  helpCrowdTitle: "人流與舒適度", helpCrowdBody: "人流顏色由綠到紅表示歷史壓力由低到高；舒適度越高代表該時段相對舒適。這是 2026 年 6 月 OD 歷史資料估算，不是即時人數、官方容量或安全上限。",
+  helpBalanceTitle: "餘額智慧推薦", helpBalanceBody: "輸入模擬餘額後，系統會列出餘額可負擔的商家。此功能不連接真實悠遊卡或付款帳戶，價格與餘額均為 Prototype 資料。",
+  helpCompanionTitle: "BeBe、任務與收藏", helpCompanionBody: "點右上角 BeBe 進入探索檔案。完成搜尋、雨天情境、深夜查詢、地區探索與餘額推薦，可解鎖裝備、徽章及卡面；點擊已解鎖項目即可裝備或設為背景，主頁頭像會同步。",
+  helpPostcardTitle: "榮譽明信片", helpPostcardBody: "完成餘額推薦可取得明信片。打開明信片後可下載 PNG 或使用裝置分享功能；內容只呈現選擇的商圈印章，不公開完整路線。",
+  helpRoamingTitle: "寄養與週末漫遊", helpRoamingBody: "開啟寄養模式後，按「生成本週漫遊報告」，BeBe 會從 20 個台灣特色地點中產生虛擬故事，文字與背景會對應同一地點。此功能不會追蹤真實位置，也不會在網站關閉時背景推播。",
+  helpLanguageTitle: "切換語言", helpLanguageBody: "使用頁面右上角的語言按鈕，可切換繁體中文、English、日本語與한국어；搜尋、結果、收藏與本說明都會一起切換。",
+  districtBeitou: "北投", districtTamsui: "淡水", districtMaokong: "貓空", districtJiufen: "九份", districtShifen: "十分",
+  districtYehliu: "野柳", districtKeelung: "基隆", districtPingxi: "平溪", districtSunMoonLake: "日月潭", districtAlishan: "阿里山",
+  districtTainanAnping: "台南安平", districtKaohsiungPier2: "高雄駁二", districtTaroko: "太魯閣", districtKenting: "墾丁", districtPenghu: "澎湖",
+  districtTaipeiMetroNight: "台北捷運夜景",
+  stationBeimen: "北門站", stationZhongshan: "中山站", stationXimen: "西門站", stationDongmen: "東門站", stationXinbeitou: "新北投站",
+  stationTamsui: "淡水站", stationMaokong: "貓空纜車站", stationRuifang: "瑞芳車站", stationShifen: "十分車站", stationYehliu: "野柳地質公園",
+  stationKeelung: "基隆車站", stationPingxi: "平溪車站", stationShuishe: "水社碼頭", stationAlishan: "阿里山車站", stationAnpingFort: "安平古堡",
+  stationHamasen: "哈瑪星站", stationXincheng: "新城車站", stationEluanbi: "鵝鑾鼻燈塔", stationMagong: "馬公港", stationTaipei101: "台北101／世貿站",
+});
+
+Object.assign(translations.en, {
+  dataGuide: "APP GUIDE", helpTitle: "Complete Smart Travel Assistant guide",
+  helpIntro: "Learn how to use the map, searches, balance recommendations, companion and foster mode.",
+  helpMapTitle: "Map and place search", helpMapBody: "Tap a metro station, or enter a destination and choose a date and time. The app finds the nearest station and shows historical crowd pressure and comfort. Drag the lower sheet to resize it, or clear the result to restore the full map.",
+  helpAiTitle: "AI recommendations", helpAiBody: "Switch to AI Search and describe your activity, budget and preferences in natural language. The app returns three named places and compares comfort at their nearest metro stations.",
+  helpCrowdTitle: "Crowd and comfort", helpCrowdBody: "Crowd colors run from green to red as historical pressure rises. A higher comfort score means the selected time is relatively more comfortable. Estimates use June 2026 OD history; they are not real-time counts, official capacity or a safety limit.",
+  helpBalanceTitle: "Smart balance recommendations", helpBalanceBody: "Enter a mock balance to see merchants it could afford. The prototype does not connect to a real EasyCard, EasyWallet or payment account; balances and prices are simulated.",
+  helpCompanionTitle: "BeBe, missions and collectibles", helpCompanionBody: "Tap BeBe at the top right to open your exploration profile. Searches, rainy-day scenarios, late-night searches, district exploration and balance recommendations unlock gear, badges and card backgrounds. Tap an unlocked item to use it; the home avatar updates too.",
+  helpPostcardTitle: "Honor postcards", helpPostcardBody: "Complete a balance recommendation to earn a postcard. Open it to download a PNG or use your device's share feature. Only selected district stamps appear; your full route stays private.",
+  helpRoamingTitle: "Foster and weekend roaming", helpRoamingBody: "Turn on Foster Mode and select “Generate weekly roaming report.” BeBe creates a virtual story from 20 Taiwanese destinations, with the text and illustration matched to the same place. It never tracks your real location or pushes updates while the site is closed.",
+  helpLanguageTitle: "Language", helpLanguageBody: "Use the language button at the top right to switch between Traditional Chinese, English, Japanese and Korean. Search, results, collectibles and this guide change together.",
+  districtBeitou: "Beitou", districtTamsui: "Tamsui", districtMaokong: "Maokong", districtJiufen: "Jiufen", districtShifen: "Shifen",
+  districtYehliu: "Yehliu", districtKeelung: "Keelung", districtPingxi: "Pingxi", districtSunMoonLake: "Sun Moon Lake", districtAlishan: "Alishan",
+  districtTainanAnping: "Anping, Tainan", districtKaohsiungPier2: "Pier-2, Kaohsiung", districtTaroko: "Taroko", districtKenting: "Kenting", districtPenghu: "Penghu",
+  districtTaipeiMetroNight: "Taipei Metro at night",
+  stationBeimen: "Beimen Station", stationZhongshan: "Zhongshan Station", stationXimen: "Ximen Station", stationDongmen: "Dongmen Station", stationXinbeitou: "Xinbeitou Station",
+  stationTamsui: "Tamsui Station", stationMaokong: "Maokong Gondola Station", stationRuifang: "Ruifang Station", stationShifen: "Shifen Station", stationYehliu: "Yehliu Geopark",
+  stationKeelung: "Keelung Station", stationPingxi: "Pingxi Station", stationShuishe: "Shuishe Pier", stationAlishan: "Alishan Station", stationAnpingFort: "Anping Fort",
+  stationHamasen: "Hamasen Station", stationXincheng: "Xincheng Station", stationEluanbi: "Eluanbi Lighthouse", stationMagong: "Magong Harbor", stationTaipei101: "Taipei 101/World Trade Center Station",
+});
+
+Object.assign(translations.ja, {
+  dataGuide: "アプリガイド", helpTitle: "スマート旅行アシスタント完全ガイド",
+  helpIntro: "地図、検索、残高、小人、お預かりモードの操作方法をまとめています。",
+  helpMapTitle: "地図と通常検索", helpMapBody: "地図のMRT駅をタップするか、目的地・日付・時間を入力します。最寄り駅の過去の人流と快適度を表示します。下部パネルはドラッグで調整でき、結果を消去すると全体地図に戻ります。",
+  helpAiTitle: "AIおすすめ", helpAiBody: "AI検索に切り替え、やりたいこと、予算、希望を自然な文章で入力します。実名の候補を3件表示し、最寄りMRT駅の快適度を比較します。",
+  helpCrowdTitle: "人流と快適度", helpCrowdBody: "人流は緑から赤になるほど過去の混雑圧力が高く、快適度は高いほど比較的快適です。2026年6月のOD履歴による推定で、リアルタイム人数・公式定員・安全基準ではありません。",
+  helpBalanceTitle: "残高スマートおすすめ", helpBalanceBody: "模擬残高を入力すると、その金額で利用できる店舗を表示します。実際の悠遊カード、EasyWallet、決済口座には接続せず、残高と価格は試作データです。",
+  helpCompanionTitle: "BeBe・ミッション・コレクション", helpCompanionBody: "右上のBeBeをタップして探索プロフィールを開きます。検索、雨の日、深夜検索、地域探索、残高おすすめで装備・バッジ・カード背景を解除できます。解除済み項目をタップすると装備でき、ホームのアイコンにも反映されます。",
+  helpPostcardTitle: "名誉ポストカード", helpPostcardBody: "残高おすすめを完了するとポストカードを獲得できます。PNG保存または端末の共有機能を利用できます。表示するのは選んだ地域スタンプだけで、全ルートは公開しません。",
+  helpRoamingTitle: "お預かりと週末漫遊", helpRoamingBody: "お預かりモードをオンにして「今週の漫遊レポートを生成」を押します。BeBeが台湾の20地域から仮想ストーリーを作り、文章と背景は同じ場所に一致します。実際の位置追跡や、サイト終了後の通知はありません。",
+  helpLanguageTitle: "言語切替", helpLanguageBody: "右上の言語ボタンで繁體中文、English、日本語、한국어を切り替えられます。検索、結果、コレクション、このガイドも同時に切り替わります。",
+  districtBeitou: "北投", districtTamsui: "淡水", districtMaokong: "猫空", districtJiufen: "九份", districtShifen: "十分",
+  districtYehliu: "野柳", districtKeelung: "基隆", districtPingxi: "平溪", districtSunMoonLake: "日月潭", districtAlishan: "阿里山",
+  districtTainanAnping: "台南・安平", districtKaohsiungPier2: "高雄・駁二", districtTaroko: "太魯閣", districtKenting: "墾丁", districtPenghu: "澎湖",
+  districtTaipeiMetroNight: "台北MRT夜景",
+  stationBeimen: "北門駅", stationZhongshan: "中山駅", stationXimen: "西門駅", stationDongmen: "東門駅", stationXinbeitou: "新北投駅",
+  stationTamsui: "淡水駅", stationMaokong: "猫空ロープウェイ駅", stationRuifang: "瑞芳駅", stationShifen: "十分駅", stationYehliu: "野柳地質公園",
+  stationKeelung: "基隆駅", stationPingxi: "平溪駅", stationShuishe: "水社埠頭", stationAlishan: "阿里山駅", stationAnpingFort: "安平古堡",
+  stationHamasen: "哈瑪星駅", stationXincheng: "新城駅", stationEluanbi: "鵝鑾鼻灯台", stationMagong: "馬公港", stationTaipei101: "台北101／世貿駅",
+});
+
+Object.assign(translations.ko, {
+  dataGuide: "앱 이용 가이드", helpTitle: "스마트 여행 도우미 전체 이용 방법",
+  helpIntro: "지도, 검색, 잔액 추천, 캐릭터와 위탁 모드 사용법을 안내합니다.",
+  helpMapTitle: "지도와 일반 검색", helpMapBody: "지도의 MRT역을 누르거나 목적지, 날짜, 시간을 입력하세요. 가장 가까운 역의 과거 혼잡도와 쾌적도를 표시합니다. 아래 정보 패널은 드래그해 크기를 조절하고, 결과 삭제로 전체 지도로 돌아갈 수 있습니다.",
+  helpAiTitle: "AI 추천", helpAiBody: "AI 검색으로 전환해 활동, 예산, 선호를 자연어로 입력하세요. 이름이 있는 장소 3곳과 각 장소의 가장 가까운 MRT역 쾌적도를 비교해 줍니다.",
+  helpCrowdTitle: "혼잡도와 쾌적도", helpCrowdBody: "혼잡 색상은 초록에서 빨강으로 갈수록 과거 압력이 높고, 쾌적도 점수는 높을수록 상대적으로 편안합니다. 2026년 6월 OD 이력 추정치이며 실시간 인원, 공식 수용량 또는 안전 기준이 아닙니다.",
+  helpBalanceTitle: "스마트 잔액 추천", helpBalanceBody: "모의 잔액을 입력하면 해당 금액으로 이용 가능한 가게를 보여 줍니다. 실제 이지카드, EasyWallet 또는 결제 계정과 연결되지 않으며 잔액과 가격은 프로토타입 데이터입니다.",
+  helpCompanionTitle: "BeBe·미션·컬렉션", helpCompanionBody: "오른쪽 위 BeBe를 눌러 탐험 프로필을 여세요. 검색, 우천 상황, 심야 검색, 지역 탐험, 잔액 추천으로 장비·배지·카드 배경을 해제합니다. 해제된 항목을 누르면 착용할 수 있고 홈 아바타에도 반영됩니다.",
+  helpPostcardTitle: "명예 엽서", helpPostcardBody: "잔액 추천을 완료하면 엽서를 받습니다. PNG로 저장하거나 기기의 공유 기능을 사용할 수 있습니다. 선택한 지역 도장만 표시하고 전체 경로는 공개하지 않습니다.",
+  helpRoamingTitle: "위탁과 주말 로밍", helpRoamingBody: "위탁 모드를 켜고 ‘주간 로밍 보고서 만들기’를 누르세요. BeBe가 대만의 20개 지역에서 가상 이야기를 만들며 글과 배경은 같은 장소로 연결됩니다. 실제 위치를 추적하거나 사이트 종료 후 알림을 보내지 않습니다.",
+  helpLanguageTitle: "언어 전환", helpLanguageBody: "오른쪽 위 언어 버튼으로 繁體中文, English, 日本語, 한국어를 전환할 수 있습니다. 검색, 결과, 컬렉션과 이 안내도 함께 바뀝니다.",
+  districtBeitou: "베이터우", districtTamsui: "단수이", districtMaokong: "마오콩", districtJiufen: "지우펀", districtShifen: "스펀",
+  districtYehliu: "예류", districtKeelung: "지룽", districtPingxi: "핑시", districtSunMoonLake: "르웨탄", districtAlishan: "아리산",
+  districtTainanAnping: "타이난 안핑", districtKaohsiungPier2: "가오슝 보얼", districtTaroko: "타이루거", districtKenting: "컨딩", districtPenghu: "펑후",
+  districtTaipeiMetroNight: "타이베이 MRT 야경",
+  stationBeimen: "베이먼역", stationZhongshan: "중산역", stationXimen: "시먼역", stationDongmen: "둥먼역", stationXinbeitou: "신베이터우역",
+  stationTamsui: "단수이역", stationMaokong: "마오콩 곤돌라역", stationRuifang: "루이팡역", stationShifen: "스펀역", stationYehliu: "예류 지질공원",
+  stationKeelung: "지룽역", stationPingxi: "핑시역", stationShuishe: "수이서 부두", stationAlishan: "아리산역", stationAnpingFort: "안핑고보",
+  stationHamasen: "하마싱역", stationXincheng: "신청역", stationEluanbi: "어롼비 등대", stationMagong: "마궁항", stationTaipei101: "타이베이 101/세계무역센터역",
 });
 
 function t(key) {
@@ -780,6 +904,48 @@ function localizedDistrict(name) {
     心中山: "districtZhongshan",
     西門町: "districtXimen",
     永康街: "districtYongkang",
+    北投: "districtBeitou",
+    淡水: "districtTamsui",
+    貓空: "districtMaokong",
+    九份: "districtJiufen",
+    十分: "districtShifen",
+    野柳: "districtYehliu",
+    基隆: "districtKeelung",
+    平溪: "districtPingxi",
+    日月潭: "districtSunMoonLake",
+    阿里山: "districtAlishan",
+    台南安平: "districtTainanAnping",
+    高雄駁二: "districtKaohsiungPier2",
+    太魯閣: "districtTaroko",
+    墾丁: "districtKenting",
+    澎湖: "districtPenghu",
+    台北捷運夜景: "districtTaipeiMetroNight",
+  }[name];
+  return key ? t(key) : name;
+}
+
+function localizedStation(name) {
+  const key = {
+    北門站: "stationBeimen",
+    中山站: "stationZhongshan",
+    西門站: "stationXimen",
+    東門站: "stationDongmen",
+    新北投站: "stationXinbeitou",
+    淡水站: "stationTamsui",
+    貓空纜車站: "stationMaokong",
+    瑞芳車站: "stationRuifang",
+    十分車站: "stationShifen",
+    野柳地質公園: "stationYehliu",
+    基隆車站: "stationKeelung",
+    平溪車站: "stationPingxi",
+    水社碼頭: "stationShuishe",
+    阿里山車站: "stationAlishan",
+    安平古堡: "stationAnpingFort",
+    哈瑪星站: "stationHamasen",
+    新城車站: "stationXincheng",
+    鵝鑾鼻燈塔: "stationEluanbi",
+    馬公港: "stationMagong",
+    "台北101／世貿站": "stationTaipei101",
   }[name];
   return key ? t(key) : name;
 }
@@ -846,10 +1012,12 @@ function selectVirtualCard(cardId) {
 
 function renderAvatar() {
   const equipment = equipmentCatalog.find((item) => item.id === profileState.equippedEquipment) || equipmentCatalog[0];
+  const artwork = companionArtwork.cards[profileState.selectedCard] || companionArtwork.cards["metro-night"];
   document.querySelectorAll(".companion-avatar").forEach((avatar) => {
     avatar.dataset.stage = String(profileStage());
     avatar.dataset.equipment = equipment.id;
     avatar.dataset.card = profileState.selectedCard;
+    avatar.style.setProperty("--avatar-art", `url("${artwork}")`);
   });
   document.querySelector("#equipped-name").textContent = t(equipment.nameKey);
   document.querySelector("#avatar-stage-label").textContent = stageLabel();
@@ -882,6 +1050,7 @@ function renderCardCollection() {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.card = item.id;
+    button.style.setProperty("--card-art", `url("${companionArtwork.cards[item.id]}")`);
     button.className = `virtual-card${selected ? " is-selected" : ""}${unlocked ? "" : " is-locked"}`;
     button.disabled = !unlocked;
     button.innerHTML = `<strong>${t(item.nameKey)}</strong><small>${selected ? t("selectedBackground") : (unlocked ? t("useBackground") : t(item.unlockKey))}</small>`;
@@ -930,6 +1099,7 @@ function renderPostcards() {
   button.hidden = !latest;
   if (latest) {
     button.dataset.card = latest.card || "metro-night";
+    button.style.setProperty("--card-art", `url("${companionArtwork.cards[button.dataset.card] || companionArtwork.cards["metro-night"]}")`);
     button.innerHTML = postcardMarkup(latest);
     button.onclick = () => openPostcard(latest);
   }
@@ -959,6 +1129,7 @@ function openPostcard(postcard) {
   activePostcard = postcard;
   const preview = document.querySelector("#postcard-preview");
   preview.dataset.card = postcard.card || "metro-night";
+  preview.style.setProperty("--card-art", `url("${companionArtwork.cards[preview.dataset.card] || companionArtwork.cards["metro-night"]}")`);
   preview.innerHTML = postcardMarkup(postcard);
   const dialog = document.querySelector("#postcard-dialog");
   if (!dialog.open) dialog.showModal();
@@ -1078,9 +1249,11 @@ async function createWeeklyReport() {
   generateButton.disabled = true;
   profileState.weeklyReport = {
     id: `week-${weekNumber}`,
+    destinationId: destination.id,
     district: destination.district,
     station: destination.station,
     equipment: destination.equipment,
+    language: currentLanguage,
   };
   try {
     const response = await fetch("/api/roaming-report", {
@@ -1089,7 +1262,7 @@ async function createWeeklyReport() {
       body: JSON.stringify({
         language: currentLanguage,
         district: localizedDistrict(destination.district),
-        station: destination.station,
+        station: localizedStation(destination.station),
       }),
     });
     if (response.ok) {
@@ -1108,19 +1281,27 @@ async function createWeeklyReport() {
 
 function renderWeeklyReport() {
   const report = profileState.weeklyReport;
+  const reportCard = document.querySelector("#weekly-report");
   const title = document.querySelector("#weekly-report-title");
   const story = document.querySelector("#weekly-report-story");
   document.querySelector("#foster-mode").checked = Boolean(profileState.fosterMode);
   document.querySelector("#generate-report").disabled = !profileState.fosterMode;
   if (!report) {
+    reportCard.style.removeProperty("--roaming-art");
     title.textContent = t("weeklyReportEmpty").split("，")[0];
     story.textContent = t("weeklyReportEmpty");
     return;
   }
-  title.textContent = report.title || tf("reportTitle", { district: localizedDistrict(report.district) });
-  story.textContent = report.story || tf("reportStory", {
+  const destination = roamingDestinations.find((item) => item.id === report.destinationId)
+    || roamingDestinations.find((item) => item.district === report.district)
+    || roamingDestinations[0];
+  reportCard.dataset.destination = destination.id;
+  reportCard.style.setProperty("--roaming-art", `url("${companionArtwork.locations[destination.id]}")`);
+  const useGeneratedCopy = report.language === currentLanguage && report.source !== "LOCAL_TEMPLATE";
+  title.textContent = (useGeneratedCopy && report.title) || tf("reportTitle", { district: localizedDistrict(report.district) });
+  story.textContent = (useGeneratedCopy && report.story) || tf("reportStory", {
     district: localizedDistrict(report.district),
-    station: report.station,
+    station: localizedStation(report.station),
   });
 }
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260725-8" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260726-1" />
   </head>
   <body>
     <main class="app-shell">
@@ -398,14 +398,42 @@
         </div>
         <button id="close-help" class="help-close" type="button" aria-label="關閉" data-i18n-aria="close">×</button>
       </div>
-      <p data-i18n="helpIntro">畫面提供的是歷史人流估算，適合用來比較不同車站與時段。</p>
-      <ul>
-        <li data-i18n="helpHistory">資料期間為 2026 年 6 月，依車站、星期與小時整理歷史 OD 進出站資料。</li>
-        <li data-i18n="helpRealtime">結果不是即時站內人數，也不是官方容量或安全上限。</li>
-        <li data-i18n="helpReliability">目前只有一個月資料，同星期同時段約 4–5 筆樣本，因此仍屬初步估算。</li>
-        <li data-i18n="helpComfort">舒適度由歷史人流壓力反向換算，分數越高代表該時段相對舒適。</li>
-      </ul>
-      <p class="help-note" data-i18n="helpUse">建議把結果當作錯峰與比較時段的參考，不應作為安全或營運判斷。</p>
+      <p data-i18n="helpIntro">這裡整理地圖、搜尋、餘額、小人與寄養模式的完整操作方式。</p>
+      <div class="help-guide">
+        <section>
+          <span aria-hidden="true">01</span>
+          <div><h3 data-i18n="helpMapTitle">地圖與普通搜尋</h3><p data-i18n="helpMapBody">點選地圖上的捷運站，或輸入目的地並選擇日期、時間；系統會找出最近捷運站，顯示歷史人流與舒適度。下方資訊面板可拖曳縮放，清除結果可回到完整地圖。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">02</span>
+          <div><h3 data-i18n="helpAiTitle">AI 推薦</h3><p data-i18n="helpAiBody">切換到 AI 搜尋，用自然語言輸入活動、預算與偏好，系統會回傳三個具名地點，並比較最近捷運站的舒適度。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">03</span>
+          <div><h3 data-i18n="helpCrowdTitle">人流與舒適度</h3><p data-i18n="helpCrowdBody">人流顏色由綠到紅表示歷史壓力由低到高；舒適度越高代表該時段相對舒適。這是 2026 年 6 月 OD 歷史資料估算，不是即時人數、官方容量或安全上限。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">04</span>
+          <div><h3 data-i18n="helpBalanceTitle">餘額智慧推薦</h3><p data-i18n="helpBalanceBody">輸入模擬餘額後，系統會列出餘額可負擔的商家。此功能不連接真實悠遊卡或付款帳戶，價格與餘額均為 Prototype 資料。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">05</span>
+          <div><h3 data-i18n="helpCompanionTitle">BeBe、任務與收藏</h3><p data-i18n="helpCompanionBody">點右上角 BeBe 進入探索檔案。完成搜尋、雨天情境、深夜查詢、地區探索與餘額推薦，可解鎖裝備、徽章及卡面；點擊已解鎖項目即可裝備或設為背景，主頁頭像會同步。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">06</span>
+          <div><h3 data-i18n="helpPostcardTitle">榮譽明信片</h3><p data-i18n="helpPostcardBody">完成餘額推薦可取得明信片。打開明信片後可下載 PNG 或使用裝置分享功能；內容只呈現選擇的商圈印章，不公開完整路線。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">07</span>
+          <div><h3 data-i18n="helpRoamingTitle">寄養與週末漫遊</h3><p data-i18n="helpRoamingBody">開啟寄養模式後，按「生成本週漫遊報告」，BeBe 會從 20 個台灣特色地點中產生虛擬故事，文字與背景會對應同一地點。此功能不會追蹤真實位置，也不會在網站關閉時背景推播。</p></div>
+        </section>
+        <section>
+          <span aria-hidden="true">08</span>
+          <div><h3 data-i18n="helpLanguageTitle">切換語言</h3><p data-i18n="helpLanguageBody">使用頁面右上角的語言按鈕，可切換繁體中文、English、日本語與한국어；搜尋、結果、收藏與本說明都會一起切換。</p></div>
+        </section>
+      </div>
+      <p class="help-note" data-i18n="helpUse">建議把人流結果作為錯峰與比較時段的參考，不應作為安全或營運判斷。</p>
     </dialog>
     <dialog id="postcard-dialog" class="postcard-dialog" aria-labelledby="postcard-dialog-title">
       <div class="postcard-dialog-header">
@@ -424,6 +452,6 @@
     </dialog>
     <div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260725-8"></script>
+    <script src="/static/app.js?v=20260726-1"></script>
   </body>
 </html>
