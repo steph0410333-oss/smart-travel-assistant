@@ -7,20 +7,20 @@ from urllib.request import Request, urlopen
 FALLBACK_COPY = {
     "zh-Hant": (
         "{district}週末漫遊",
-        "小悠本週從{station}站出發，虛擬探索了{district}。下次來台灣時，要不要一起完成這個城市任務？",
+        "小悠本週從{station}出發，虛擬探索了{district}。下次來台灣時，要不要一起完成這個城市任務？",
     ),
     "en": (
         "A weekend in {district}",
-        "Xiao-You virtually explored {district} from {station} Station this week. "
+        "Xiao-You virtually explored {district} from {station} this week. "
         "Would you like to complete this city mission together on your next Taiwan trip?",
     ),
     "ja": (
         "{district}週末漫遊",
-        "小悠は今週、{station}駅から{district}をバーチャル散策しました。次の台湾旅行で一緒に街ミッションを達成しませんか？",
+        "小悠は今週、{station}から{district}をバーチャル散策しました。次の台湾旅行で一緒に街ミッションを達成しませんか？",
     ),
     "ko": (
         "{district} 주말 로밍",
-        "샤오유는 이번 주 {station}역에서 출발해 {district}을 가상으로 여행했어요. 다음 대만 여행에서 함께 도시 미션을 완료할까요?",
+        "샤오유는 이번 주 {station}에서 출발해 {district} 지역을 가상으로 여행했어요. 다음 대만 여행에서 함께 도시 미션을 완료할까요?",
     ),
 }
 
@@ -39,7 +39,7 @@ def generate_roaming_report(language: str, district: str, station: str) -> dict[
     model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
     prompt = (
         "Write a warm weekly virtual travel postcard for a digital companion. "
-        f"Language: {language}. District: {district}. Nearest metro station: {station}. "
+        f"Language: {language}. District: {district}. Starting point: {station}. "
         "This is fictional roaming, not the user's real location. "
         'Return JSON only: {"title":"max 28 chars","story":"max 110 chars"}.'
     )
