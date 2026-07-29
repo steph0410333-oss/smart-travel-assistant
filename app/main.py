@@ -48,7 +48,8 @@ def health_check() -> dict[str, str]:
 def list_stations(time: str | None = None, date: str | None = None) -> dict:
     metadata = get_crowd_metadata()
     return {
-        "data_label": "HISTORICAL OD ESTIMATE / LOW RELIABILITY",
+        "data_label": "HISTORICAL OD RELATIVE CROWD SCORE / EXPERIMENTAL",
+        "model_version": metadata["model_version"],
         "data_period": {
             "start": metadata["data_period_start"],
             "end": metadata["data_period_end"],
@@ -121,10 +122,16 @@ def analyze_place(request: PlaceAnalysisRequest) -> dict:
         query_date=request.date,
         preferences=request.preferences,
         station_distance_m=nearest_station["distance_m"],
+        weather_type=request.weather_type,
+        place_type=place.get("place_type"),
+        enable_external_factors=request.enable_external_factors,
     )
     nearby_merchants = find_nearby_merchants(place["latitude"], place["longitude"])
     return {
-        "data_label": "HISTORICAL OD ESTIMATE / NOT REAL-TIME / LOW RELIABILITY",
+        "data_label": (
+            "40/40/10/10 HISTORICAL OD + PROTOTYPE EXTERNAL FACTORS "
+            "/ NOT REAL-TIME / EXPERIMENTAL"
+        ),
         "query": request.model_dump(),
         "resolved_place": place,
         "nearest_station": nearest_station,
@@ -137,9 +144,22 @@ def analyze_place(request: PlaceAnalysisRequest) -> dict:
 @app.post("/api/recommend")
 def recommend(request: RecommendationRequest) -> dict:
     intent = parse_recommendation_intent(request.prompt)
-    recommendations = recommend_places(intent, limit=3)
+    if request.time and request.time.strip():
+        intent["time"] = request.time
+    recommendations = recommend_places(
+        intent,
+        limit=3,
+        query_date=request.date,
+        weather_type=request.weather_type,
+        enable_external_factors=request.enable_external_factors,
+    )
     return {
-        "data_label": "MOCK DATA / RULES-BASED RECOMMENDATION",
+        "data_label": (
+            "40/40/10/10 HISTORICAL OD + PROTOTYPE EXTERNAL FACTORS "
+            "/ RULES-BASED RECOMMENDATION"
+            if request.enable_external_factors
+            else "40/40/10/10 HISTORICAL OD / RULES-BASED RECOMMENDATION"
+        ),
         "structured_intent": intent,
         "recommendations": recommendations,
     }
@@ -147,7 +167,13 @@ def recommend(request: RecommendationRequest) -> dict:
 
 @app.post("/api/agent/recommend")
 def agent_recommend(request: RecommendationRequest) -> dict:
-    return travel_decision_agent.run(request.prompt)
+    return travel_decision_agent.run(
+        request.prompt,
+        query_date=request.date,
+        query_time=request.time,
+        weather_type=request.weather_type,
+        enable_external_factors=request.enable_external_factors,
+    )
 
 
 @app.post("/api/roaming-report")

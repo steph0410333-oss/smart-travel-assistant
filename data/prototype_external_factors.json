@@ -1,0 +1,44 @@
+{
+  "data_label": "PROTOTYPE / MOCK EXTERNAL FACTORS - NOT OFFICIAL OR REAL-TIME",
+  "timezone": "Asia/Taipei",
+  "holidays": [
+    {"date": "2026-01-01", "name": "Prototype New Year Example"},
+    {"date": "2026-02-17", "name": "Prototype Holiday Example"},
+    {"date": "2026-10-10", "name": "Prototype National Day Example"}
+  ],
+  "events": [
+    {
+      "event_id": "EVT001",
+      "event_name": "台北小巨蛋示例演唱會",
+      "venue_name": "台北小巨蛋",
+      "latitude": 25.0514,
+      "longitude": 121.5501,
+      "start_datetime": "2026-08-15T19:30:00",
+      "end_datetime": "2026-08-15T22:00:00",
+      "expected_attendance": 11000,
+      "venue_capacity": 15000
+    },
+    {
+      "event_id": "EVT002",
+      "event_name": "華山示例展覽",
+      "venue_name": "華山1914文化創意產業園區",
+      "latitude": 25.0441,
+      "longitude": 121.5294,
+      "start_datetime": "2026-09-12T10:00:00",
+      "end_datetime": "2026-09-12T18:00:00",
+      "expected_attendance": 4500,
+      "venue_capacity": 6000
+    },
+    {
+      "event_id": "EVT003",
+      "event_name": "大安森林公園示例市集",
+      "venue_name": "大安森林公園",
+      "latitude": 25.0316,
+      "longitude": 121.5350,
+      "start_datetime": "2026-11-07T12:00:00",
+      "end_datetime": "2026-11-07T17:00:00",
+      "expected_attendance": 8000,
+      "venue_capacity": 12000
+    }
+  ]
+}

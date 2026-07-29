@@ -68,9 +68,15 @@ class GeminiTravelAdapter:
             {
                 "排名": index + 1,
                 "地點": item["resolved_place"]["place_name"],
+                "地點類型": item["resolved_place"].get("place_type"),
                 "最近捷運站": item["nearest_station"]["station_name"],
-                "舒適度": item["comfort"]["comfort_score"],
+                "歷史OD基礎人流分數": item["comfort"].get("historical_crowd_score"),
+                "外部因素調整後人流分數": item["comfort"].get("adjusted_crowd_score"),
+                "個人化舒適度": self._personalized_comfort_score(item["comfort"]),
                 "舒適狀態": item["comfort"]["status"],
+                "外部因素": self._compact_external_factors(item["comfort"].get("external_factors")),
+                "推薦總分": item.get("recommendation_score"),
+                "推薦分數構成": item.get("component_scores"),
                 "典型預算": item["resolved_place"]["typical_budget"],
                 "推薦理由": item["recommendation_reasons"][:3],
                 "附近悠遊付模擬商家": [
@@ -81,7 +87,10 @@ class GeminiTravelAdapter:
         ]
         function_response: dict[str, Any] = {
             "name": self.TOOL_NAME,
-            "response": {"recommendations": compact_results, "data_label": "MOCK / SIMULATED DATA"},
+            "response": {
+                "recommendations": compact_results,
+                "data_label": "40/40/10/10 HISTORICAL OD + PROTOTYPE EXTERNAL FACTORS",
+            },
         }
         if function_call.get("id"):
             function_response["id"] = function_call["id"]
@@ -89,7 +98,10 @@ class GeminiTravelAdapter:
         payload = {
             "systemInstruction": {"parts": [{"text": (
                 "根據工具結果，用繁體中文寫 2 到 3 句精簡、具體的建議。"
-                "必須說出第一名地點與最近捷運站，也要提到舒適度是模擬評分。"
+                "必須維持工具提供的排名，不得自行重新計分或改變名次。"
+                "必須說出第一名地點與最近捷運站，也要說明基礎人流來自歷史OD的40/40/10/10模型，不是即時站內人數。"
+                "外部因素是規則式Prototype：假日資料不完整、天氣來自本次請求而非即時氣象API、活動為Mock資料。"
+                "若天氣的 applied 為 false，不可宣稱天氣已影響分數；若有 warnings，應簡短揭露。"
                 "若工具有回傳附近悠遊付模擬商家，請挑一間作為順路參考並說明那是 Mock 資料。"
                 "不可自行增加工具結果沒有的店家或即時資訊。"
             )}]},
@@ -174,10 +186,26 @@ class GeminiTravelAdapter:
         }
 
     @staticmethod
+    def _personalized_comfort_score(comfort: dict[str, Any]) -> float | int | None:
+        return comfort.get("personalized_comfort_score", comfort.get("comfort_score"))
+
+    @staticmethod
+    def _compact_external_factors(external_factors: dict[str, Any] | None) -> dict[str, Any]:
+        if not external_factors:
+            return {"enabled": False}
+        return {
+            "enabled": bool(external_factors.get("enabled")),
+            "date": external_factors.get("date"),
+            "weather": external_factors.get("weather"),
+            "event": external_factors.get("event"),
+            "warnings": external_factors.get("warnings", []),
+        }
+
+    @staticmethod
     def _tool_declaration() -> dict[str, Any]:
         return {
             "name": GeminiTravelAdapter.TOOL_NAME,
-            "description": "依照需求搜尋 Prototype 地點，計算最近捷運站的模擬人流舒適度、查詢附近悠遊付 Mock 商家並排序 Top 3。",
+            "description": "依照需求搜尋 Prototype 地點，以40/40/10/10歷史OD人流、Prototype外部因素及個人偏好計算舒適度，查詢附近悠遊付 Mock 商家並排序 Top 3。",
             "parameters": {
                 "type": "OBJECT",
                 "properties": {

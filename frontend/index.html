@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260726-1" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260727-1" />
   </head>
   <body>
     <main class="app-shell">
@@ -130,6 +130,28 @@
         <div class="mode-tabs" role="tablist" aria-label="搜尋模式" data-i18n-aria="searchMode">
           <button class="mode-tab is-active" type="button" role="tab" data-mode="normal" aria-selected="true">普通搜尋</button>
           <button class="mode-tab" type="button" role="tab" data-mode="ai" aria-selected="false">AI 推薦</button>
+        </div>
+
+        <div class="external-context" aria-label="分析情境" data-i18n-aria="analysisContext">
+          <label class="field-row">
+            <span class="field-icon" aria-hidden="true">▣</span>
+            <span class="sr-only" data-i18n="dateLabel">日期</span>
+            <input id="date-input" type="date" aria-label="日期" data-i18n-aria="dateLabel" />
+          </label>
+          <label class="field-row">
+            <span class="field-icon" aria-hidden="true">☁</span>
+            <span class="sr-only" data-i18n="weatherLabel">天氣情境</span>
+            <select id="weather-input" aria-label="天氣情境" data-i18n-aria="weatherLabel">
+              <option value="" data-i18n="weatherUnknown">未指定天氣</option>
+              <option value="sunny" data-i18n="weatherSunny">晴天</option>
+              <option value="rain" data-i18n="weatherRain">雨天</option>
+              <option value="heavy_rain" data-i18n="weatherHeavyRain">大雨</option>
+            </select>
+          </label>
+          <label class="external-factor-toggle">
+            <input id="external-factor-toggle" type="checkbox" checked />
+            <span data-i18n="externalFactorToggle">套用 Prototype 假日、天氣與活動因素</span>
+          </label>
         </div>
 
         <div id="normal-panel" class="mode-panel">
@@ -452,6 +474,6 @@
     </dialog>
     <div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260726-1"></script>
+    <script src="/static/app.js?v=20260727-2"></script>
   </body>
 </html>
