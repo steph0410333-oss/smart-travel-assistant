@@ -2,14 +2,15 @@
 
 這是一個 Map-first 的 AI-assisted prototype，用來驗證以下流程：
 
-使用者需求 → 歷史 OD 人流推估 → 舒適度分析 → 地點推薦 → 悠遊付模擬商家資訊 → 地圖呈現
+使用者需求 → 40/40/10/10 歷史 OD 基礎人流 → Prototype 外部因素調整 → 個人化舒適度 → 地點推薦 → 悠遊付模擬商家資訊 → 地圖呈現
 
 ## Prototype 聲明
 
 - 人流資料來自 2026 年 6 月 OD 歷史分析結果，屬於低可靠度的歷史推估，不是即時站內人數。
 - 商家資料為 `MOCK DATA`。
-- 舒適度以 `100 - 歷史相對人流擁擠指數 - 個人偏好扣分` 計算。
-- P95 是歷史高流量代理值，不是官方站體容量或安全上限。
+- 外部因素（假日、請求提供的天氣、Mock 活動）為規則式 Prototype，不是即時或官方資料。
+- 舒適度以 `100 - 調整後人流分數 - 個人偏好扣分` 計算。
+- 人流分數採 40% 同星期內總人流、40% 跨星期同時段總人流、10% 進站壓力、10% 出站壓力。
 
 ## 目前進度
 
@@ -25,6 +26,8 @@
 - [x] Phase 9：可調整資訊面板、搜尋重設、旅客餘額推薦與四語介面
 - [x] Phase 10：真實 OD 歷史資料轉換、119 站時段查詢與可靠度揭露
 - [x] Phase 11：119 筆 OD 站名座標對照、全站熱區圖與最近站判定
+- [x] Phase 12：40/40/10/10 新人流模型與來源 Excel 全面替換
+- [x] Phase 13：Prototype 假日、天氣、活動因素與個人化舒適度整合
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/steph0410333-oss/smart-travel-assistant)
 
@@ -44,13 +47,24 @@ AI 推薦由 Gemini 理解自然語言並呼叫本機推薦工具；地點與典
 
 ## Phase 10：OD 歷史人流串接
 
-- `data/historical_crowd.json`：119 站、17,493 組「車站 × 星期 × 小時」歷史人流資料。
-- 各時段以 `[crowd_score, sample_count]` 精簡儲存；人流文字等級與可靠度由後端依相同門檻即時計算。
+- `data/hourly_crowd_scores_weekday_hour_40_40_10_10.xlsx`：人流資料與計算結果的唯一來源。
+- `data/historical_crowd.json`：由來源 Excel 產生的部署快取，含 119 站、17,493 組「車站 × 星期 × 小時」資料。
+- 各時段以 `[final_crowd_score, sample_count, final_crowd_level, score_status]` 儲存。
 - `services/crowd_service.py`：依站名、日期與時間查詢歷史人流壓力。
 - `services/comfort_service.py`：以歷史人流壓力反向計算舒適度，不再套用固定尖峰加分。
 - `GET /api/stations?date=YYYY-MM-DD&time=HH:MM`：取得地圖站點的指定時段歷史推估。
 - `POST /api/analyze-place`：請求可額外提供 `date` 與 `time`。
 - 凌晨或缺少 OD 紀錄的時段會回傳「資料不足」，不以模擬值補齊。
+
+## Phase 13：外部因素與個人化推薦
+
+- `data/prototype_external_factors.json`：不完整的示例假日與 Mock 活動資料。
+- `services/external_factor_service.py`：計算日期、天氣及活動壓力；天氣由使用者選擇，不會呼叫即時氣象 API。
+- `places.json` 的 `place_type` 決定雨天對戶外、商場、交通站點或場館的不同係數。
+- 調整公式為 `clamp(基礎人流 × 假日係數 × 天氣係數 + 活動壓力, 0, 100)`。
+- Excel 基礎分數已依星期建模，因此週末係數維持 `1.0`，避免週末效果重複計算；只有 Prototype 假日可再加乘。
+- API 請求可提供 `date`、`weather_type` 與 `enable_external_factors`；回應同時保留基礎、調整後、環境及個人化四種分數。
+- 前端預設開啟外部因素，但可由使用者取消；API 預設仍為關閉，以維持既有呼叫相容性。
 
 地圖會顯示 `data/stations.json` 的 119 筆 OD 站點，並以同一批站點執行最近捷運站判定。OD 有 119 個站名、座標表有 118 個實體站；差異來自板橋站在 OD 中分成 `BL板橋` 與 `Y板橋`。`大橋頭站` 則明確對照座標表的 `大橋頭`。
 
@@ -76,7 +90,7 @@ python scripts/build_station_catalog.py `
 
 ```powershell
 python scripts/build_historical_crowd_json.py `
-  hourly_crowd_scores_with_weekday_summary.xlsx `
+  data/hourly_crowd_scores_weekday_hour_40_40_10_10.xlsx `
   data/historical_crowd.json
 ```
 

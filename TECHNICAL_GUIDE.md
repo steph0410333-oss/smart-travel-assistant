@@ -52,7 +52,7 @@ historical_crowd.json + stations.json + places.json + merchants.json
 | 環境變數 | python-dotenv | 從 `.env` 讀取 Gemini API Key 與模型名稱 | `agent/gemini_adapter.py` |
 | 生成式 AI | Google Gemini REST API | 理解自然語言需求、呼叫推薦工具、產生繁中摘要 | `agent/gemini_adapter.py` |
 | Agent 協調 | 自製 Travel Decision Agent | 串接意圖、候選地點、人流、商家、排序及回覆，並處理備援 | `agent/travel_decision_agent.py` |
-| OD 資料轉換 | Python + openpyxl | 將分析 Excel 的星期時段平均結果轉成網站可讀 JSON | `scripts/build_historical_crowd_json.py` |
+| OD 資料轉換 | Python + openpyxl | 將 40/40/10/10 分析 Excel 轉成網站可讀 JSON | `scripts/build_historical_crowd_json.py` |
 | 歷史人流查詢 | Python | 依車站、星期與小時查詢 OD 歷史人流壓力及可靠度 | `services/crowd_service.py` |
 | 資料儲存 | JSON 檔案 | 儲存 OD 歷史人流、展示站點、地點與商家資料 | `data/*.json` |
 | 距離計算 | Haversine 公式 | 用經緯度估算兩點球面直線距離 | `services/station_service.py`、`services/merchant_service.py` |
@@ -64,7 +64,7 @@ historical_crowd.json + stations.json + places.json + merchants.json
 ### 目前沒有使用的技術
 
 - 沒有 React、Vue、Next.js 或其他前端框架。
-- 沒有資料庫，資料只放在 JSON 檔案。
+- 沒有外部資料庫；人流以來源 Excel 為準，部署時讀取其產生的 JSON 快取。
 - 沒有 Google Maps／Google Places API；目前任意地址或店名無法自動地理編碼。
 - 沒有登入、會員、權限管理或真實悠遊卡／悠遊付帳戶連線。
 - 沒有 WebSocket 或即時資料串流。
@@ -83,13 +83,16 @@ smart-travel-assistant/
 ├─ services/
 │  ├─ station_service.py      地點解析、捷運站資料、最近車站
 │  ├─ crowd_service.py        OD歷史人流查詢、站名對應、資料期間與可靠度
-│  ├─ comfort_service.py      歷史人流壓力轉換為舒適度
+│  ├─ external_factor_service.py Prototype日期、天氣與活動壓力
+│  ├─ comfort_service.py      基礎人流、外部修正與個人化舒適度
 │  ├─ intent_service.py       無 AI 時的關鍵字／預算／時間解析
 │  ├─ recommendation_service.py 地點符合度計算與 Top 3 排序
 │  ├─ merchant_service.py     700 公尺內 Mock 商家與距離
 │  └─ balance_service.py      依模擬餘額找可負擔商家
 ├─ data/
 │  ├─ historical_crowd.json   119站、17,493組星期時段OD歷史人流
+│  ├─ hourly_crowd_scores_weekday_hour_40_40_10_10.xlsx  人流模型唯一來源
+│  ├─ prototype_external_factors.json  示例假日與Mock活動
 │  ├─ stations.json           119 筆 OD 站名、線別站號與代表座標
 │  ├─ taipei_metro_stations_source.csv  135 筆線別站點座標來源
 │  ├─ places.json             9 個可搜尋／推薦的 Mock 地點
@@ -99,7 +102,7 @@ smart-travel-assistant/
 │  ├─ styles.css              視覺與響應式版面
 │  └─ app.js                  地圖、API 與所有瀏覽器互動
 ├─ scripts/                   重建OD歷史人流與119站座標JSON
-├─ tests/                     21 項 Python 自動測試
+├─ tests/                     35 項 Python 自動測試
 ├─ requirements.txt           Python 套件清單
 ├─ render.yaml                Render 建置與部署設定
 ├─ start_app.bat              Windows 本機啟動捷徑
@@ -108,9 +111,9 @@ smart-travel-assistant/
 └─ DEPLOYMENT.md              部署說明
 ```
 
-`historical_crowd.json` 的每個時段使用 `[crowd_score, sample_count]`
-精簡編碼。`crowd_service.py` 讀取後再依既定門檻補出人流等級與可靠度，
-避免在 17,493 筆資料中重複儲存相同文字。
+`historical_crowd.json` 是來源 Excel 的部署快取，每個時段使用
+`[final_crowd_score, sample_count, final_crowd_level, score_status]` 編碼。
+`crowd_service.py` 不重新計算人流分數或等級，只負責查詢與可靠度標示。
 
 ## 5. 前端功能如何實作
 
@@ -124,17 +127,18 @@ smart-travel-assistant/
 
 每個捷運站會畫出兩個圖形：
 
-1. 一個彩色半透明圓圈，圓圈半徑是 `280 + crowd_index × 5` 公尺。
+1. 一個彩色半透明圓圈，圓圈半徑是 `160 + crowd_index × 2` 公尺。
 2. 一個較小的圓形站點標記。
 
 顏色依 `crowd_index` 分級：
 
 - 0–34：綠色，較少
 - 35–54：黃色，普通
-- 55–74：橘色，偏高
-- 75–100：紅色，擁擠
+- 55–69：橘色，偏擠
+- 70–84：紅色，擁擠
+- 85–100：深紅色，非常擁擠
 
-因此目前畫面比較精確的名稱是「站點人流熱區圓」，不是根據大量即時座標產生的連續式 Heatmap。畫面仍只有 10 個已有經緯度的固定站點，但圓圈數值已改由 `historical_crowd.json` 依當天星期與小時查詢。
+因此目前畫面比較精確的名稱是「站點人流熱區圓」，不是根據大量即時座標產生的連續式 Heatmap。畫面使用 119 個 OD 站點，圓圈數值由 `historical_crowd.json` 依當天星期與小時查詢。
 
 ### 5.2 地圖上的商家
 
@@ -185,12 +189,12 @@ smart-travel-assistant/
 |---|---|---|---|
 | `GET /` | 傳回網站首頁 | 無 | `frontend/index.html` |
 | `GET /api/health` | Render 健康檢查 | 無 | `status: ok` |
-| `GET /api/stations` | 取得地圖站點與OD歷史人流推估 | 可選日期、時間 | 10 個已有座標的站點及可靠度 |
+| `GET /api/stations` | 取得地圖站點與OD歷史人流推估 | 可選日期、時間 | 119 個 OD 站點及可靠度 |
 | `GET /api/places` | 取得可搜尋地點 | 無 | 9 個地點及最近捷運站 |
 | `GET /api/merchants` | 取得全部或指定座標附近的 Mock 商家 | 可選經緯度、半徑 | 商家列表及類型統計 |
-| `POST /api/analyze-place` | 分析指定目的地 | 地點、日期、時間、偏好 | 最近站、OD歷史人流、舒適度、附近商家 |
-| `POST /api/recommend` | 純規則式地點推薦 | 自然語言文字 | 結構化需求與 Top 3 |
-| `POST /api/agent/recommend` | Gemini Agent 推薦 | 自然語言文字 | Top 3、AI 摘要、流程紀錄、備援狀態 |
+| `POST /api/analyze-place` | 分析指定目的地 | 地點、日期、時間、偏好、天氣、外部因素開關 | 最近站、基礎／調整後人流、個人化舒適度、附近商家 |
+| `POST /api/recommend` | 純規則式地點推薦 | 自然語言、日期、時間、天氣、外部因素開關 | 結構化需求、分數構成與 Top 3 |
+| `POST /api/agent/recommend` | Gemini Agent 推薦 | 自然語言、日期、時間、天氣、外部因素開關 | Top 3、AI 摘要、流程紀錄、備援狀態 |
 | `POST /api/balance-recommend` | 模擬餘額推薦 | 餘額、數量 | 可負擔的 Mock 商家 |
 
 FastAPI 預設還會提供 `/docs` 的 Swagger API 文件，技術組可以直接用瀏覽器測試 API。
@@ -204,10 +208,11 @@ FastAPI 預設還會提供 `/docs` 的 Swagger API 文件，技術組可以直�
 3. `resolve_place()` 在 `places.json` 的名稱與 aliases 中比對。
 4. 找到地點經緯度後，`find_nearest_station()` 用 Haversine 公式比較所有站點。
 5. `crowd_service.py` 依站名、星期與小時查詢 OD 歷史人流壓力。
-6. `analyze_station_comfort()` 將歷史人流壓力反向轉為舒適度，再加入偏好扣分。
-7. `find_nearby_merchants()` 搜尋目的地 700 公尺內的 Mock 商家。
-8. API 回傳地點、最近站、距離、舒適度、人流因素、可靠度、理由與商家。
-9. 前端移動地圖、畫環狀分數、點亮人物圖示、顯示建議並展開面板。
+6. `external_factor_service.py` 依假日、請求天氣及附近 Mock 活動調整基礎人流。
+7. `analyze_station_comfort()` 將調整後人流反向轉為環境舒適度，再加入偏好扣分。
+8. `find_nearby_merchants()` 搜尋目的地 700 公尺內的 Mock 商家。
+9. API 回傳地點、最近站、距離、四種分數、外部因素、可靠度、理由與商家。
+10. 前端移動地圖、畫環狀分數、點亮人物圖示、顯示建議並展開面板。
 
 目前普通搜尋不是網路搜尋。只有名稱或別名能對到 `places.json`，或文字能對到既有站名時才會成功。
 
@@ -215,19 +220,21 @@ FastAPI 預設還會提供 `/docs` 的 Swagger API 文件，技術組可以直�
 
 ## 8. 最近捷運站如何決定
 
-每個地點與捷運站都有經緯度。系統使用 Haversine 公式估算地球表面兩點的直線距離，再從 10 個站中取距離最短的一個。
+每個地點與捷運站都有經緯度。系統使用 Haversine 公式估算地球表面兩點的直線距離，再從 119 個 OD 站名中取距離最短的一個。
 
 這能回答「使用者不知道目的地靠近哪一站」的問題，但有三項限制：
 
 - 算的是直線距離，不是實際步行路線。
-- 只會在 10 個模擬站中選擇，不是完整台北捷運網。
+- 會在 119 個 OD 站名中選擇；板橋站依線別拆成 `BL板橋` 與 `Y板橋`。
 - 沒有考慮出口位置、道路阻隔、轉乘或無障礙路線。
 
 ## 9. 人流與舒適度怎麼算
 
 ### 9.1 歷史人流資料
 
-`historical_crowd.json` 由 Excel 的「星期時段平均擁擠度」產生，查詢鍵為：
+`historical_crowd.json` 由
+`data/hourly_crowd_scores_weekday_hour_40_40_10_10.xlsx`
+的「星期時段擁擠度」工作表產生，查詢鍵為：
 
 ```text
 車站 + 星期編號 + 小時
@@ -240,14 +247,41 @@ FastAPI 預設還會提供 `/docs` 的 Swagger API 文件，技術組可以直�
 - `sample_count`：同星期同時段樣本數。
 - `reliability`：目前全部為 `low`，因樣本未達 8 筆。
 
+人流模型公式：
+
+```text
+final_crowd_score
+  = 0.40 × within_day_total_score
+  + 0.40 × across_weekday_total_score
+  + 0.10 × entry_pressure_score
+  + 0.10 × exit_pressure_score
+```
+
+分級門檻為：舒適 0–34、普通 35–54、偏擠 55–69、擁擠 70–84、非常擁擠 85–100。
+
 系統已移除固定早晚尖峰加分，因為 OD 時段資料本身已反映尖峰；再次加分會重複計算。
+
+### 9.2 外部因素調整
+
+```text
+adjusted_crowd_score
+  = clamp(
+      historical_crowd_score
+      × holiday_coefficient
+      × weather_coefficient
+      + event_pressure_score,
+      0,
+      100
+    )
+```
+
+週末係數固定為 `1.0`，因 Excel 基礎分數已依星期幾建模；再次加權會重複計算。Prototype 假日係數為 `1.15`。天氣係數依 `place_type` 不同，活動壓力依人數規模、距離及時間接近度計算，最高加 30 分。這些資料不是即時天氣、完整官方假日或真實活動 API。
 
 ### 9.3 舒適度公式
 
 ```text
-舒適度 = 100
-       - 歷史相對人流擁擠指數
-       - 個人偏好扣分
+環境舒適度 = 100 - adjusted_crowd_score
+個人化舒適度 = 環境舒適度 - 個人偏好扣分
 ```
 
 結果會限制在 0–100：
@@ -259,7 +293,7 @@ FastAPI 預設還會提供 `/docs` 的 Swagger API 文件，技術組可以直�
 
 個人偏好扣分：
 
-- 選擇「不想太擠」且歷史人流壓力 ≥ 55：扣 8 分
+- 選擇「不想太擠」且調整後人流壓力 ≥ 55：扣 8 分
 - 選擇「少走路」且最近站超過 500 公尺：扣 6 或 12 分
 
 如果查詢時段沒有 OD 紀錄，系統回傳「資料不足」，不會回頭使用 `stations.json` 的舊模擬值。`nearby_crowd_index`、`peak_index` 與 `event_flag` 目前不再參與舒適度。
@@ -368,10 +402,12 @@ FastAPI 預設還會提供 `/docs` 的 Swagger API 文件，技術組可以直�
 
 ## 14. 測試目前做到什麼
 
-目前共有 18 項 Python `unittest`，主要驗證：
+目前共有 35 項 Python `unittest`，主要驗證：
 
 - 地點別名能解析並找出最近捷運站
-- 尖峰時間會降低舒適度
+- 40/40/10/10 Excel 快取與來源檔 checksum 一致
+- 週末不會重複加權，Prototype 假日、雨天與 Mock 活動係數符合規則
+- 外部因素會先調整人流，再計算環境及個人化舒適度
 - 不想擁擠偏好會影響分數
 - 自然語言能解析咖啡、聊天、冷氣與預算
 - 推薦能回傳三個有名稱與理由的地點

@@ -112,6 +112,7 @@ def resolve_place(query: str) -> dict[str, Any] | None:
                     "place_name_en": station["station_name_en"],
                     "latitude": station["latitude"],
                     "longitude": station["longitude"],
+                    "place_type": "transit",
                     "aliases": [station["station_name"]],
                 }
 

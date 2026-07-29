@@ -157,6 +157,9 @@ const translations = {
     balanceAction: "推薦", balanceDisclaimer: "未連接真實帳戶；餘額、商家與價格皆為 Prototype 模擬資料。",
     placePlaceholder: "輸入目的地，例如台北小巨蛋", balanceEmpty: "此餘額目前沒有可推薦的模擬消費選擇。",
     remaining: "估計消費後餘額", nearestStation: "最近捷運站", update: "更新",
+    analysisContext: "分析情境", dateLabel: "日期", weatherLabel: "天氣情境",
+    weatherUnknown: "未指定天氣", weatherSunny: "晴天", weatherRain: "雨天", weatherHeavyRain: "大雨",
+    externalFactorToggle: "套用 Prototype 假日、天氣與活動因素",
   },
   en: {
     appTitle: "Smart Travel Assistant", help: "Help", searchEntry: "Search a place or tell AI where you want to go",
@@ -175,6 +178,9 @@ const translations = {
     balanceAction: "Recommend", balanceDisclaimer: "Not connected to a real account. Balances, merchants and prices are prototype data.",
     placePlaceholder: "Enter a destination, e.g. Taipei Arena", balanceEmpty: "No prototype option is affordable with this balance.",
     remaining: "Estimated balance after spending", nearestStation: "Nearest metro", update: "updated",
+    analysisContext: "Analysis context", dateLabel: "Date", weatherLabel: "Weather scenario",
+    weatherUnknown: "Weather not specified", weatherSunny: "Sunny", weatherRain: "Rain", weatherHeavyRain: "Heavy rain",
+    externalFactorToggle: "Apply prototype holiday, weather and event factors",
   },
   ja: {
     appTitle: "スマート移動アシスタント", help: "ヘルプ", searchEntry: "場所を検索、またはAIに希望を伝える",
@@ -193,6 +199,9 @@ const translations = {
     balanceAction: "おすすめ", balanceDisclaimer: "実際の口座には接続していません。残高・店舗・価格は試作データです。",
     placePlaceholder: "目的地を入力（例：台北アリーナ）", balanceEmpty: "この残高で利用できる模擬候補はありません。",
     remaining: "利用後の推定残高", nearestStation: "最寄りMRT", update: "更新",
+    analysisContext: "分析条件", dateLabel: "日付", weatherLabel: "天気シナリオ",
+    weatherUnknown: "天気を指定しない", weatherSunny: "晴れ", weatherRain: "雨", weatherHeavyRain: "大雨",
+    externalFactorToggle: "試作の祝日・天気・イベント要因を適用",
   },
   ko: {
     appTitle: "스마트 여행 도우미", help: "도움말", searchEntry: "장소를 검색하거나 AI에게 원하는 곳을 말해 주세요",
@@ -211,6 +220,9 @@ const translations = {
     balanceAction: "추천", balanceDisclaimer: "실제 계정과 연결되지 않았으며 잔액, 가맹점, 가격은 프로토타입 데이터입니다.",
     placePlaceholder: "목적지 입력 (예: 타이베이 아레나)", balanceEmpty: "이 잔액으로 이용 가능한 모의 추천이 없습니다.",
     remaining: "사용 후 예상 잔액", nearestStation: "가장 가까운 MRT", update: "업데이트",
+    analysisContext: "분석 조건", dateLabel: "날짜", weatherLabel: "날씨 시나리오",
+    weatherUnknown: "날씨 지정 안 함", weatherSunny: "맑음", weatherRain: "비", weatherHeavyRain: "폭우",
+    externalFactorToggle: "프로토타입 공휴일·날씨·행사 요인 적용",
   },
 };
 
@@ -243,6 +255,7 @@ Object.assign(translations["zh-Hant"], {
   adviceOkay: "歷史人流屬中間區間，建議預留候車與步行時間。",
   adviceBusy: "歷史資料顯示此時段較擁擠，建議錯峰或比較鄰近替代站。",
   reasonPressure: "{weekday}{hour}:00 的歷史人流壓力為 {score} 分（{level}）",
+  reasonAdjusted: "套用 Prototype 外部因素後為 {score} 分（{level}）",
   reasonPeriod: "依據 {start} 至 {end} OD 歷史資料估算", historyData: "歷史資料",
   updatedThrough: "至 {date} · {basis}",
   merchantNone: "此地點 700 公尺內目前沒有 Mock 商家資料。", nearbyFound: "附近找到 {count} 間：{categories}。",
@@ -304,6 +317,7 @@ Object.assign(translations.en, {
   adviceOkay: "Crowd pressure is moderate. Allow extra time for waiting and walking.",
   adviceBusy: "Historical data suggests a busy period. Consider traveling off-peak or using a nearby station.",
   reasonPressure: "Historical crowd pressure on {weekday} at {hour}:00 is {score} ({level}).",
+  reasonAdjusted: "After prototype external factors: {score} ({level}).",
   reasonPeriod: "Estimated from OD history between {start} and {end}.", historyData: "Historical data",
   updatedThrough: "Through {date} · {basis}",
   merchantNone: "No prototype merchant data within 700 m.", nearbyFound: "{count} nearby merchants: {categories}.",
@@ -372,6 +386,7 @@ Object.assign(translations.ja, {
   adviceOkay: "混雑は中程度です。待ち時間と徒歩時間に余裕を持ってください。",
   adviceBusy: "過去データでは混雑する時間帯です。ピークを避けるか近隣駅も比較してください。",
   reasonPressure: "{weekday} {hour}:00 の過去混雑圧力は {score}（{level}）です。",
+  reasonAdjusted: "試作の外部要因適用後は {score}（{level}）です。",
   reasonPeriod: "{start}〜{end} のOD履歴から推定しています。", historyData: "過去データ",
   updatedThrough: "{date}まで・{basis}",
   merchantNone: "700m以内に試作店舗データがありません。", nearbyFound: "周辺に{count}店：{categories}。",
@@ -430,6 +445,7 @@ Object.assign(translations.ko, {
   adviceOkay: "혼잡 압력이 보통입니다. 대기와 도보 시간을 여유 있게 잡으세요.",
   adviceBusy: "과거 데이터상 혼잡한 시간입니다. 피크 시간을 피하거나 인근 역도 비교하세요.",
   reasonPressure: "{weekday} {hour}:00의 과거 혼잡 압력은 {score}({level})입니다.",
+  reasonAdjusted: "프로토타입 외부 요인 적용 후 {score}({level})입니다.",
   reasonPeriod: "{start}~{end} OD 이력으로 추정했습니다.", historyData: "과거 데이터",
   updatedThrough: "{date}까지 · {basis}",
   merchantNone: "700m 이내에 프로토타입 매장 데이터가 없습니다.", nearbyFound: "주변 {count}곳: {categories}.",
@@ -741,6 +757,27 @@ function selectedTravelTime() {
   return document.querySelector("#time-input")?.value
     || document.querySelector('input[type="time"]')?.value
     || "19:00";
+}
+
+function selectedTravelDate() {
+  const input = document.querySelector("#date-input");
+  if (input?.value) return input.value;
+  const today = new Date();
+  const localDate = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+  if (input) input.value = localDate;
+  return localDate;
+}
+
+function selectedWeatherType() {
+  return document.querySelector("#weather-input")?.value || null;
+}
+
+function externalFactorsEnabled() {
+  return Boolean(document.querySelector("#external-factor-toggle")?.checked);
 }
 
 if (typeof L !== "undefined") {
@@ -1384,18 +1421,34 @@ function showPrototypeResult(title, description) {
   closeSearch();
 }
 
-function crowdColor(index) {
-  if (index >= 75) return "#d44d3f";
-  if (index >= 55) return "#ee9b35";
-  if (index >= 35) return "#e4c34f";
+function crowdColor(index, crowdLevel = null) {
+  const level = crowdLevel || (
+    index >= 85 ? "非常擁擠"
+      : index >= 70 ? "擁擠"
+        : index >= 55 ? "偏擠"
+          : index >= 35 ? "普通"
+            : "舒適"
+  );
+  if (level === "非常擁擠") return "#9f2f2f";
+  if (level === "擁擠") return "#d44d3f";
+  if (level === "偏擠") return "#ee9b35";
+  if (level === "普通") return "#e4c34f";
   return "#39a875";
 }
 
-function crowdPresentation(index) {
+function crowdPresentation(index, crowdLevel = null) {
   if (!Number.isFinite(Number(index))) return { label: t("crowdNoData"), level: "level-medium", people: 0 };
-  if (index >= 80) return { label: t("crowdVeryHigh"), level: "level-critical", people: 4 };
-  if (index >= 60) return { label: t("crowdHigh"), level: "level-high", people: 3 };
-  if (index >= 40) return { label: t("crowdMedium"), level: "level-medium", people: 2 };
+  const level = crowdLevel || (
+    index >= 85 ? "非常擁擠"
+      : index >= 70 ? "擁擠"
+        : index >= 55 ? "偏擠"
+          : index >= 35 ? "普通"
+            : "舒適"
+  );
+  if (level === "非常擁擠") return { label: t("crowdVeryHigh"), level: "level-critical", people: 4 };
+  if (level === "擁擠") return { label: t("crowdHigh"), level: "level-critical", people: 4 };
+  if (level === "偏擠") return { label: t("crowdHigh"), level: "level-high", people: 3 };
+  if (level === "普通") return { label: t("crowdMedium"), level: "level-medium", people: 2 };
   return { label: t("crowdLow"), level: "level-low", people: 1 };
 }
 
@@ -1431,18 +1484,28 @@ function localizedAdvice(status) {
 function localizedReasons(comfort) {
   const estimate = comfort.crowd_estimate;
   if (!estimate?.available) return [t("decisionNoData")];
-  return [
+  const reasons = [
     tf("reasonPressure", {
       weekday: localizedWeekday(estimate.weekday_num),
       hour: String(estimate.hour).padStart(2, "0"),
       score: Math.round(estimate.crowd_score),
       level: crowdPresentation(estimate.crowd_score).label,
     }),
-    tf("reasonPeriod", {
+  ];
+  if (comfort.external_factors?.enabled) {
+    reasons.push(tf("reasonAdjusted", {
+      score: Math.round(comfort.adjusted_crowd_score),
+      level: crowdPresentation(
+        comfort.adjusted_crowd_score,
+        comfort.adjusted_crowd_level,
+      ).label,
+    }));
+  }
+  reasons.push(tf("reasonPeriod", {
       start: estimate.data_period_start,
       end: estimate.data_period_end,
-    }),
-  ];
+  }));
+  return reasons;
 }
 
 function setMetricLevel(element, level) {
@@ -1454,7 +1517,10 @@ function renderAnalysis(result) {
   lastAnalysisResult = result;
   const station = result.nearest_station;
   const comfort = result.comfort;
-  const crowd = crowdPresentation(comfort.factors.effective_crowd_index);
+  const crowd = crowdPresentation(
+    comfort.factors.effective_crowd_index,
+    comfort.adjusted_crowd_level || comfort.crowd_estimate.crowd_level,
+  );
   const comfortDisplay = comfortPresentation(comfort.status);
   hasActiveResult = true;
   document.querySelector("#reset-map").hidden = false;
@@ -1669,7 +1735,10 @@ async function analyzePlace(placeName) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       place: placeName,
+      date: selectedTravelDate(),
       time: selectedTravelTime(),
+      weather_type: selectedWeatherType(),
+      enable_external_factors: externalFactorsEnabled(),
       preferences: [...document.querySelectorAll(".choice-chip.is-selected")].map((item) => item.dataset.value),
     }),
   });
@@ -1758,7 +1827,9 @@ async function loadPrototypeData() {
   if (!map) return;
   stationsData.stations.forEach((station) => {
     const hasCrowdScore = Number.isFinite(Number(station.crowd_index));
-    const color = hasCrowdScore ? crowdColor(station.crowd_index) : "#94a3b8";
+    const color = hasCrowdScore
+      ? crowdColor(station.crowd_index, station.crowd_level)
+      : "#94a3b8";
     L.circle([station.latitude, station.longitude], {
       radius: hasCrowdScore ? 160 + station.crowd_index * 2 : 160,
       color,
@@ -1923,7 +1994,13 @@ document.querySelector("#ai-submit").addEventListener("click", async () => {
     const response = await fetch("/api/agent/recommend", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({
+        prompt,
+        date: selectedTravelDate(),
+        time: selectedTravelTime(),
+        weather_type: selectedWeatherType(),
+        enable_external_factors: externalFactorsEnabled(),
+      }),
     });
     const payload = await response.json();
     if (!response.ok) throw new Error(currentLanguage === "zh-Hant" ? (payload.detail || t("aiFailed")) : t("aiFailed"));
@@ -1937,5 +2014,6 @@ document.querySelector("#ai-submit").addEventListener("click", async () => {
 
 setupSheetDrag();
 renderProfileProgress();
+selectedTravelDate();
 applyLanguage("zh-Hant");
 loadPrototypeData().catch((error) => console.error("無法載入 Prototype 資料", error));

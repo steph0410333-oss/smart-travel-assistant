@@ -45,12 +45,41 @@ class ApiContractTests(unittest.TestCase):
         self.assertIn("station_name", result["nearest_station"])
         self.assertIn("station_name_en", result["nearest_station"])
         self.assertIn("comfort_score", result["comfort"])
+        self.assertFalse(result["comfort"]["external_factors"]["enabled"])
+        self.assertEqual(
+            result["comfort"]["historical_crowd_score"],
+            result["comfort"]["adjusted_crowd_score"],
+        )
         self.assertEqual(result["comfort"]["crowd_estimate"]["reliability"], "low")
         self.assertGreaterEqual(len(result["nearby_merchants"]), 1)
+
+    def test_place_analysis_can_apply_prototype_external_factors(self) -> None:
+        result = analyze_place(
+            PlaceAnalysisRequest(
+                place="台北小巨蛋",
+                date="2026-08-15",
+                time="17:30",
+                weather_type="rain",
+                enable_external_factors=True,
+            )
+        )
+        comfort = result["comfort"]
+        self.assertTrue(comfort["external_factors"]["enabled"])
+        self.assertEqual(comfort["external_factors"]["date"]["coefficient"], 1.0)
+        self.assertTrue(comfort["external_factors"]["event"]["matched_events"])
+        self.assertNotEqual(
+            comfort["historical_crowd_score"],
+            comfort["adjusted_crowd_score"],
+        )
+        self.assertEqual(
+            comfort["personalized_comfort_score"],
+            comfort["comfort_score"],
+        )
 
     def test_station_endpoint_contract_uses_historical_od(self) -> None:
         result = list_stations(time="19:00", date="2026-07-24")
         self.assertIn("HISTORICAL OD", result["data_label"])
+        self.assertEqual(result["model_version"], "crowd_40_40_10_10_v1")
         self.assertEqual(len(result["stations"]), 119)
         self.assertTrue(all(item["station_name_en"] for item in result["stations"]))
         self.assertTrue(all(item["crowd_reliability"] == "low" for item in result["stations"]))
@@ -67,6 +96,22 @@ class ApiContractTests(unittest.TestCase):
         result = recommend(RecommendationRequest(prompt="想喝咖啡聊天，有冷氣，預算500元內"))
         self.assertEqual(len(result["recommendations"]), 3)
         self.assertTrue(all(item["resolved_place"]["place_name"] for item in result["recommendations"]))
+
+    def test_rules_recommendation_accepts_date_weather_and_external_flag(self) -> None:
+        result = recommend(
+            RecommendationRequest(
+                prompt="想避開人潮",
+                date="2026-08-15",
+                time="17:30",
+                weather_type="rain",
+                enable_external_factors=True,
+            )
+        )
+        self.assertTrue(all(
+            item["comfort"]["external_factors"]["enabled"]
+            for item in result["recommendations"]
+        ))
+        self.assertTrue(all("component_scores" in item for item in result["recommendations"]))
 
     def test_merchant_endpoint_contract(self) -> None:
         result = list_merchants(latitude=25.0533, longitude=121.5210, radius_m=700)

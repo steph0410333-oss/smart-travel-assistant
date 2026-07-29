@@ -11,7 +11,15 @@ class TravelDecisionAgent:
     def __init__(self, gemini: GeminiTravelAdapter | None = None) -> None:
         self.gemini = gemini or GeminiTravelAdapter()
 
-    def run(self, prompt: str) -> dict[str, Any]:
+    def run(
+        self,
+        prompt: str,
+        *,
+        query_date: str | None = None,
+        query_time: str | None = None,
+        weather_type: str | None = None,
+        enable_external_factors: bool = False,
+    ) -> dict[str, Any]:
         trace: list[dict[str, Any]] = []
 
         gemini_error = None
@@ -31,6 +39,8 @@ class TravelDecisionAgent:
             intent = parse_recommendation_intent(prompt)
             mode = "deterministic_fallback"
             llm_enabled = False
+        if query_time and query_time.strip():
+            intent["time"] = query_time
         trace.append(
             {
                 "step": 1,
@@ -40,7 +50,13 @@ class TravelDecisionAgent:
             }
         )
 
-        recommendations = recommend_places(intent, limit=3)
+        recommendations = recommend_places(
+            intent,
+            limit=3,
+            query_date=query_date,
+            weather_type=weather_type,
+            enable_external_factors=enable_external_factors,
+        )
         trace.append(
             {
                 "step": 2,
@@ -54,7 +70,14 @@ class TravelDecisionAgent:
                 "step": 3,
                 "tool": "Crowd & Comfort Tools",
                 "status": "completed",
-                "summary": "查詢最近捷運站並計算各候選地點舒適度",
+                "summary": (
+                    "查詢40/40/10/10基礎人流，計算環境舒適度與個人化舒適度；"
+                    + (
+                        "已套用request指定的Prototype假日、天氣與Mock活動情境"
+                        if enable_external_factors
+                        else "外部因素未啟用"
+                    )
+                ),
             }
         )
         trace.append(
@@ -70,7 +93,7 @@ class TravelDecisionAgent:
                 "step": 5,
                 "tool": "Recommendation Ranking Tool",
                 "status": "completed",
-                "summary": "依需求符合度、預算與舒適度排序 Top 3",
+                "summary": "依需求符合度、預算與個人化舒適度排序 Top 3",
             }
         )
 
@@ -98,18 +121,42 @@ class TravelDecisionAgent:
             "llm_enabled": llm_enabled,
             "model": self.gemini.model if llm_enabled else None,
             "data_label": (
-                "GEMINI AGENT + HISTORICAL OD CROWD ESTIMATE"
+                (
+                    "GEMINI AGENT + 40/40/10/10 HISTORICAL OD "
+                    + (
+                        "+ PROTOTYPE EXTERNAL FACTORS"
+                        if enable_external_factors
+                        else ""
+                    )
+                )
                 if llm_enabled
-                else "HISTORICAL OD CROWD ESTIMATE / RULES-BASED AGENT FALLBACK"
+                else (
+                    "40/40/10/10 HISTORICAL OD"
+                    + (
+                        " + PROTOTYPE EXTERNAL FACTORS"
+                        if enable_external_factors
+                        else ""
+                    )
+                    + " / RULES-BASED AGENT FALLBACK"
+                )
             ),
             "structured_intent": intent,
+            "external_factor_context": {
+                "enabled": enable_external_factors,
+                "query_date": query_date,
+                "query_time": intent["time"],
+                "weather_type": weather_type,
+            },
             "recommendations": recommendations,
             "personalized_summary": summary,
             "workflow_trace": trace,
             "limitations": (
                 f"Gemini 無法完成全部流程，已自動使用規則式備援：{gemini_error}。"
                 if gemini_error
-                else "Gemini 負責理解需求與撰寫說明；人流為低可靠度的歷史OD推估，並非即時站內人數。"
+                else (
+                    "Gemini負責理解需求與撰寫說明；基礎人流為40/40/10/10"
+                    "歷史OD相對分數，外部因素是規則式Prototype，並非即時官方資料。"
+                )
                 if llm_enabled
                 else "未設定 Gemini API key，意圖解析與說明使用可測試的規則式備援。"
             ),
@@ -124,7 +171,7 @@ class TravelDecisionAgent:
             parts.append("條件：" + "、".join(intent["features"]))
         if intent["budget_max"] is not None:
             parts.append(f"預算：{intent['budget_max']} 元內")
-        return "；".join(parts) or "未辨識到明確條件，使用舒適度作為主要排序依據"
+        return "；".join(parts) or "未辨識到明確條件，使用個人化舒適度作為主要排序依據"
 
     @staticmethod
     def _compose_summary(recommendations: list[dict[str, Any]], intent: dict[str, Any]) -> str:

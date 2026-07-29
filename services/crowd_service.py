@@ -31,15 +31,18 @@ def _crowd_level(score: float) -> str:
 
 
 def _decode_profile(
-    profile: list[float | int] | dict[str, Any],
+    profile: list[float | int | str] | dict[str, Any],
     minimum_sample_count: int,
 ) -> dict[str, Any]:
     if isinstance(profile, dict):
         return profile
-    score, sample_count = profile
+    score, sample_count, *extra = profile
+    stored_level = str(extra[0]) if len(extra) >= 1 else _crowd_level(float(score))
+    score_status = str(extra[1]) if len(extra) >= 2 else "正常"
     return {
         "crowd_score": float(score),
-        "crowd_level": _crowd_level(float(score)),
+        "crowd_level": stored_level,
+        "score_status": score_status,
         "sample_count": int(sample_count),
         "reliability": (
             "low" if int(sample_count) < minimum_sample_count else "usable"
@@ -104,6 +107,8 @@ def get_historical_crowd(
         "data_period_start": metadata["data_period_start"],
         "data_period_end": metadata["data_period_end"],
         "data_label": metadata["data_label"],
+        "model_name": metadata["model_name"],
+        "model_version": metadata["model_version"],
         "minimum_sample_count": metadata["minimum_sample_count"],
     }
     if source_station is None:
@@ -115,6 +120,7 @@ def get_historical_crowd(
             "crowd_level": "資料不足",
             "sample_count": 0,
             "reliability": "unavailable",
+            "score_status": "資料不足",
         }
 
     profile = (
@@ -132,6 +138,7 @@ def get_historical_crowd(
             "crowd_level": "資料不足",
             "sample_count": 0,
             "reliability": "unavailable",
+            "score_status": "資料不足",
         }
 
     decoded_profile = _decode_profile(
