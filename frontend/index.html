@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260802-1" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260802-3" />
   </head>
   <body>
     <main class="app-shell">
@@ -96,6 +96,7 @@
             <svg id="trend-chart" class="trend-chart" viewBox="0 0 640 220" role="img" aria-label="所選車站每小時歷史人流趨勢"></svg>
             <p id="trend-loading" class="trend-loading" data-i18n="trendLoading">載入趨勢中…</p>
           </div>
+          <p id="trend-non-operating-note" class="trend-non-operating-note" hidden></p>
           <p class="trend-note" data-i18n="trendHistoricalNote">歷史 OD 相對人流推估，不是即時站內人數。</p>
         </section>
         <section id="weather-impact" class="weather-impact-card" aria-labelledby="weather-impact-title" hidden>
@@ -516,6 +517,6 @@
     </dialog>
     <div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260802-1"></script>
+    <script src="/static/app.js?v=20260802-3"></script>
   </body>
 </html>

@@ -347,6 +347,15 @@ button { font: inherit; }
 }
 .trend-grid { stroke: #dce8e4; stroke-width: 1; }
 .trend-axis-label { fill: #789087; font-size: 17px; font-weight: 700; }
+.trend-non-operating-band {
+  fill: #e8edeb;
+  opacity: .8;
+}
+.trend-non-operating-label {
+  fill: #71827c;
+  font-size: 14px;
+  font-weight: 800;
+}
 .trend-line {
   fill: none;
   stroke: #2e999b;
@@ -380,6 +389,17 @@ button { font: inherit; }
   font-weight: 700;
 }
 .trend-loading[hidden] { display: none; }
+.trend-non-operating-note {
+  width: fit-content;
+  margin: 7px 0 0;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #e8edeb;
+  color: #62756e;
+  font-size: 9px;
+  font-weight: 800;
+}
+.trend-non-operating-note[hidden] { display: none; }
 .trend-note {
   margin: 7px 0 0;
   color: #84958f;

@@ -91,6 +91,11 @@ def get_station_trend(
                 "available": estimate["available"],
                 "crowd_score": estimate["crowd_score"],
                 "crowd_level": estimate["crowd_level"],
+                "unavailable_reason": (
+                    "non_operating"
+                    if not estimate["available"] and 2 <= hour <= 4
+                    else "missing_data" if not estimate["available"] else None
+                ),
             }
         )
 

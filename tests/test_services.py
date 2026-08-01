@@ -77,6 +77,11 @@ class StationServiceTests(unittest.TestCase):
             point["crowd_score"] is None or 0 <= point["crowd_score"] <= 100
             for point in trend["points"]
         ))
+        self.assertTrue(all(
+            trend["points"][hour]["unavailable_reason"] == "non_operating"
+            for hour in (2, 3, 4)
+        ))
+        self.assertIsNone(trend["points"][5]["unavailable_reason"])
 
     def test_resolves_localized_place_suggestion_name(self) -> None:
         place = resolve_place("Shilin Night Market")

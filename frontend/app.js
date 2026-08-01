@@ -707,6 +707,8 @@ const stationInsightsTranslations = {
     trendHistoricalNote: "歷史 OD 相對人流推估，不是即時站內人數。",
     trendSummary: "{date} {weekday} · 目前查看 {time}",
     trendUnavailable: "此日期沒有可顯示的人流趨勢。",
+    nonOperatingHours: "{range} 非營運時段",
+    nonOperatingChartLabel: "非營運",
     weatherImpactTitle: "天氣影響度",
     impactLow: "低",
     impactMedium: "中",
@@ -724,6 +726,8 @@ const stationInsightsTranslations = {
     trendHistoricalNote: "Historical relative OD crowd estimate, not live occupancy.",
     trendSummary: "{weekday}, {date} · viewing {time}",
     trendUnavailable: "No crowd trend is available for this date.",
+    nonOperatingHours: "{range} · Metro not operating",
+    nonOperatingChartLabel: "Not operating",
     weatherImpactTitle: "Weather impact",
     impactLow: "Low",
     impactMedium: "Medium",
@@ -741,6 +745,8 @@ const stationInsightsTranslations = {
     trendHistoricalNote: "過去ODの相対人流推定で、リアルタイムの駅構内人数ではありません。",
     trendSummary: "{date} {weekday}・{time}を表示",
     trendUnavailable: "この日付の人流トレンドはありません。",
+    nonOperatingHours: "{range}・運行時間外",
+    nonOperatingChartLabel: "運行時間外",
     weatherImpactTitle: "天気の影響度",
     impactLow: "低",
     impactMedium: "中",
@@ -758,6 +764,8 @@ const stationInsightsTranslations = {
     trendHistoricalNote: "과거 OD 상대 인파 추정치이며 실시간 역사 내 인원이 아닙니다.",
     trendSummary: "{date} {weekday} · {time} 조회",
     trendUnavailable: "이 날짜에 표시할 인파 추세가 없습니다.",
+    nonOperatingHours: "{range} · 운행 시간 외",
+    nonOperatingChartLabel: "운행 시간 외",
     weatherImpactTitle: "날씨 영향도",
     impactLow: "낮음",
     impactMedium: "중간",
@@ -1659,6 +1667,47 @@ function renderTrendChart(points, currentHour) {
   const plotHeight = height - top - bottom;
   const x = (hour) => left + (hour / 23) * plotWidth;
   const y = (score) => top + (1 - score / 100) * plotHeight;
+  const nonOperatingRanges = [];
+  points.forEach((point) => {
+    if (point.unavailable_reason !== "non_operating") return;
+    const previous = nonOperatingRanges.at(-1);
+    if (previous && point.hour === previous.end + 1) {
+      previous.end = point.hour;
+    } else {
+      nonOperatingRanges.push({ start: point.hour, end: point.hour });
+    }
+  });
+
+  nonOperatingRanges.forEach(({ start, end }) => {
+    const startX = x(Math.max(0, start - 0.5));
+    const endX = x(Math.min(23, end + 0.5));
+    appendSvgElement(svg, "rect", {
+      class: "trend-non-operating-band",
+      x: startX,
+      y: top,
+      width: endX - startX,
+      height: plotHeight,
+      rx: 8,
+    });
+    appendSvgElement(svg, "text", {
+      class: "trend-non-operating-label",
+      x: (startX + endX) / 2,
+      y: top + 19,
+      "text-anchor": "middle",
+    }, t("nonOperatingChartLabel"));
+  });
+
+  const nonOperatingNote = document.querySelector("#trend-non-operating-note");
+  if (nonOperatingRanges.length) {
+    nonOperatingNote.textContent = nonOperatingRanges
+      .map(({ start, end }) => tf("nonOperatingHours", {
+        range: `${String(start).padStart(2, "0")}:00–${String(end).padStart(2, "0")}:00`,
+      }))
+      .join(" · ");
+    nonOperatingNote.hidden = false;
+  } else {
+    nonOperatingNote.hidden = true;
+  }
 
   [0, 50, 100].forEach((score) => {
     appendSvgElement(svg, "line", {
@@ -1741,6 +1790,7 @@ async function loadStationTrend(station) {
   loading.hidden = false;
   loading.textContent = t("trendLoading");
   chart.replaceChildren();
+  document.querySelector("#trend-non-operating-note").hidden = true;
 
   try {
     const response = await fetch(
