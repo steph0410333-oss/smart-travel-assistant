@@ -2,6 +2,9 @@ let map = null;
 let placeCatalog = [];
 let merchantMarkers = [];
 let stationMarkers = [];
+let selectedStationMarker = null;
+let trendRequestCounter = 0;
+let stationCrowdRequestCounter = 0;
 let hasActiveResult = false;
 let lastAnalysisResult = null;
 let lastRecommendationPayload = null;
@@ -694,6 +697,80 @@ Object.assign(translations.ko, {
   stationTamsui: "단수이역", stationMaokong: "마오콩 곤돌라역", stationRuifang: "루이팡역", stationShifen: "스펀역", stationYehliu: "예류 지질공원",
   stationKeelung: "지룽역", stationPingxi: "핑시역", stationShuishe: "수이서 부두", stationAlishan: "아리산역", stationAnpingFort: "안핑고보",
   stationHamasen: "하마싱역", stationXincheng: "신청역", stationEluanbi: "어롼비 등대", stationMagong: "마궁항", stationTaipei101: "타이베이 101/세계무역센터역",
+});
+
+const stationInsightsTranslations = {
+  "zh-Hant": {
+    todayEstimate: "所選日期趨勢",
+    crowdTrendTitle: "捷運人流趨勢",
+    trendLoading: "載入趨勢中…",
+    trendHistoricalNote: "歷史 OD 相對人流推估，不是即時站內人數。",
+    trendSummary: "{date} {weekday} · 目前查看 {time}",
+    trendUnavailable: "此日期沒有可顯示的人流趨勢。",
+    weatherImpactTitle: "天氣影響度",
+    impactLow: "低",
+    impactMedium: "中",
+    impactHigh: "高",
+    viewWeatherDetails: "查看詳情",
+    weatherScenarioNote: "此為使用者選擇的情境模擬，並非即時氣象。",
+    weatherImpactExplanation: "影響程度依「捷運場域 × {weather}情境」的調整係數換算。",
+    selectedStationMeta: "{codes} · {date} {time}",
+    currentTimeLabel: "查看 {time}",
+  },
+  en: {
+    todayEstimate: "SELECTED-DAY TREND",
+    crowdTrendTitle: "Metro crowd trend",
+    trendLoading: "Loading trend…",
+    trendHistoricalNote: "Historical relative OD crowd estimate, not live occupancy.",
+    trendSummary: "{weekday}, {date} · viewing {time}",
+    trendUnavailable: "No crowd trend is available for this date.",
+    weatherImpactTitle: "Weather impact",
+    impactLow: "Low",
+    impactMedium: "Medium",
+    impactHigh: "High",
+    viewWeatherDetails: "View details",
+    weatherScenarioNote: "This is a selected scenario, not live weather.",
+    weatherImpactExplanation: "Impact is derived from the transit × {weather} scenario coefficient.",
+    selectedStationMeta: "{codes} · {date} {time}",
+    currentTimeLabel: "Viewing {time}",
+  },
+  ja: {
+    todayEstimate: "選択日の傾向",
+    crowdTrendTitle: "MRT人流トレンド",
+    trendLoading: "トレンドを読み込み中…",
+    trendHistoricalNote: "過去ODの相対人流推定で、リアルタイムの駅構内人数ではありません。",
+    trendSummary: "{date} {weekday}・{time}を表示",
+    trendUnavailable: "この日付の人流トレンドはありません。",
+    weatherImpactTitle: "天気の影響度",
+    impactLow: "低",
+    impactMedium: "中",
+    impactHigh: "高",
+    viewWeatherDetails: "詳細を見る",
+    weatherScenarioNote: "選択したシナリオであり、リアルタイム天気ではありません。",
+    weatherImpactExplanation: "「交通施設 × {weather}シナリオ」の調整係数から影響度を算出しています。",
+    selectedStationMeta: "{codes}・{date} {time}",
+    currentTimeLabel: "{time}を表示",
+  },
+  ko: {
+    todayEstimate: "선택 날짜 추세",
+    crowdTrendTitle: "MRT 인파 추세",
+    trendLoading: "추세 불러오는 중…",
+    trendHistoricalNote: "과거 OD 상대 인파 추정치이며 실시간 역사 내 인원이 아닙니다.",
+    trendSummary: "{date} {weekday} · {time} 조회",
+    trendUnavailable: "이 날짜에 표시할 인파 추세가 없습니다.",
+    weatherImpactTitle: "날씨 영향도",
+    impactLow: "낮음",
+    impactMedium: "중간",
+    impactHigh: "높음",
+    viewWeatherDetails: "자세히 보기",
+    weatherScenarioNote: "사용자가 선택한 시나리오이며 실시간 날씨가 아닙니다.",
+    weatherImpactExplanation: "교통 시설 × {weather} 시나리오의 조정 계수로 영향도를 계산합니다.",
+    selectedStationMeta: "{codes} · {date} {time}",
+    currentTimeLabel: "{time} 조회",
+  },
+};
+Object.entries(stationInsightsTranslations).forEach(([language, values]) => {
+  Object.assign(translations[language], values);
 });
 
 function t(key) {
@@ -1513,19 +1590,208 @@ function setMetricLevel(element, level) {
   element.classList.add(level);
 }
 
+function localizedWeatherType(weatherType) {
+  return t({
+    sunny: "weatherSunny",
+    rain: "weatherRain",
+    heavy_rain: "weatherHeavyRain",
+  }[weatherType] || "weatherUnknown");
+}
+
+function weatherIcon(weatherType) {
+  return {
+    sunny: "☀",
+    rain: "🌧",
+    heavy_rain: "⛈",
+  }[weatherType] || "☁";
+}
+
+function renderWeatherImpact(comfort) {
+  const section = document.querySelector("#weather-impact");
+  const weather = comfort.external_factors?.weather;
+  if (!comfort.external_factors?.enabled || !weather?.applied || !weather.weather_type) {
+    section.hidden = true;
+    return;
+  }
+
+  const magnitude = Math.abs(1 - Number(weather.coefficient)) * 100;
+  const position = Math.min(100, (magnitude / 25) * 100);
+  const levelKey = magnitude <= 7
+    ? "impactLow"
+    : magnitude <= 17
+      ? "impactMedium"
+      : "impactHigh";
+  const weatherLabel = localizedWeatherType(weather.weather_type);
+  const scale = document.querySelector("#weather-impact-scale");
+
+  document.querySelector("#weather-impact-icon").textContent = weatherIcon(weather.weather_type);
+  document.querySelector("#weather-impact-label").textContent = weatherLabel;
+  document.querySelector("#weather-impact-explanation").textContent = tf(
+    "weatherImpactExplanation",
+    { weather: weatherLabel },
+  );
+  scale.style.setProperty("--impact-position", `${position}%`);
+  scale.setAttribute(
+    "aria-label",
+    `${weatherLabel} · ${t("weatherImpactTitle")} ${t(levelKey)}`,
+  );
+  section.hidden = false;
+}
+
+function appendSvgElement(parent, name, attributes = {}, text = "") {
+  const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+  if (text) element.textContent = text;
+  parent.append(element);
+  return element;
+}
+
+function renderTrendChart(points, currentHour) {
+  const svg = document.querySelector("#trend-chart");
+  svg.replaceChildren();
+  const width = 640;
+  const height = 220;
+  const left = 44;
+  const right = 16;
+  const top = 18;
+  const bottom = 36;
+  const plotWidth = width - left - right;
+  const plotHeight = height - top - bottom;
+  const x = (hour) => left + (hour / 23) * plotWidth;
+  const y = (score) => top + (1 - score / 100) * plotHeight;
+
+  [0, 50, 100].forEach((score) => {
+    appendSvgElement(svg, "line", {
+      class: "trend-grid",
+      x1: left,
+      x2: width - right,
+      y1: y(score),
+      y2: y(score),
+    });
+    appendSvgElement(svg, "text", {
+      class: "trend-axis-label",
+      x: left - 9,
+      y: y(score) + 6,
+      "text-anchor": "end",
+    }, String(score));
+  });
+  [0, 6, 12, 18, 23].forEach((hour) => {
+    appendSvgElement(svg, "text", {
+      class: "trend-axis-label",
+      x: x(hour),
+      y: height - 8,
+      "text-anchor": hour === 0 ? "start" : hour === 23 ? "end" : "middle",
+    }, `${String(hour).padStart(2, "0")}:00`);
+  });
+
+  const available = points.filter((point) => point.available);
+  if (!available.length) return false;
+
+  appendSvgElement(svg, "line", {
+    class: "trend-current-line",
+    x1: x(currentHour),
+    x2: x(currentHour),
+    y1: top,
+    y2: height - bottom,
+  });
+
+  let segment = [];
+  const drawSegment = () => {
+    if (!segment.length) return;
+    const path = segment
+      .map((point, index) => `${index ? "L" : "M"} ${x(point.hour)} ${y(point.crowd_score)}`)
+      .join(" ");
+    appendSvgElement(svg, "path", { class: "trend-line", d: path });
+    segment = [];
+  };
+  points.forEach((point) => {
+    if (!point.available) {
+      drawSegment();
+      return;
+    }
+    segment.push(point);
+  });
+  drawSegment();
+
+  available.forEach((point) => {
+    const circle = appendSvgElement(svg, "circle", {
+      class: `trend-point${point.hour === currentHour ? " is-current" : ""}`,
+      cx: x(point.hour),
+      cy: y(point.crowd_score),
+      r: point.hour === currentHour ? 7 : 4,
+      tabindex: 0,
+    });
+    const label = crowdPresentation(point.crowd_score, point.crowd_level).label;
+    appendSvgElement(
+      circle,
+      "title",
+      {},
+      `${point.time} · ${Math.round(point.crowd_score)} / 100 · ${label}`,
+    );
+  });
+  return true;
+}
+
+async function loadStationTrend(station) {
+  const requestId = ++trendRequestCounter;
+  const section = document.querySelector("#station-trend");
+  const loading = document.querySelector("#trend-loading");
+  const chart = document.querySelector("#trend-chart");
+  section.hidden = false;
+  loading.hidden = false;
+  loading.textContent = t("trendLoading");
+  chart.replaceChildren();
+
+  try {
+    const response = await fetch(
+      `/api/stations/${encodeURIComponent(station.station_id)}/trend?date=${encodeURIComponent(selectedTravelDate())}`,
+    );
+    const trend = await response.json();
+    if (!response.ok) throw new Error(trend.detail || t("trendUnavailable"));
+    if (requestId !== trendRequestCounter) return;
+
+    const currentHour = Number(selectedTravelTime().split(":")[0]);
+    const hasTrend = renderTrendChart(trend.points, currentHour);
+    loading.hidden = hasTrend;
+    if (!hasTrend) loading.textContent = t("trendUnavailable");
+    document.querySelector("#trend-current-time").textContent = tf(
+      "currentTimeLabel",
+      { time: selectedTravelTime() },
+    );
+    document.querySelector("#trend-summary").textContent = tf("trendSummary", {
+      date: trend.query_date.replaceAll("-", "/"),
+      weekday: localizedWeekday(trend.weekday_num),
+      time: selectedTravelTime(),
+    });
+  } catch (error) {
+    if (requestId !== trendRequestCounter) return;
+    loading.hidden = false;
+    loading.textContent = error.message || t("trendUnavailable");
+  }
+}
+
 function renderAnalysis(result) {
   lastAnalysisResult = result;
   const station = result.nearest_station;
   const comfort = result.comfort;
+  const historicalCrowdScore = comfort.historical_crowd_score
+    ?? comfort.crowd_estimate?.crowd_score;
   const crowd = crowdPresentation(
-    comfort.factors.effective_crowd_index,
-    comfort.adjusted_crowd_level || comfort.crowd_estimate.crowd_level,
+    historicalCrowdScore,
+    comfort.crowd_estimate?.crowd_level,
   );
   const comfortDisplay = comfortPresentation(comfort.status);
   hasActiveResult = true;
   document.querySelector("#reset-map").hidden = false;
   document.querySelector("#sheet-kicker").textContent = tf("resultKicker", { place: localizedPlaceName(result.resolved_place) });
   document.querySelector("#sheet-title").textContent = localizedStationName(station);
+  const stationMeta = document.querySelector("#station-meta");
+  stationMeta.textContent = tf("selectedStationMeta", {
+    codes: (station.line_station_ids || [station.station_id]).join("・"),
+    date: selectedTravelDate().replaceAll("-", "/"),
+    time: selectedTravelTime(),
+  });
+  stationMeta.hidden = false;
   document.querySelector("#sheet-description").textContent = tf("distanceToStation", { distance: station.distance_m });
   document.querySelector("#decision-label").textContent = decisionPresentation(comfort.status);
   document.querySelector("#decision-summary").textContent = currentLanguage === "zh-Hant"
@@ -1547,6 +1813,9 @@ function renderAnalysis(result) {
   setMetricLevel(comfortCard, comfortDisplay.level);
   document.querySelector("#crowd-visual").dataset.level = String(crowd.people);
   document.querySelector("#crowd-label").textContent = crowd.label;
+  document.querySelector("#crowd-score").textContent = Number.isFinite(Number(historicalCrowdScore))
+    ? Math.round(historicalCrowdScore)
+    : "--";
   const hasComfortScore = Number.isFinite(Number(comfort.comfort_score));
   document.querySelector("#comfort-score").textContent = hasComfortScore ? comfort.comfort_score : "--";
   document.querySelector("#comfort-gauge").style.setProperty(
@@ -1568,6 +1837,8 @@ function renderAnalysis(result) {
     })
     : t("historyData");
   document.querySelector("#recommendation-section").hidden = true;
+  renderWeatherImpact(comfort);
+  loadStationTrend(station);
   renderMerchants(result.nearby_merchants || [], result.merchant_summary);
   if (map) map.setView([station.latitude, station.longitude], 15);
   setSheetState("half");
@@ -1581,17 +1852,27 @@ function resetResult(clearInputs = true) {
   document.querySelector("#reset-map").hidden = true;
   document.querySelector("#sheet-kicker").textContent = t("defaultKicker");
   document.querySelector("#sheet-title").textContent = t("defaultTitle");
+  document.querySelector("#station-meta").hidden = true;
   document.querySelector("#sheet-description").textContent = t("defaultDescription");
   document.querySelector("#decision-label").textContent = t("defaultKicker");
   document.querySelector("#decision-summary").textContent = t("defaultDescription");
   document.querySelector("#comfort-score").textContent = "--";
   document.querySelector("#comfort-gauge").style.setProperty("--score-angle", "0deg");
   document.querySelector("#crowd-visual").dataset.level = "0";
+  document.querySelector("#crowd-score").textContent = "--";
   document.querySelector("#crowd-label").textContent = "--";
   document.querySelector("#updated-time").textContent = "--";
   document.querySelector("#comfort-reasons").hidden = true;
   document.querySelector("#merchant-section").hidden = true;
   document.querySelector("#recommendation-section").hidden = true;
+  document.querySelector("#station-trend").hidden = true;
+  document.querySelector("#weather-impact").hidden = true;
+  trendRequestCounter += 1;
+  if (selectedStationMarker) {
+    selectedStationMarker.setRadius(7);
+    selectedStationMarker.setStyle({ color: "#ffffff", weight: 2 });
+    selectedStationMarker = null;
+  }
   if (clearInputs) {
     document.querySelector("#place-input").value = "";
     document.querySelector("#ai-prompt").value = "";
@@ -1814,9 +2095,13 @@ function applyMerchantFilter(categoryKey = "all") {
 }
 
 async function loadPrototypeData() {
+  const stationQuery = new URLSearchParams({
+    date: selectedTravelDate(),
+    time: selectedTravelTime(),
+  });
   const [placesResponse, stationsResponse, merchantsResponse] = await Promise.all([
     fetch("/api/places"),
-    fetch("/api/stations"),
+    fetch(`/api/stations?${stationQuery}`),
     fetch("/api/merchants"),
   ]);
   const placesData = await placesResponse.json();
@@ -1830,13 +2115,6 @@ async function loadPrototypeData() {
     const color = hasCrowdScore
       ? crowdColor(station.crowd_index, station.crowd_level)
       : "#94a3b8";
-    L.circle([station.latitude, station.longitude], {
-      radius: hasCrowdScore ? 160 + station.crowd_index * 2 : 160,
-      color,
-      fillColor: color,
-      fillOpacity: 0.11,
-      weight: 0.8,
-    }).addTo(map);
 
     const stationMarker = L.circleMarker([station.latitude, station.longitude], {
       radius: 7,
@@ -1846,7 +2124,16 @@ async function loadPrototypeData() {
       weight: 2,
     })
       .addTo(map)
-      .on("click", () => analyzePlace(station.station_name).catch((error) => window.alert(error.message)));
+      .on("click", () => {
+        if (selectedStationMarker && selectedStationMarker !== stationMarker) {
+          selectedStationMarker.setRadius(7);
+          selectedStationMarker.setStyle({ color: "#ffffff", weight: 2 });
+        }
+        selectedStationMarker = stationMarker;
+        stationMarker.setRadius(10);
+        stationMarker.setStyle({ color: "#17332c", weight: 3 });
+        analyzePlace(station.station_name).catch((error) => window.alert(error.message));
+      });
     stationMarker.bindTooltip(
       hasCrowdScore
         ? tf("mapCrowd", { station: localizedStationName(station), score: Math.round(station.crowd_index) })
@@ -1882,6 +2169,33 @@ function refreshMapTooltips() {
   merchantMarkers.forEach(({ merchant, marker }) => {
     marker.setTooltipContent(`${merchant.merchant_name} · ${localizedCategory(merchant.category)}`);
   });
+}
+
+async function refreshStationCrowd() {
+  const requestId = ++stationCrowdRequestCounter;
+  const query = new URLSearchParams({
+    date: selectedTravelDate(),
+    time: selectedTravelTime(),
+  });
+  const response = await fetch(`/api/stations?${query}`);
+  const payload = await response.json();
+  if (!response.ok) throw new Error(payload.detail || "無法更新站點人流");
+  if (requestId !== stationCrowdRequestCounter) return;
+
+  const stationsById = new Map(
+    payload.stations.map((station) => [station.station_id, station]),
+  );
+  stationMarkers.forEach((entry) => {
+    const updatedStation = stationsById.get(entry.station.station_id);
+    if (!updatedStation) return;
+    Object.assign(entry.station, updatedStation);
+    entry.hasCrowdScore = Number.isFinite(Number(updatedStation.crowd_index));
+    const color = entry.hasCrowdScore
+      ? crowdColor(updatedStation.crowd_index, updatedStation.crowd_level)
+      : "#94a3b8";
+    entry.marker.setStyle({ fillColor: color });
+  });
+  refreshMapTooltips();
 }
 
 document.querySelector("#open-search").addEventListener("click", openSearch);
@@ -1954,6 +2268,12 @@ document.querySelector("#share-postcard").addEventListener("click", () => {
 
 document.querySelector("#place-input").addEventListener("focus", (event) => renderPlaceSuggestions(event.target.value));
 document.querySelector("#place-input").addEventListener("input", (event) => renderPlaceSuggestions(event.target.value));
+document.querySelector("#date-input").addEventListener("change", () => {
+  refreshStationCrowd().catch((error) => console.error("無法更新站點日期人流", error));
+});
+document.querySelector("#time-input").addEventListener("change", () => {
+  refreshStationCrowd().catch((error) => console.error("無法更新站點時段人流", error));
+});
 
 document.querySelectorAll(".suggestion-chip").forEach((chip) => {
   chip.addEventListener("click", () => {

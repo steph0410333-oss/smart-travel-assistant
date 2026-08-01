@@ -66,6 +66,54 @@ def get_stations_for_time(
     return stations
 
 
+def get_station_trend(
+    station_id: str,
+    query_date: str | None = None,
+) -> dict[str, Any] | None:
+    station = next(
+        (item for item in get_stations() if item["station_id"] == station_id),
+        None,
+    )
+    if station is None:
+        return None
+
+    points = []
+    for hour in range(24):
+        estimate = get_historical_crowd(
+            station["station_name"],
+            query_time=f"{hour:02d}:00",
+            query_date=query_date,
+        )
+        points.append(
+            {
+                "hour": hour,
+                "time": f"{hour:02d}:00",
+                "available": estimate["available"],
+                "crowd_score": estimate["crowd_score"],
+                "crowd_level": estimate["crowd_level"],
+            }
+        )
+
+    reference_estimate = get_historical_crowd(
+        station["station_name"],
+        query_time="12:00",
+        query_date=query_date,
+    )
+    return {
+        "data_label": "HISTORICAL OD RELATIVE CROWD SCORE / NOT REAL-TIME",
+        "station": {
+            "station_id": station["station_id"],
+            "station_name": station["station_name"],
+            "display_name": station["display_name"],
+            "station_name_en": station["station_name_en"],
+            "line_station_ids": station["line_station_ids"],
+        },
+        "query_date": reference_estimate["query_date"],
+        "weekday_num": reference_estimate["weekday_num"],
+        "points": points,
+    }
+
+
 def _normalize(text: str) -> str:
     return "".join(text.lower().split())
 
@@ -74,6 +122,27 @@ def resolve_place(query: str) -> dict[str, Any] | None:
     normalized_query = _normalize(query)
     if not normalized_query:
         return None
+
+    for station in get_stations():
+        station_names = {
+            _normalize(station["station_name"]),
+            _normalize(station.get("display_name", station["station_name"])),
+            _normalize(station["station_name_en"]),
+        }
+        if any(
+            normalized_query == name
+            or normalized_query == name.removesuffix("站")
+            for name in station_names
+        ):
+            return {
+                "place_id": f"station:{station['station_id']}",
+                "place_name": station.get("display_name", station["station_name"]),
+                "place_name_en": station["station_name_en"],
+                "latitude": station["latitude"],
+                "longitude": station["longitude"],
+                "place_type": "transit",
+                "aliases": [station["station_name"]],
+            }
 
     candidates: list[tuple[int, dict[str, Any]]] = []
     for place in get_places():

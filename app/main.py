@@ -21,6 +21,7 @@ from services.crowd_service import get_crowd_metadata
 from services.station_service import (
     find_nearest_station,
     get_places,
+    get_station_trend,
     get_stations_for_time,
     resolve_place,
 )
@@ -56,6 +57,14 @@ def list_stations(time: str | None = None, date: str | None = None) -> dict:
         },
         "stations": get_stations_for_time(query_time=time, query_date=date),
     }
+
+
+@app.get("/api/stations/{station_id}/trend")
+def station_trend(station_id: str, date: str | None = None) -> dict:
+    trend = get_station_trend(station_id, query_date=date)
+    if trend is None:
+        raise HTTPException(status_code=404, detail="找不到指定捷運站")
+    return trend
 
 
 @app.get("/api/places")

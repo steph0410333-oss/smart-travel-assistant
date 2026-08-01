@@ -10,6 +10,7 @@ from app.main import (
     list_stations,
     recommend,
     roaming_report,
+    station_trend,
 )
 from app.schemas import (
     BalanceRecommendationRequest,
@@ -85,6 +86,17 @@ class ApiContractTests(unittest.TestCase):
         self.assertTrue(all(item["crowd_reliability"] == "low" for item in result["stations"]))
         self.assertTrue(all(item["crowd_index"] is not None for item in result["stations"]))
         self.assertTrue(all(0 <= item["crowd_index"] <= 100 for item in result["stations"]))
+
+    def test_station_trend_returns_full_day_without_inventing_missing_hours(self) -> None:
+        result = station_trend("R11-G14", date="2026-07-24")
+        self.assertIn("HISTORICAL OD", result["data_label"])
+        self.assertEqual(result["station"]["station_id"], "R11-G14")
+        self.assertEqual(result["query_date"], "2026-07-24")
+        self.assertEqual(len(result["points"]), 24)
+        self.assertTrue(result["points"][19]["available"])
+        self.assertIsNotNone(result["points"][19]["crowd_score"])
+        self.assertFalse(result["points"][3]["available"])
+        self.assertIsNone(result["points"][3]["crowd_score"])
 
     def test_place_catalog_includes_localized_names(self) -> None:
         result = list_places()

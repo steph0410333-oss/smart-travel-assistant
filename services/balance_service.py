@@ -27,4 +27,3 @@ def recommend_by_balance(balance: int, limit: int = 3) -> list[dict[str, Any]]:
             )
     candidates.sort(key=lambda item: (item["suggested_spend"], item["merchant_name"]))
     return candidates[: max(1, min(limit, 10))]
-

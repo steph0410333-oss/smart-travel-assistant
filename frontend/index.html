@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>智慧出行小幫手</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/static/styles.css?v=20260727-1" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260802-1" />
   </head>
   <body>
     <main class="app-shell">
@@ -55,6 +55,7 @@
         <button id="sheet-handle" class="sheet-handle" type="button" aria-label="拖曳或點擊調整資訊面板" data-i18n-aria="sheetHandle" aria-expanded="false"><span></span></button>
         <p id="sheet-kicker" class="sheet-kicker">尚未選擇地點</p>
         <h2 id="sheet-title">從地圖探索適合前往的時段</h2>
+        <p id="station-meta" class="station-meta" hidden></p>
         <p id="sheet-description" class="sheet-description">選擇目的地後，我們會依最近捷運站的歷史 OD 資料推估人流；結果不是即時站內人數。</p>
         <section class="decision-card" aria-label="出行決策" data-i18n-aria="travelDecision">
           <div id="comfort-status" class="decision-gauge-wrap">
@@ -75,10 +76,51 @@
             <span id="crowd-visual" class="crowd-people" data-level="0" aria-hidden="true">
               <i></i><i></i><i></i><i></i>
             </span>
-            <span><small data-i18n="nearestCrowd">最近捷運站人流</small><strong id="crowd-label" data-i18n="notAnalyzed">尚未分析</strong></span>
+            <span>
+              <small data-i18n="nearestCrowd">最近捷運站人流</small>
+              <strong><span id="crowd-score">--</span><span class="crowd-score-unit"> / 100</span> · <span id="crowd-label" data-i18n="notAnalyzed">尚未分析</span></strong>
+            </span>
           </div>
           <div class="context-card update-context"><small data-i18n="dataBasis">資料依據</small><strong id="updated-time">--</strong></div>
         </div>
+        <section id="station-trend" class="station-trend-card" aria-labelledby="station-trend-title" hidden>
+          <header class="station-trend-header">
+            <div>
+              <small data-i18n="todayEstimate">所選日期趨勢</small>
+              <h3 id="station-trend-title" data-i18n="crowdTrendTitle">捷運人流趨勢</h3>
+            </div>
+            <span id="trend-current-time">--</span>
+          </header>
+          <p id="trend-summary" class="trend-summary"></p>
+          <div class="trend-chart-wrap">
+            <svg id="trend-chart" class="trend-chart" viewBox="0 0 640 220" role="img" aria-label="所選車站每小時歷史人流趨勢"></svg>
+            <p id="trend-loading" class="trend-loading" data-i18n="trendLoading">載入趨勢中…</p>
+          </div>
+          <p class="trend-note" data-i18n="trendHistoricalNote">歷史 OD 相對人流推估，不是即時站內人數。</p>
+        </section>
+        <section id="weather-impact" class="weather-impact-card" aria-labelledby="weather-impact-title" hidden>
+          <h3 id="weather-impact-title" data-i18n="weatherImpactTitle">天氣影響度</h3>
+          <div class="weather-scenario">
+            <span id="weather-impact-icon" aria-hidden="true">☁</span>
+            <strong id="weather-impact-label">--</strong>
+          </div>
+          <div id="weather-impact-scale" class="weather-impact-scale" style="--impact-position: 0%;">
+            <div class="weather-impact-pointer" aria-hidden="true"><span></span></div>
+            <div class="weather-impact-labels" aria-hidden="true">
+              <span data-i18n="impactLow">低</span>
+              <span data-i18n="impactMedium">中</span>
+              <span data-i18n="impactHigh">高</span>
+            </div>
+            <div class="weather-impact-track" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+          <details class="weather-impact-details">
+            <summary data-i18n="viewWeatherDetails">查看詳情</summary>
+            <p id="weather-impact-explanation"></p>
+            <p data-i18n="weatherScenarioNote">此為使用者選擇的情境模擬，並非即時氣象。</p>
+          </details>
+        </section>
         <section id="recommendation-section" class="recommendation-section" hidden>
           <div class="recommendation-heading">
             <div><small data-i18n="aiResult">AI 推薦結果</small><h3 data-i18n="top3Title">適合你的 Top 3</h3></div>
@@ -474,6 +516,6 @@
     </dialog>
     <div id="achievement-toast" class="achievement-toast" role="status" aria-live="polite" hidden></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/static/app.js?v=20260727-2"></script>
+    <script src="/static/app.js?v=20260802-1"></script>
   </body>
 </html>

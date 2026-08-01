@@ -15,7 +15,12 @@ from services.balance_service import recommend_by_balance
 from services.intent_service import parse_recommendation_intent
 from services.merchant_service import find_nearby_merchants, get_merchants, summarize_merchants
 from services.recommendation_service import recommend_places
-from services.station_service import find_nearest_station, get_stations, resolve_place
+from services.station_service import (
+    find_nearest_station,
+    get_station_trend,
+    get_stations,
+    resolve_place,
+)
 
 
 class StationServiceTests(unittest.TestCase):
@@ -43,6 +48,12 @@ class StationServiceTests(unittest.TestCase):
         self.assertIsNotNone(place)
         self.assertEqual(place["place_name"], "板橋")
 
+    def test_exact_station_name_takes_priority_over_nearby_district_place(self) -> None:
+        place = resolve_place("台北車站")
+        self.assertIsNotNone(place)
+        self.assertEqual(place["place_id"], "station:R10-BL12")
+        self.assertEqual(place["place_type"], "transit")
+
     def test_resolves_place_alias_and_finds_nearest_station(self) -> None:
         place = resolve_place("我想去小巨蛋")
         self.assertIsNotNone(place)
@@ -56,6 +67,16 @@ class StationServiceTests(unittest.TestCase):
         self.assertIsNotNone(place)
         self.assertEqual(place["place_name"], "台北小巨蛋")
         self.assertEqual(place["place_name_en"], "Taipei Arena")
+
+    def test_station_trend_uses_selected_weekday_for_all_hours(self) -> None:
+        trend = get_station_trend("R11-G14", query_date="2026-07-24")
+        self.assertIsNotNone(trend)
+        self.assertEqual(trend["weekday_num"], 5)
+        self.assertEqual([point["hour"] for point in trend["points"]], list(range(24)))
+        self.assertTrue(all(
+            point["crowd_score"] is None or 0 <= point["crowd_score"] <= 100
+            for point in trend["points"]
+        ))
 
     def test_resolves_localized_place_suggestion_name(self) -> None:
         place = resolve_place("Shilin Night Market")

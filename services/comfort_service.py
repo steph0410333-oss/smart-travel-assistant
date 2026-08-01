@@ -138,8 +138,8 @@ def analyze_station_comfort(
         )
     if enable_external_factors:
         reasons.append(
-            "已套用Prototype假日、天氣與Mock活動外部修正；"
-            f"調整後人流壓力為{adjusted_crowd_score:.2f}分"
+            "假日、天氣與Mock活動因素只套用於舒適度評估；"
+            f"評估用壓力為{adjusted_crowd_score:.2f}分"
             f"（{adjusted_crowd_level}）"
         )
         reasons.extend(external_factors["warnings"])
