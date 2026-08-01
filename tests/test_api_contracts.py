@@ -5,6 +5,7 @@ from app.main import (
     analyze_place,
     balance_recommend,
     health_check,
+    home,
     list_merchants,
     list_places,
     list_stations,
@@ -24,6 +25,11 @@ class ApiContractTests(unittest.TestCase):
     def test_health_contract(self) -> None:
         result = health_check()
         self.assertEqual(result["status"], "ok")
+
+    def test_home_disables_browser_cache(self) -> None:
+        response = home()
+        self.assertIn("no-store", response.headers["cache-control"])
+        self.assertEqual(response.headers["pragma"], "no-cache")
 
     def test_roaming_report_has_safe_local_fallback(self) -> None:
         with patch.dict("os.environ", {"GEMINI_API_KEY": ""}):
