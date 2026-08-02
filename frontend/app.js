@@ -10,6 +10,8 @@ let lastAnalysisResult = null;
 let lastRecommendationPayload = null;
 let currentLanguage = "zh-Hant";
 let activeMerchantCategory = "all";
+let followsCurrentTaipeiTime = true;
+let currentTimeSyncTimer = null;
 const PROFILE_STORAGE_KEY = "smart-travel-companion-v2";
 const PROFILE_STATE_VERSION = 2;
 const defaultProfileState = {
@@ -844,15 +846,41 @@ function selectedTravelTime() {
     || "19:00";
 }
 
+function currentTaipeiDateTime(date = new Date()) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Taipei",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(date)
+      .filter(({ type }) => type !== "literal")
+      .map(({ type, value }) => [type, value]),
+  );
+  return {
+    date: `${parts.year}-${parts.month}-${parts.day}`,
+    time: `${parts.hour}:00`,
+  };
+}
+
+function syncTravelInputsToTaipeiNow() {
+  if (!followsCurrentTaipeiTime) return false;
+  const current = currentTaipeiDateTime();
+  const dateInput = document.querySelector("#date-input");
+  const timeInput = document.querySelector("#time-input");
+  const timeChanged = Boolean(timeInput && timeInput.value !== current.time);
+  if (dateInput) dateInput.value = current.date;
+  if (timeInput) timeInput.value = current.time;
+  return timeChanged;
+}
+
 function selectedTravelDate() {
   const input = document.querySelector("#date-input");
   if (input?.value) return input.value;
-  const today = new Date();
-  const localDate = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, "0"),
-    String(today.getDate()).padStart(2, "0"),
-  ].join("-");
+  const localDate = currentTaipeiDateTime().date;
   if (input) input.value = localDate;
   return localDate;
 }
@@ -2060,7 +2088,7 @@ function renderRecommendations(payload, activeIndex = 0) {
   section.hidden = false;
 }
 
-async function analyzePlace(placeName) {
+async function analyzePlace(placeName, { register = true } = {}) {
   const response = await fetch("/api/analyze-place", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -2076,7 +2104,7 @@ async function analyzePlace(placeName) {
   const result = await response.json();
   if (!response.ok) throw new Error(currentLanguage === "zh-Hant" ? (result.detail || t("analysisFailed")) : t("analysisFailed"));
   lastRecommendationPayload = null;
-  registerExploration(result);
+  if (register) registerExploration(result);
   renderAnalysis(result);
 }
 
@@ -2248,6 +2276,27 @@ async function refreshStationCrowd() {
   refreshMapTooltips();
 }
 
+async function refreshCurrentTaipeiTimeView() {
+  const timeChanged = syncTravelInputsToTaipeiNow();
+  if (!timeChanged || !stationMarkers.length) return;
+  await refreshStationCrowd();
+  const selectedPlace = lastAnalysisResult?.resolved_place?.place_name
+    || lastAnalysisResult?.nearest_station?.station_name;
+  if (hasActiveResult && selectedPlace) {
+    await analyzePlace(selectedPlace, { register: false });
+  }
+}
+
+function startCurrentTaipeiTimeSync() {
+  if (currentTimeSyncTimer) window.clearInterval(currentTimeSyncTimer);
+  currentTimeSyncTimer = window.setInterval(() => {
+    if (!followsCurrentTaipeiTime) return;
+    refreshCurrentTaipeiTimeView().catch((error) => {
+      console.error("無法更新目前時段人流", error);
+    });
+  }, 60_000);
+}
+
 document.querySelector("#open-search").addEventListener("click", openSearch);
 document.querySelector("#close-search").addEventListener("click", closeSearch);
 document.querySelector("#open-profile").addEventListener("click", openProfile);
@@ -2319,10 +2368,19 @@ document.querySelector("#share-postcard").addEventListener("click", () => {
 document.querySelector("#place-input").addEventListener("focus", (event) => renderPlaceSuggestions(event.target.value));
 document.querySelector("#place-input").addEventListener("input", (event) => renderPlaceSuggestions(event.target.value));
 document.querySelector("#date-input").addEventListener("change", () => {
+  followsCurrentTaipeiTime = false;
   refreshStationCrowd().catch((error) => console.error("無法更新站點日期人流", error));
 });
 document.querySelector("#time-input").addEventListener("change", () => {
+  followsCurrentTaipeiTime = false;
   refreshStationCrowd().catch((error) => console.error("無法更新站點時段人流", error));
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible" || !followsCurrentTaipeiTime) return;
+  refreshCurrentTaipeiTimeView().catch((error) => {
+    console.error("無法更新目前時段人流", error);
+  });
 });
 
 document.querySelectorAll(".suggestion-chip").forEach((chip) => {
@@ -2384,6 +2442,8 @@ document.querySelector("#ai-submit").addEventListener("click", async () => {
 
 setupSheetDrag();
 renderProfileProgress();
+syncTravelInputsToTaipeiNow();
 selectedTravelDate();
 applyLanguage("zh-Hant");
+startCurrentTaipeiTimeSync();
 loadPrototypeData().catch((error) => console.error("無法載入 Prototype 資料", error));
